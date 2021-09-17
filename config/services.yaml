@@ -1,0 +1,15 @@
+services:
+    _defaults:
+        autoconfigure: true
+        autowire: true
+
+    Torr\PrismicApi\:
+        resource: ../src/*
+        exclude: ../src/{Data,Exception,PrismicApiBundle.php}
+
+    Torr\PrismicApi\Api\PrismicClient:
+        $baseUrl: '%env(PRISMIC_BASE_URL)%'
+        $permanentAccessToken: '%env(PRISMIC_PERMANENT_ACCESS_TOKEN)%'
+
+    Torr\PrismicApi\RichText\LinkGenerator:
+        $handlers: !tagged_iterator 'prismic.link_generator'

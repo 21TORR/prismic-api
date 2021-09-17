@@ -1,0 +1,5 @@
+{
+    "require-dev": {
+        "21torr/php-cs": "^4.0"
+    }
+}
