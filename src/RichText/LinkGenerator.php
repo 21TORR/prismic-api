@@ -7,7 +7,7 @@ use Torr\PrismicApi\RichText\Link\LinkGeneratorHandler;
 
 final class LinkGenerator
 {
-	/** @var iterable<LinkGeneratorHandler>  */
+	/** @var iterable<LinkGeneratorHandler> */
 	private iterable $handlers;
 
 	/**

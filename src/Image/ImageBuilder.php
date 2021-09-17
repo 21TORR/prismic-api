@@ -17,7 +17,7 @@ final class ImageBuilder
 
 		$builder = new HtmlBuilder();
 		return $builder->build(
-			new HtmlElement("img", $attributes)
+			new HtmlElement("img", $attributes),
 		);
 	}
 }

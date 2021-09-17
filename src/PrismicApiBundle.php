@@ -19,7 +19,7 @@ final class PrismicApiBundle extends Bundle
 		return new BundleExtension($this);
 	}
 
-	public function build (ContainerBuilder $container)
+	public function build (ContainerBuilder $container) : void
 	{
 		$container->registerForAutoconfiguration(LinkGeneratorHandler::class)
 			->addTag("prismic.link_generator");

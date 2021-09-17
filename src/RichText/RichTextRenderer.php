@@ -15,7 +15,7 @@ final class RichTextRenderer
 		return \implode(
 			"",
 			\array_map(
-				static function (array $section) use ($builder, $sectionAttributes)
+				static function (array $section) use ($builder, $sectionAttributes) : string
 				{
 					$element = match ($section["type"])
 					{
@@ -31,8 +31,8 @@ final class RichTextRenderer
 
 					return $builder->build($element);
 				},
-				$text
-			)
+				$text,
+			),
 		);
 	}
 

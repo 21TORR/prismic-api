@@ -6,6 +6,7 @@ namespace Torr\PrismicApi\DataFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Data\PrismicEnvironment;
@@ -31,11 +32,15 @@ final class PrismicEnvironmentFactory
 
 		if (0 !== \count($violations))
 		{
+			$errorMessage = $violations instanceof ConstraintViolationList
+				? (string) $violations
+				: "n/a";
+
 			$this->logger->error("Invalid prismic environment data", [
-				"error" => (string) $violations,
+				"error" => $errorMessage,
 				"violations" => $violations,
 			]);
-			throw new InvalidEnvironmentException((string) $violations);
+			throw new InvalidEnvironmentException($errorMessage);
 		}
 
 		return new PrismicEnvironment($data["refs"], $data["types"], $data["languages"]);
@@ -75,14 +80,14 @@ final class PrismicEnvironmentFactory
 								"allowExtraFields" => true,
 								"allowMissingFields" => false,
 							]),
-						]
+						],
 					]),
 				],
 				"types" => [
 					new Assert\NotNull(),
 					new Assert\Type("array"),
 					new Assert\Callback(
-						function (array $array, ExecutionContextInterface $context)
+						function (array $array, ExecutionContextInterface $context) : void
 						{
 							foreach ($array as $key => $value)
 							{
@@ -97,7 +102,7 @@ final class PrismicEnvironmentFactory
 										->addViolation();
 								}
 							}
-						}
+						},
 					),
 				],
 				"languages" => [
@@ -119,7 +124,7 @@ final class PrismicEnvironmentFactory
 								"allowExtraFields" => true,
 								"allowMissingFields" => false,
 							]),
-						]
+						],
 					]),
 				],
 			],

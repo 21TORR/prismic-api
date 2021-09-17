@@ -25,12 +25,12 @@ final class PrismicClient
 		string $baseUrl,
 		private string $permanentAccessToken,
 		private PrismicEnvironmentFactory $configFactory,
-		private LoggerInterface $logger
+		private LoggerInterface $logger,
 	)
 	{
 		$this->httpClient = HttpClient::createForBaseUri(
 		// ensure trailing slash
-			\rtrim($baseUrl, "/") . "/"
+			\rtrim($baseUrl, "/") . "/",
 		);
 	}
 
@@ -89,13 +89,15 @@ final class PrismicClient
 	{
 		try
 		{
-			$response = $this->httpClient->request("GET", $path,
+			$response = $this->httpClient->request(
+				"GET",
+				$path,
 				(new HttpOptions())
 					->setQuery(\array_replace($query, [
 						"access_token" => $this->permanentAccessToken,
 						"format" => "json",
 					]))
-					->toArray()
+					->toArray(),
 			);
 
 			return $response->toArray();
