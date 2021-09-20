@@ -31,7 +31,7 @@ final class PrismicEnvironment
 	{
 		foreach ($validatedRefs as $ref)
 		{
-			if ($ref["isMasterRef"])
+			if ($ref["isMasterRef"] ?? false)
 			{
 				return $ref["ref"];
 			}
