@@ -72,14 +72,21 @@ final class PrismicEnvironmentFactory
 										new Assert\NotNull(),
 										new Assert\Type("string"),
 									],
-									"isMasterRef" => [
-										new Assert\NotNull(),
-										new Assert\Type("bool"),
-									],
 								],
 								"allowExtraFields" => true,
 								"allowMissingFields" => false,
 							]),
+							new Assert\Callback(
+								static function (array $data, ExecutionContextInterface $executionContext) : void
+								{
+									if (\array_key_exists("isMasterRef", $data) && !\is_bool($data["isMasterRef"]))
+									{
+										$executionContext
+											->buildViolation("isMasterRef must be a bool, if set.")
+											->addViolation();
+									}
+								},
+							),
 						],
 					]),
 				],
