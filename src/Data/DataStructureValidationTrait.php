@@ -11,18 +11,19 @@ trait DataStructureValidationTrait
 	/**
 	 * Validates the given data according to the constraints.
 	 *
-	 * @param string|null $validationMessage A message that is added to the exception in case the validation fails.
+	 * @param Constraint[] $constraints
+	 * @param string|null  $validationMessage A message that is added to the exception in case the validation fails.
 	 */
-	private function validateDataStructure (array $data, ?Constraint $constraint, ?string $validationMessage = null) : void
+	private function validateDataStructure (array $data, array $constraints, ?string $validationMessage = null) : void
 	{
 		// always valid if no constraints given
-		if (null === $constraint)
+		if (0 === \count($constraints))
 		{
 			return;
 		}
 
 		$validator = Validation::createValidator();
-		$violations = $validator->validate($data, $constraint);
+		$violations = $validator->validate($data, $constraints);
 
 		if (\count($violations) > 0)
 		{

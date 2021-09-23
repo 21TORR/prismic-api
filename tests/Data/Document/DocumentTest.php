@@ -27,7 +27,7 @@ final class DocumentTest extends TestCase
 
 		yield "minimal valid base date" => [
 			$baseData,
-			null,
+			[],
 			true,
 		];
 
@@ -35,14 +35,14 @@ final class DocumentTest extends TestCase
 			\array_replace($baseData, [
 				"uid" => "test",
 			]),
-			null,
+			[],
 			true,
 		];
 
 
 		yield "no data at all" => [
 			[],
-			null,
+			[],
 			false,
 		];
 
@@ -54,7 +54,7 @@ final class DocumentTest extends TestCase
 
 			yield "missing key: {$key}" => [
 				$newData,
-				null,
+				[],
 				false,
 			];
 		}
@@ -62,13 +62,15 @@ final class DocumentTest extends TestCase
 
 		yield "custom data invalid" => [
 			$baseData,
-			new Assert\Collection([
-				"fields" => [
-					"test" => [
-						new Assert\NotNull(),
+			[
+				new Assert\Collection([
+					"fields" => [
+						"test" => [
+							new Assert\NotNull(),
+						],
 					],
-				],
-			]),
+				]),
+			],
 			false,
 		];
 
@@ -78,13 +80,15 @@ final class DocumentTest extends TestCase
 					"test" => 1,
 				],
 			]),
-			new Assert\Collection([
-				"fields" => [
-					"test" => [
-						new Assert\NotNull(),
+			[
+				new Assert\Collection([
+					"fields" => [
+						"test" => [
+							new Assert\NotNull(),
+						],
 					],
-				],
-			]),
+				]),
+			],
 			true,
 		];
 
@@ -92,7 +96,7 @@ final class DocumentTest extends TestCase
 			\array_replace($baseData, [
 				"data" => 1,
 			]),
-			null,
+			[],
 			false,
 		];
 	}
@@ -100,8 +104,10 @@ final class DocumentTest extends TestCase
 
 	/**
 	 * @dataProvider provideData
+	 *
+	 * @param Constraint[] $constraints
 	 */
-	public function testConstruction (array $data, ?Constraint $constraint, bool $shouldBeValid) : void
+	public function testConstruction (array $data, array $constraints, bool $shouldBeValid) : void
 	{
 		if (!$shouldBeValid)
 		{
@@ -109,7 +115,7 @@ final class DocumentTest extends TestCase
 		}
 
 		// construct and let possibly throw
-		$this->createDocument($data, $constraint);
+		$this->createDocument($data, $constraints);
 
 		if ($shouldBeValid)
 		{
@@ -119,19 +125,20 @@ final class DocumentTest extends TestCase
 
 
 	/**
+	 * @param Constraint[] $constraints
 	 */
-	private function createDocument (array $data, ?Constraint $constraint) : Document
+	private function createDocument (array $data, array $constraints) : Document
 	{
-		return new class ($data, $constraint) extends Document
+		return new class ($data, $constraints) extends Document
 		{
-			public function __construct (array $data, private ?Constraint $constraint)
+			public function __construct (array $data, private array $constraints)
 			{
 				parent::__construct($data);
 			}
 
-			protected function getValidationConstraints () : ?Constraint
+			protected function getValidationConstraints () : array
 			{
-				return $this->constraint;
+				return $this->constraints;
 			}
 		};
 	}

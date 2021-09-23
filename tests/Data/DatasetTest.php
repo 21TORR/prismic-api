@@ -14,40 +14,73 @@ final class DatasetTest extends TestCase
 	 */
 	public function provideConstruction () : iterable
 	{
-		yield "no constraint" => [["some" => "data"], null, true];
+		yield "no constraint" => [["some" => "data"], [], true];
 
 		yield "basic valid" => [
 			["some" => "data"],
-			new Assert\Collection([
-				"fields" => [
-					"some" => [
-						new Assert\NotNull(),
-						new Assert\Type("string"),
+			[
+				new Assert\Collection([
+					"fields" => [
+						"some" => [
+							new Assert\NotNull(),
+							new Assert\Type("string"),
+						],
 					],
-				],
-			]),
+				]),
+			],
 			true,
 		];
 
 		yield "basic invalid" => [
 			["some" => null],
-			new Assert\Collection([
-				"fields" => [
-					"some" => [
-						new Assert\NotNull(),
-						new Assert\Type("string"),
+			[
+				new Assert\Collection([
+					"fields" => [
+						"some" => [
+							new Assert\NotNull(),
+							new Assert\Type("string"),
+						],
 					],
-				],
-			]),
+				]),
+			],
 			false,
+		];
+
+		yield "multiple constraints" => [
+			[
+				"some" => "data",
+				"other" => "data",
+			],
+			[
+				new Assert\Collection([
+					"fields" => [
+						"some" => [
+							new Assert\NotNull(),
+							new Assert\Type("string"),
+						],
+					],
+					"allowExtraFields" => true,
+				]),
+				new Assert\Collection([
+					"fields" => [
+						"other" => [
+							new Assert\NotNull(),
+							new Assert\Type("string"),
+						],
+					],
+					"allowExtraFields" => true,
+				]),
+			],
+			true,
 		];
 	}
 
 
 	/**
 	 * @dataProvider provideConstruction
+	 * @param Constraint[] $constraints
 	 */
-	public function testConstruction (array $data, ?Constraint $constraint, bool $shouldBeValid) : void
+	public function testConstruction (array $data, array $constraints, bool $shouldBeValid) : void
 	{
 		if (!$shouldBeValid)
 		{
@@ -55,7 +88,7 @@ final class DatasetTest extends TestCase
 		}
 
 		// construct and let possibly throw
-		$this->createDataset($data, $constraint);
+		$this->createDataset($data, $constraints);
 
 		if ($shouldBeValid)
 		{
@@ -65,19 +98,20 @@ final class DatasetTest extends TestCase
 
 
 	/**
+	 * @param Constraint[] $constraints
 	 */
-	private function createDataset (array $data, ?Constraint $constraint) : Dataset
+	private function createDataset (array $data, array $constraints) : Dataset
 	{
-		return new class ($data, $constraint) extends Dataset
+		return new class ($data, $constraints) extends Dataset
 		{
-			public function __construct (array $data, private ?Constraint $constraint)
+			public function __construct (array $data, private array $constraints)
 			{
 				parent::__construct($data);
 			}
 
-			protected function getValidationConstraints () : ?Constraint
+			protected function getValidationConstraints () : array
 			{
-				return $this->constraint;
+				return $this->constraints;
 			}
 		};
 	}

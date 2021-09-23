@@ -20,16 +20,18 @@ abstract class Document extends Dataset
 	{
 		$this->validateDataStructure(
 			$data,
-			new Assert\Collection([
-				"fields" => [
-					"data" => [
-						new Assert\NotNull(),
-						new Assert\Type("array"),
+			[
+				new Assert\Collection([
+					"fields" => [
+						"data" => [
+							new Assert\NotNull(),
+							new Assert\Type("array"),
+						],
 					],
-				],
-				"allowExtraFields" => true,
-				"allowMissingFields" => false,
-			]),
+					"allowExtraFields" => true,
+					"allowMissingFields" => false,
+				]),
+			],
 		);
 
 		parent::__construct($data["data"]);
