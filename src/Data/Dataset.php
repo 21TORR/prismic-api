@@ -28,6 +28,8 @@ abstract class Dataset
 
 	/**
 	 * Returns the validation constraints for this dataset
+	 *
+	 * @return Constraint[]
 	 */
-	abstract protected function getValidationConstraints () : ?Constraint;
+	abstract protected function getValidationConstraints () : array;
 }

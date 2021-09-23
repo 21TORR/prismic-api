@@ -2,7 +2,6 @@
 
 namespace Torr\PrismicApi\Data\Document;
 
-use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\Data\Dataset;
 
@@ -89,49 +88,51 @@ final class DocumentAttributes extends Dataset
 	/**
 	 * @inheritDoc
 	 */
-	protected function getValidationConstraints () : ?Constraint
+	protected function getValidationConstraints () : array
 	{
-		return new Assert\Collection([
-			"fields" => [
-				"id" => [
-					new Assert\NotNull(),
-					new Assert\Type("string"),
+		return [
+			new Assert\Collection([
+				"fields" => [
+					"id" => [
+						new Assert\NotNull(),
+						new Assert\Type("string"),
+					],
+					"uid" => [
+						new Assert\Type("string"),
+					],
+					"type" => [
+						new Assert\NotNull(),
+						new Assert\Type("string"),
+					],
+					"tags" => [
+						new Assert\NotNull(),
+						new Assert\Type("array"),
+						new Assert\All([
+							"constraints" => [
+								new Assert\NotNull(),
+								new Assert\Type("string"),
+							],
+						]),
+					],
+					"first_publication_date" => [
+						new Assert\NotNull(),
+						new Assert\Type("string"),
+						new Assert\DateTime(\DateTimeInterface::RFC3339),
+					],
+					"last_publication_date" => [
+						new Assert\NotNull(),
+						new Assert\Type("string"),
+						new Assert\DateTime(\DateTimeInterface::RFC3339),
+					],
+					"lang" => [
+						new Assert\NotNull(),
+						new Assert\Type("string"),
+					],
 				],
-				"uid" => [
-					new Assert\Type("string"),
-				],
-				"type" => [
-					new Assert\NotNull(),
-					new Assert\Type("string"),
-				],
-				"tags" => [
-					new Assert\NotNull(),
-					new Assert\Type("array"),
-					new Assert\All([
-						"constraints" => [
-							new Assert\NotNull(),
-							new Assert\Type("string"),
-						],
-					]),
-				],
-				"first_publication_date" => [
-					new Assert\NotNull(),
-					new Assert\Type("string"),
-					new Assert\DateTime(\DateTimeInterface::RFC3339),
-				],
-				"last_publication_date" => [
-					new Assert\NotNull(),
-					new Assert\Type("string"),
-					new Assert\DateTime(\DateTimeInterface::RFC3339),
-				],
-				"lang" => [
-					new Assert\NotNull(),
-					new Assert\Type("string"),
-				],
-			],
-			"allowMissingFields" => false,
-			"allowExtraFields" => true,
-		]);
+				"allowMissingFields" => false,
+				"allowExtraFields" => true,
+			]),
+		];
 	}
 
 
