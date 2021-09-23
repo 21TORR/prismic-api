@@ -2,28 +2,37 @@
 
 namespace Torr\PrismicApi\Data\Document;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\Data\Dataset;
-use Torr\PrismicApi\Exception\Data\InvalidDataStructureException;
+use Torr\PrismicApi\Data\DataStructureValidationTrait;
 
 /**
- * A top level
+ * A top level base class for representing documents
  */
 abstract class Document extends Dataset
 {
+	use DataStructureValidationTrait;
 	protected DocumentAttributes $attributes;
 
 	/**
 	 */
 	public function __construct (array $data)
 	{
-		$itemData = $data["data"] ?? null;
+		$this->validateDataStructure(
+			$data,
+			new Assert\Collection([
+				"fields" => [
+					"data" => [
+						new Assert\NotNull(),
+						new Assert\Type("array"),
+					],
+				],
+				"allowExtraFields" => true,
+				"allowMissingFields" => false,
+			]),
+		);
 
-		if (!\is_array($itemData))
-		{
-			throw new InvalidDataStructureException(static::class, null, "No nested data key.");
-		}
-
-		parent::__construct($itemData);
+		parent::__construct($data["data"]);
 		$this->attributes = new DocumentAttributes($data);
 	}
 
