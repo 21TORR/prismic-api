@@ -48,6 +48,6 @@ jobs:
             -   name: PHPStan
                 run: "./vendor/bin/phpstan analyze -c vendor-bin/test/vendor/21torr/php-cs/phpstan/lib.neon . --ansi --error-format=checkstyle | cs2pr"
 
-            #-   name: PHPUnit
-            #    # --teamcity output used by `mheap/phpunit-matcher-action`
-            #    run: "./vendor/bin/simple-phpunit --teamcity"
+            -   name: PHPUnit
+                # --teamcity output used by `mheap/phpunit-matcher-action`
+                run: "./vendor/bin/simple-phpunit --teamcity"
