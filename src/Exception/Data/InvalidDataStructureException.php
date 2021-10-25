@@ -8,11 +8,14 @@ use Torr\PrismicApi\Exception\PrismicApiException;
 final class InvalidDataStructureException extends \InvalidArgumentException implements PrismicApiException
 {
 	private ?ConstraintViolationListInterface $violations;
+	private array $data;
+	private string $type;
 
 	/**
 	 */
 	public function __construct (
 		string $type,
+		array $data,
 		?ConstraintViolationListInterface $violations = null,
 		?string $message = null,
 		?\Throwable $previous = null,
@@ -34,6 +37,8 @@ final class InvalidDataStructureException extends \InvalidArgumentException impl
 		);
 
 		$this->violations = $violations;
+		$this->data = $data;
+		$this->type = $type;
 	}
 
 	/**
@@ -41,5 +46,19 @@ final class InvalidDataStructureException extends \InvalidArgumentException impl
 	public function getViolations () : ?ConstraintViolationListInterface
 	{
 		return $this->violations;
+	}
+
+	/**
+	 */
+	public function getData () : array
+	{
+		return $this->data;
+	}
+
+	/**
+	 */
+	public function getType () : string
+	{
+		return $this->type;
 	}
 }

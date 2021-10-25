@@ -47,7 +47,7 @@ final class Environment extends Dataset
 			}
 		}
 
-		throw new InvalidDataStructureException("Found no master ref");
+		throw new InvalidDataStructureException("Found no master ref", $validatedRefs);
 	}
 
 
