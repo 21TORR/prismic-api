@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Torr\BundleHelpers\Bundle\BundleExtension;
+use Torr\PrismicApi\CustomType\CustomTypeDefinition;
 use Torr\PrismicApi\RichText\Link\LinkGeneratorHandler;
 
 final class PrismicApiBundle extends Bundle
@@ -22,6 +23,9 @@ final class PrismicApiBundle extends Bundle
 	{
 		$container->registerForAutoconfiguration(LinkGeneratorHandler::class)
 			->addTag("prismic.link_generator");
+
+		$container->registerForAutoconfiguration(CustomTypeDefinition::class)
+			->addTag("prismic.type-definition");
 	}
 
 
