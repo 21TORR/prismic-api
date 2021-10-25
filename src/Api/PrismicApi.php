@@ -29,7 +29,7 @@ final class PrismicApi
 		LoggerInterface $logger,
 		string $repository,
 		string $contentToken,
-		string $typesToken
+		string $typesToken,
 	) {
 		$this->repository = $repository;
 		$this->contentToken = $contentToken;
@@ -118,7 +118,7 @@ final class PrismicApi
 				"json" => $data,
 				"status" => $typeDefinition->isActive(),
 			],
-			method: "POST"
+			method: "POST",
 		);
 
 		return !$alreadyExists;
@@ -170,7 +170,7 @@ final class PrismicApi
 			[
 				"path" => $path,
 				"query" => $query,
-			]
+			],
 		);
 	}
 
@@ -200,7 +200,7 @@ final class PrismicApi
 			[
 				"path" => $path,
 				"payload" => $payload,
-			]
+			],
 		);
 	}
 
@@ -221,14 +221,16 @@ final class PrismicApi
 		{
 			$this->logger->error("Prismic request failed: {message}", \array_replace($debugParameters, [
 				"message" => $exception->getMessage(),
-				"response" => $exception->getResponse()->getContent(false),
+				"response" => $exception instanceof HttpExceptionInterface
+					? $exception->getResponse()->getContent(false)
+					: "n/a",
 			]));
 
 			throw new RequestFailedException("Prismic request failed", 0, $exception);
 		}
 		catch (DecodingExceptionInterface $exception)
 		{
-			$this->logger->error("Prismic request failed to decode: {message}", \array_replace($debugParameters,[
+			$this->logger->error("Prismic request failed to decode: {message}", \array_replace($debugParameters, [
 				"message" => $exception->getMessage(),
 			]));
 

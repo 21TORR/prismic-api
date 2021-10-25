@@ -25,13 +25,13 @@ final class CustomTypesMigrator
 		{
 			$style->write(\sprintf(
 				"• Migrating type <fg=blue>%s</> ... ",
-				$definition->getLabel()
+				$definition->getLabel(),
 			));
 			$added = $this->api->pushTypeDefinition($definition);
 
 
 			$style->writeln(
-				\sprintf("<fg=green>%s</>", $added ? "added" : "updated")
+				\sprintf("<fg=green>%s</>", $added ? "added" : "updated"),
 			);
 		}
 	}

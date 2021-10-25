@@ -17,7 +17,6 @@ use Torr\PrismicApi\Exception\PrismicApiException;
 )]
 final class PrismicTypesMigrateCommand extends Command
 {
-
 	/**
 	 * @inheritDoc
 	 */
