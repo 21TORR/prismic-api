@@ -17,7 +17,7 @@ final class Environment extends Dataset
 	public function __construct (array $data)
 	{
 		parent::__construct($data);
-		$this->masterRefId = $this->findMasterRefId($data);
+		$this->masterRefId = $this->findMasterRefId($data["refs"]);
 
 		foreach ($data["languages"] as $language)
 		{
