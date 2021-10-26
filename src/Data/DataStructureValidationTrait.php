@@ -29,6 +29,7 @@ trait DataStructureValidationTrait
 		{
 			throw new InvalidDataStructureException(
 				static::class,
+				$data,
 				$violations,
 				$validationMessage,
 			);

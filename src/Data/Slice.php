@@ -43,7 +43,7 @@ abstract class Slice extends Dataset
 	/**
 	 * @inheritDoc
 	 */
-	protected function getValidationConstraints () : ?Constraint
+	protected function getValidationConstraints () : array
 	{
 		$fields = [
 			"slice_type" => [
@@ -73,11 +73,13 @@ abstract class Slice extends Dataset
 			]);
 		}
 
-		return new Assert\Collection([
-			"fields" => $fields,
-			"allowMissingFields" => false,
-			"allowExtraFields" => true,
-		]);
+		return [
+			new Assert\Collection([
+				"fields" => $fields,
+				"allowMissingFields" => false,
+				"allowExtraFields" => true,
+			]),
+		];
 	}
 
 

@@ -7,9 +7,13 @@ services:
         resource: ../src/*
         exclude: ../src/{Data,Exception,PrismicApiBundle.php}
 
-    Torr\PrismicApi\Api\PrismicClient:
-        $baseUrl: '%env(PRISMIC_BASE_URL)%'
-        $permanentAccessToken: '%env(PRISMIC_PERMANENT_ACCESS_TOKEN)%'
+    Torr\PrismicApi\Api\PrismicApi:
+        $repository: '%env(PRISMIC_REPOSITORY)%'
+        $contentToken: '%env(PRISMIC_CONTENT_API_TOKEN)%'
+        $typesToken: '%env(PRISMIC_TYPES_API_TOKEN)%'
+
+    Torr\PrismicApi\CustomType\CustomTypesMigrator:
+        $typeDefinitions: !tagged_iterator 'prismic.type-definition'
 
     Torr\PrismicApi\RichText\LinkGenerator:
         $handlers: !tagged_iterator 'prismic.link_generator'
