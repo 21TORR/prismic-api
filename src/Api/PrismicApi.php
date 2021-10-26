@@ -86,10 +86,6 @@ final class PrismicApi
 	}
 
 
-
-	//region Search Request Wrappers
-	// endregion
-
 	/**
 	 * Pushes the type definition to prismic
 	 *
