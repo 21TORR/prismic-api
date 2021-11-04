@@ -1,3 +1,9 @@
+1.0.2
+=====
+
+*   (bug) Fix invalid link type key.
+
+
 1.0.1
 =====
 

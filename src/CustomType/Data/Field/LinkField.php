@@ -16,7 +16,7 @@ final class LinkField extends InputField
 	public const SELECT_ALL = null;
 	public const SELECT_WEB = "web";
 	public const SELECT_MEDIA = "media";
-	public const SELECT_DOCUMENT = "media";
+	public const SELECT_DOCUMENT = "document";
 
 
 
