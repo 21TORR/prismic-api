@@ -94,7 +94,7 @@ final class PrismicApi
 	public function pushTypeDefinition (CustomTypeDefinition $typeDefinition) : bool
 	{
 		$stored = $this->fetchesTypeConfig($typeDefinition);
-		$alreadyExists = null !== $stored;
+		$alreadyExists = [] !== $stored;
 
 		$data = [];
 
