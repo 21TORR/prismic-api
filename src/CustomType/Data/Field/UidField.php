@@ -15,7 +15,7 @@ final class UidField extends InputField
 	 */
 	public function __construct (
 		string $label,
-		?string $placeholder = null
+		?string $placeholder = null,
 	)
 	{
 		parent::__construct(self::TYPE_KEY, [
