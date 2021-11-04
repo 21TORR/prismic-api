@@ -1,3 +1,11 @@
+1.0.0
+=====
+
+*   (feature) Added new implementation.
+*   (feature) Added migrations.
+*   (feature) Added input fields.
+
+
 0.1.1
 =====
 
