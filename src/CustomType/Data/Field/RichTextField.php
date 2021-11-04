@@ -2,6 +2,8 @@
 
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
+use Torr\PrismicApi\CustomType\Data\Part\ImageConstraint;
+
 /**
  * @link https://prismic.io/docs/core-concepts/rich-text-title
  */
@@ -41,8 +43,7 @@ class RichTextField extends InputField
 		bool $allowsMultipleLines = true,
 		bool $allowTargetBlankForLinks = true,
 		?string $placeholder = null,
-		?int $maxImageWidth = null,
-		?int $maxImageHeight = null,
+		?ImageConstraint $imageConstraint = null,
 	)
 	{
 		if (null === $styles)
@@ -55,22 +56,13 @@ class RichTextField extends InputField
 		}
 
 		$stylesKey = $allowsMultipleLines ? "multi" : "single";
-		$imageConstraints = null;
-
-		if (null !== $maxImageWidth || null !== $maxImageHeight)
-		{
-			$imageConstraints = $this->filterOptionalFields([
-				"width" => $maxImageWidth,
-				"height" => $maxImageHeight,
-			]);
-		}
 
 		parent::__construct(self::TYPE_KEY, $this->filterOptionalFields([
 			"label" => $label,
 			"placeholder" => $placeholder,
 			$stylesKey => $styles,
 			"allowTargetBlank" => $allowTargetBlankForLinks,
-			"imageConstraints" => $imageConstraints,
+			"imageConstraint" => $imageConstraint?->toArray(),
 		]));
 	}
 }
