@@ -29,4 +29,14 @@ class InputField implements PrismicTypeInterface
 			"config" => $this->config,
 		];
 	}
+
+	/**
+	 */
+	protected function filterOptionalFields (array $config) : array
+	{
+		return \array_filter(
+			$config,
+			static fn ($entry) => null !== $entry,
+		);
+	}
 }
