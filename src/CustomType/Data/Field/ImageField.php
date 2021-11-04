@@ -6,7 +6,7 @@ use Torr\PrismicApi\CustomType\Data\Part\ImageConstraint;
 use Torr\PrismicApi\CustomType\Data\Part\Thumbnail;
 
 /**
- * @link https://prismic.io/docs/core-concepts/image
+ * @see https://prismic.io/docs/core-concepts/image
  */
 final class ImageField extends InputField
 {
@@ -32,7 +32,7 @@ final class ImageField extends InputField
 			"thumbnails" => !empty($thumbnails)
 				? \array_map(
 					static fn (Thumbnail $thumbnail) => $thumbnail->toArray(),
-					$thumbnails
+					$thumbnails,
 				)
 				: null,
 		]));

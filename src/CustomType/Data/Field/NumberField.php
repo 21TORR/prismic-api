@@ -3,7 +3,7 @@
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
 /**
- * @link https://prismic.io/docs/core-concepts/number
+ * @see https://prismic.io/docs/core-concepts/number
  */
 final class NumberField extends InputField
 {

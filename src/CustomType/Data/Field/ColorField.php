@@ -3,7 +3,7 @@
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
 /**
- * @link https://prismic.io/docs/core-concepts/color
+ * @see https://prismic.io/docs/core-concepts/color
  */
 final class ColorField extends InputField
 {

@@ -3,7 +3,7 @@
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
 /**
- * @link https://prismic.io/docs/core-concepts/select
+ * @see https://prismic.io/docs/core-concepts/select
  */
 final class SelectField extends InputField
 {

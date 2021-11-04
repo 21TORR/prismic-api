@@ -3,7 +3,7 @@
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
 /**
- * @link https://prismic.io/docs/core-concepts/embed
+ * @see https://prismic.io/docs/core-concepts/embed
  */
 final class EmbedField extends InputField
 {

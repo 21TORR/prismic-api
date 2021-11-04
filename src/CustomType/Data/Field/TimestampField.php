@@ -3,7 +3,7 @@
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
 /**
- * @link https://prismic.io/docs/core-concepts/timestamp
+ * @see https://prismic.io/docs/core-concepts/timestamp
  */
 final class TimestampField extends InputField
 {

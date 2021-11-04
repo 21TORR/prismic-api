@@ -3,7 +3,7 @@
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
 /**
- * @link https://prismic.io/docs/core-concepts/uid
+ * @see https://prismic.io/docs/core-concepts/uid
  */
 final class UidField extends InputField
 {

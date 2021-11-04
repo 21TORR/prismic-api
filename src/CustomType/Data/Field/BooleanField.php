@@ -3,7 +3,7 @@
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
 /**
- * @link https://prismic.io/docs/core-concepts/boolean
+ * @see https://prismic.io/docs/core-concepts/boolean
  */
 final class BooleanField extends InputField
 {

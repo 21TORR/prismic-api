@@ -3,7 +3,7 @@
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
 /**
- * @link https://prismic.io/docs/core-concepts/geopoint
+ * @see https://prismic.io/docs/core-concepts/geopoint
  */
 final class GeoPointField extends InputField
 {

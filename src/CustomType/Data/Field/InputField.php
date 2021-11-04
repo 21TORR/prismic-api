@@ -36,7 +36,7 @@ class InputField implements PrismicTypeInterface
 	{
 		return \array_filter(
 			$config,
-			static fn ($entry) => null !== $entry
+			static fn ($entry) => null !== $entry,
 		);
 	}
 }

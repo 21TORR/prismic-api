@@ -5,7 +5,7 @@ namespace Torr\PrismicApi\CustomType\Data\Field;
 use Torr\PrismicApi\CustomType\Data\Part\ImageConstraint;
 
 /**
- * @link https://prismic.io/docs/core-concepts/rich-text-title
+ * @see https://prismic.io/docs/core-concepts/rich-text-title
  */
 class RichTextField extends InputField
 {

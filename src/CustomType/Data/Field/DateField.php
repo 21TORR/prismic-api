@@ -3,7 +3,7 @@
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
 /**
- * @link https://prismic.io/docs/core-concepts/date
+ * @see https://prismic.io/docs/core-concepts/date
  */
 final class DateField extends InputField
 {

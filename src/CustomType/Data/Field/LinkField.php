@@ -5,7 +5,7 @@ namespace Torr\PrismicApi\CustomType\Data\Field;
 use Torr\PrismicApi\CustomType\Exception\InvalidTypeDefinitionException;
 
 /**
- * @link https://prismic.io/docs/core-concepts/link-content-relationship
+ * @see https://prismic.io/docs/core-concepts/link-content-relationship
  */
 final class LinkField extends InputField
 {

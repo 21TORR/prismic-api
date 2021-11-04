@@ -5,7 +5,7 @@ namespace Torr\PrismicApi\CustomType\Data\Field;
 /**
  * This is called "Key Text" in the Prismic UI
  *
- * @link https://prismic.io/docs/core-concepts/key-text
+ * @see https://prismic.io/docs/core-concepts/key-text
  */
 final class TextField extends InputField
 {

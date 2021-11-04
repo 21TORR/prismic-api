@@ -3,7 +3,7 @@
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
 /**
- * @link https://prismic.io/docs/core-concepts/integration-fields
+ * @see https://prismic.io/docs/core-concepts/integration-fields
  */
 final class IntegrationField extends InputField
 {

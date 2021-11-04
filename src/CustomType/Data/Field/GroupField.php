@@ -5,7 +5,7 @@ namespace Torr\PrismicApi\CustomType\Data\Field;
 use Torr\PrismicApi\CustomType\Helper\KeyedMapHelper;
 
 /**
- * @link https://prismic.io/docs/core-concepts/group
+ * @see https://prismic.io/docs/core-concepts/group
  */
 final class GroupField extends InputField
 {
