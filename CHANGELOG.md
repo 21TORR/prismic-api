@@ -1,3 +1,11 @@
+1.0.2
+=====
+
+*   (bug) Fix invalid link type key.
+*   (bug) Fix invalid check on whether the custom type already exists.
+*   (improvement) Mark `PrismicTypeInterface` as internal.
+
+
 1.0.1
 =====
 
