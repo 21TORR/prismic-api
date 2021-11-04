@@ -2,6 +2,9 @@
 
 namespace Torr\PrismicApi\CustomType\Data;
 
+/**
+ * @internal
+ */
 interface PrismicTypeInterface
 {
 	/**
