@@ -35,7 +35,7 @@ final class LinkField extends InputField
 	)
 	{
 		$hasDocumentFilter = !empty($customTypes) || !empty($tags);
-		$selectsDocuments = self::SELECT_ALL === $select || self::SELECT_DOCUMENT;
+		$selectsDocuments = self::SELECT_ALL === $select || self::SELECT_DOCUMENT === $select;
 
 		if ($hasDocumentFilter && !$selectsDocuments)
 		{
