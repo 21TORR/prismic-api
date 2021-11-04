@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Torr\PrismicApi\CustomType\Data;
+namespace Torr\PrismicApi\CustomType\Data\Field;
+
+use Torr\PrismicApi\CustomType\Data\PrismicTypeInterface;
 
 /**
  * Low-level input field wrapper
  */
-abstract class InputField
+class InputField implements PrismicTypeInterface
 {
 	private string $type;
 	private array $config;

@@ -2,13 +2,17 @@
 
 namespace Torr\PrismicApi\CustomType\Data;
 
+use Torr\PrismicApi\CustomType\Data\Field\InputField;
+use Torr\PrismicApi\CustomType\Data\Slice\SliceZone;
+use Torr\PrismicApi\CustomType\Helper\KeyedMapHelper;
+
 /**
  * A single tab in the prismic editing UI / data structure
  */
-final class TypeTab
+final class TypeTab implements PrismicTypeInterface
 {
 	/**
-	 * @param array<string, InputField> $fields
+	 * @param array<string, InputField|SliceZone> $fields
 	 */
 	public function __construct (
 		private string $label,
@@ -30,13 +34,6 @@ final class TypeTab
 	 */
 	public function toArray () : array
 	{
-		$result = [];
-
-		foreach ($this->fields as $key => $field)
-		{
-			$result[$key] = $field->toArray();
-		}
-
-		return $result;
+		return KeyedMapHelper::transformKeyedListOfTypes($this->fields);
 	}
 }
