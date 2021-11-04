@@ -60,7 +60,7 @@ class RichTextField extends InputField
 		parent::__construct(self::TYPE_KEY, $this->filterOptionalFields([
 			"label" => $label,
 			"placeholder" => $placeholder,
-			$stylesKey => $styles,
+			$stylesKey => \implode(", ", $styles),
 			"allowTargetBlank" => $allowTargetBlankForLinks,
 			"imageConstraint" => $imageConstraint?->toArray(),
 		]));

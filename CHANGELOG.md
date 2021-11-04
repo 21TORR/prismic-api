@@ -1,3 +1,9 @@
+1.0.1
+=====
+
+*   (bug) Properly pass rich text config.
+
+
 1.0.0
 =====
 
