@@ -20,11 +20,11 @@ final class BooleanField extends InputField
 		?string $placeholderTrue = null,
 	)
 	{
-		parent::__construct(self::TYPE_KEY, [
+		parent::__construct(self::TYPE_KEY, $this->filterOptionalFields([
 			"label" => $label,
 			"placeholder_false" => $placeholderFalse,
 			"placeholder_true" => $placeholderTrue,
 			"default_value" => $defaultValue,
-		]);
+		]));
 	}
 }

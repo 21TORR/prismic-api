@@ -20,11 +20,11 @@ final class NumberField extends InputField
 		?int $max = null,
 	)
 	{
-		parent::__construct(self::TYPE_KEY, [
+		parent::__construct(self::TYPE_KEY, $this->filterOptionalFields([
 			"label" => $label,
 			"placeholder" => $placeholder,
 			"min" => $min,
 			"max" => $max,
-		]);
+		]));
 	}
 }

@@ -17,8 +17,8 @@ final class ColorField extends InputField
 		string $label,
 	)
 	{
-		parent::__construct(self::TYPE_KEY, [
+		parent::__construct(self::TYPE_KEY, $this->filterOptionalFields([
 			"label" => $label,
-		]);
+		]));
 	}
 }

@@ -19,9 +19,9 @@ final class DateField extends InputField
 		?string $default = null,
 	)
 	{
-		parent::__construct(self::TYPE_KEY, [
+		parent::__construct(self::TYPE_KEY, $this->filterOptionalFields([
 			"label" => $label,
 			"default" => $default,
-		]);
+		]));
 	}
 }

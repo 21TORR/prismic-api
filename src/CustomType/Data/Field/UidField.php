@@ -18,9 +18,9 @@ final class UidField extends InputField
 		?string $placeholder = null,
 	)
 	{
-		parent::__construct(self::TYPE_KEY, [
+		parent::__construct(self::TYPE_KEY, $this->filterOptionalFields([
 			"label" => $label,
 			"placeholder" => $placeholder,
-		]);
+		]));
 	}
 }

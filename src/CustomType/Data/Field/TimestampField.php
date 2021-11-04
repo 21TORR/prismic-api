@@ -20,10 +20,10 @@ final class TimestampField extends InputField
 		?string $default = null,
 	)
 	{
-		parent::__construct(self::TYPE_KEY, [
+		parent::__construct(self::TYPE_KEY, $this->filterOptionalFields([
 			"label" => $label,
 			"placeholder" => $placeholder,
 			"default" => $default,
-		]);
+		]));
 	}
 }
