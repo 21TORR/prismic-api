@@ -2,6 +2,7 @@
 =====
 
 *   (bug) Add missing filter for optional fields in `SelectField`.
+*   (improvement) Make `Slice` extendable.
 
 
 1.0.2
