@@ -22,11 +22,11 @@ final class SelectField extends InputField
 		?string $placeholder = null,
 	)
 	{
-		parent::__construct(self::TYPE_KEY, [
+		parent::__construct(self::TYPE_KEY, $this->filterOptionalFields([
 			"label" => $label,
 			"placeholder" => $placeholder,
 			"options" => $options,
 			"default_value" => $default_value,
-		]);
+		]));
 	}
 }

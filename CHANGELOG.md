@@ -1,3 +1,9 @@
+1.0.3
+=====
+
+*   (bug) Add missing filter for optional fields in `SelectField`.
+
+
 1.0.2
 =====
 
