@@ -4,6 +4,7 @@ namespace Torr\PrismicApi\CustomType\Data\Slice;
 
 use Torr\PrismicApi\CustomType\Data\Field\InputField;
 use Torr\PrismicApi\CustomType\Data\PrismicTypeInterface;
+use Torr\PrismicApi\CustomType\Exception\InvalidTypeDefinitionException;
 
 /**
  * You can extend this class to create reusable slices
@@ -18,13 +19,16 @@ class Slice implements PrismicTypeInterface
 	 */
 	public function __construct (
 		private string $label,
-		private array $fields,
-		private array $repeatedFields,
+		private array $fields = [],
+		private array $repeatedFields = [],
 		private ?string $description = null,
 		private ?string $icon = null,
 	)
 	{
-
+		if (empty($this->fields) && empty($this->repeatedFields))
+		{
+			throw new InvalidTypeDefinitionException("Can't define slice without fields.");
+		}
 	}
 
 	/**

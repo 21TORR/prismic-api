@@ -1,3 +1,9 @@
+1.0.4
+=====
+
+*   (improvement) Make custom type `Slice` easier to use.
+
+
 1.0.3
 =====
 
