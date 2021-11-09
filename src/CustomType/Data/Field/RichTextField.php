@@ -3,6 +3,7 @@
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
 use Torr\PrismicApi\CustomType\Data\Part\ImageConstraint;
+use Torr\PrismicApi\CustomType\Helper\FilterFieldsHelper;
 
 /**
  * @see https://prismic.io/docs/core-concepts/rich-text-title
@@ -57,7 +58,7 @@ class RichTextField extends InputField
 
 		$stylesKey = $allowsMultipleLines ? "multi" : "single";
 
-		parent::__construct(self::TYPE_KEY, $this->filterOptionalFields([
+		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([
 			"label" => $label,
 			"placeholder" => $placeholder,
 			$stylesKey => \implode(", ", $styles),

@@ -2,6 +2,8 @@
 
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
+use Torr\PrismicApi\CustomType\Helper\FilterFieldsHelper;
+
 /**
  * @see https://prismic.io/docs/core-concepts/date
  */
@@ -19,7 +21,7 @@ final class DateField extends InputField
 		?string $default = null,
 	)
 	{
-		parent::__construct(self::TYPE_KEY, $this->filterOptionalFields([
+		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([
 			"label" => $label,
 			"default" => $default,
 		]));

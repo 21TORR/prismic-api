@@ -2,6 +2,8 @@
 
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
+use Torr\PrismicApi\CustomType\Helper\FilterFieldsHelper;
+
 /**
  * @see https://prismic.io/docs/core-concepts/number
  */
@@ -20,7 +22,7 @@ final class NumberField extends InputField
 		?int $max = null,
 	)
 	{
-		parent::__construct(self::TYPE_KEY, $this->filterOptionalFields([
+		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([
 			"label" => $label,
 			"placeholder" => $placeholder,
 			"min" => $min,

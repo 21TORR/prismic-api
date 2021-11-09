@@ -1,3 +1,9 @@
+1.0.5
+=====
+*   (improvement) Extract `filterOptionalFields` to `FilterFieldsHelper`.
+*   (bug) Add missing filter for optional fields in `Slice`.
+
+
 1.0.4
 =====
 

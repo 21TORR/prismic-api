@@ -5,6 +5,8 @@ namespace Torr\PrismicApi\CustomType\Data\Slice;
 use Torr\PrismicApi\CustomType\Data\Field\InputField;
 use Torr\PrismicApi\CustomType\Data\PrismicTypeInterface;
 use Torr\PrismicApi\CustomType\Exception\InvalidTypeDefinitionException;
+use Torr\PrismicApi\CustomType\Helper\FilterFieldsHelper;
+use Torr\PrismicApi\CustomType\Helper\KeyedMapHelper;
 
 /**
  * You can extend this class to create reusable slices
@@ -35,13 +37,13 @@ class Slice implements PrismicTypeInterface
 	 */
 	final public function toArray () : array
 	{
-		return [
+		return FilterFieldsHelper::filterOptionalFields([
 			"type" => "Slice",
 			"fieldset" => $this->label,
 			"description" => $this->description,
 			"icon" => $this->icon,
-			"non-repeat" => $this->fields,
-			"repeat" => $this->repeatedFields,
-		];
+			"non-repeat" => KeyedMapHelper::transformKeyedListOfTypes($this->fields),
+			"repeat" => KeyedMapHelper::transformKeyedListOfTypes($this->repeatedFields),
+		]);
 	}
 }
