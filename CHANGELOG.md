@@ -2,8 +2,8 @@
 =====
 
 *   (improvement) Extract `filterOptionalFields` to `FilterFieldsHelper`.
+*   (improvement) Filter empty arrays in `filterOptionalFields` out.
 *   (bug) Add missing filter for optional fields in `Slice`.
-*   (bug) Set `repeat` or `non-repeat` in `Slice` to `null`, if empty.
 *   (bug) Fix wrong value of `[config][labels]` in `SliceZone`.
 
 

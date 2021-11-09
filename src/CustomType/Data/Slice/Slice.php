@@ -42,8 +42,8 @@ class Slice implements PrismicTypeInterface
 			"fieldset" => $this->label,
 			"description" => $this->description,
 			"icon" => $this->icon,
-			"non-repeat" => !empty($this->fields) ? KeyedMapHelper::transformKeyedListOfTypes($this->fields) : null,
-			"repeat" => !empty($this->repeatedFields) ? KeyedMapHelper::transformKeyedListOfTypes($this->repeatedFields) : null,
+			"non-repeat" => KeyedMapHelper::transformKeyedListOfTypes($this->fields),
+			"repeat" => KeyedMapHelper::transformKeyedListOfTypes($this->repeatedFields),
 		]);
 	}
 }
