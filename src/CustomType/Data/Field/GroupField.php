@@ -2,6 +2,7 @@
 
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
+use Torr\PrismicApi\CustomType\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\CustomType\Helper\KeyedMapHelper;
 
 /**
@@ -23,7 +24,7 @@ final class GroupField extends InputField
 		?bool $repeat = false,
 	)
 	{
-		parent::__construct(self::TYPE_KEY, $this->filterOptionalFields([
+		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([
 			"label" => $label,
 			"repeat" => $repeat,
 			"fields" => KeyedMapHelper::transformKeyedListOfTypes($fields),

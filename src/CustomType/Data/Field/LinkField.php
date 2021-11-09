@@ -3,6 +3,7 @@
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
 use Torr\PrismicApi\CustomType\Exception\InvalidTypeDefinitionException;
+use Torr\PrismicApi\CustomType\Helper\FilterFieldsHelper;
 
 /**
  * @see https://prismic.io/docs/core-concepts/link-content-relationship
@@ -43,7 +44,7 @@ final class LinkField extends InputField
 		}
 
 
-		parent::__construct(self::TYPE_KEY, $this->filterOptionalFields([
+		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([
 			"label" => $label,
 			"placeholder" => $placeholder,
 			"select" => $select,

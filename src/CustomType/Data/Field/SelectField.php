@@ -2,6 +2,8 @@
 
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
+use Torr\PrismicApi\CustomType\Helper\FilterFieldsHelper;
+
 /**
  * @see https://prismic.io/docs/core-concepts/select
  */
@@ -22,7 +24,7 @@ final class SelectField extends InputField
 		?string $placeholder = null,
 	)
 	{
-		parent::__construct(self::TYPE_KEY, $this->filterOptionalFields([
+		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([
 			"label" => $label,
 			"placeholder" => $placeholder,
 			"options" => $options,

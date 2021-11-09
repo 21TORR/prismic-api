@@ -2,6 +2,8 @@
 
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
+use Torr\PrismicApi\CustomType\Helper\FilterFieldsHelper;
+
 /**
  * @see https://prismic.io/docs/core-concepts/embed
  */
@@ -18,7 +20,7 @@ final class EmbedField extends InputField
 		?string $placeholder = null,
 	)
 	{
-		parent::__construct(self::TYPE_KEY, $this->filterOptionalFields([
+		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([
 			"label" => $label,
 			"placeholder" => $placeholder,
 		]));
