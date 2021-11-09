@@ -13,7 +13,7 @@ final class FilterFieldsHelper
 	{
 		return \array_filter(
 			$config,
-			static fn ($entry) => null !== $entry && !(\is_array($entry) && 0 === \count($entry)),
+			static fn ($entry) => null !== $entry && [] !== $entry,
 		);
 	}
 }
