@@ -29,7 +29,7 @@ final class SliceZone implements PrismicTypeInterface
 			"type" => "Slices",
 			"fieldset" => $this->label,
 			"config" => [
-				"labels" => [],
+				"labels" => null,
 				"choices" => KeyedMapHelper::transformKeyedListOfTypes($this->choices),
 			],
 		];
