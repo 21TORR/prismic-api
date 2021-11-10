@@ -58,7 +58,11 @@ final class PrismicApi
 	/**
 	 * Searches for documents, according to the given predicates
 	 */
-	public function searchDocuments (string $predicates, ?string $ref = null) : array
+	public function searchDocuments (
+		string $language,
+		string $predicates,
+		?string $ref = null,
+	) : array
 	{
 		$allResults = [];
 		$page = 1;
@@ -68,6 +72,7 @@ final class PrismicApi
 		{
 			$response = $this->requestContent("documents/search", [
 				"ref" => $ref ?? $this->getEnvironment()->getMasterRefId(),
+				"lang" => $language,
 				"q" => $predicates,
 				"pageSize" => 100,
 				"page" => $page,
