@@ -1,3 +1,10 @@
+2.0.0
+=====
+
+*   (feature) Add language support for the API client.
+*   (bc) Add language as required parameter to `PrismicApi::searchDocuments()`.
+
+
 1.0.5
 =====
 
