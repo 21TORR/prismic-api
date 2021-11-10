@@ -34,6 +34,15 @@ final class Environment extends Dataset
 	}
 
 
+	/**
+	 * @return array<string, string>
+	 */
+	public function getLanguages () : array
+	{
+		return $this->languages;
+	}
+
+
 	//region Sanitize & Validate
 	/**
 	 */

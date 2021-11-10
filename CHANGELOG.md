@@ -1,3 +1,9 @@
+2.0.1
+=====
+
+*   (improvement) Add languages getter for `Environment`.
+
+
 2.0.0
 =====
 
