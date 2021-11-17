@@ -59,8 +59,8 @@ final class PrismicApi
 	 * Searches for documents, according to the given predicates
 	 */
 	public function searchDocuments (
-		string $language,
 		string $predicates,
+		?string $language = null,
 		?string $ref = null,
 	) : array
 	{
@@ -70,13 +70,19 @@ final class PrismicApi
 
 		while ($page <= $maxPage)
 		{
-			$response = $this->requestContent("documents/search", [
+			$query = [
 				"ref" => $ref ?? $this->getEnvironment()->getMasterRefId(),
-				"lang" => $language,
 				"q" => $predicates,
 				"pageSize" => 100,
 				"page" => $page,
-			]);
+			];
+
+			if (null !== $language)
+			{
+				$query["lang"] = $language;
+			}
+
+			$response = $this->requestContent("documents/search", $query);
 
 			foreach ($response["results"] as $result)
 			{

@@ -1,3 +1,10 @@
+3.0.0
+=====
+
+*   (improvement) Language is optional again in `PrismicApi::searchDocuments()`.
+*   (bc) Change order of parameters in `PrismicApi::searchDocuments()`.
+
+
 2.0.1
 =====
 
