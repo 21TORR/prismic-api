@@ -28,6 +28,7 @@ final class PrismicTypesMigrateCommand extends Command
 		parent::__construct(null);
 	}
 
+
 	/**
 	 * @inheritDoc
 	 */

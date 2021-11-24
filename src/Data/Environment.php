@@ -6,17 +6,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Torr\PrismicApi\Exception\Data\InvalidDataStructureException;
 
-final class Environment extends Dataset
+final class Environment
 {
+	use DataStructureValidationTrait;
 	private string $masterRefId;
 	private array $languages = [];
 
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct (array $data)
+	public function __construct (
+		private array $data,
+	)
 	{
-		parent::__construct($data);
+		$this->validateDataStructure($this->data, $this->getValidationConstraints());
 		$this->masterRefId = $this->findMasterRefId($data["refs"]);
 
 		foreach ($data["languages"] as $language)

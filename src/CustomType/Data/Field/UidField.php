@@ -2,6 +2,7 @@
 
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\CustomType\Helper\FilterFieldsHelper;
 
 /**
@@ -24,5 +25,16 @@ final class UidField extends InputField
 			"label" => $label,
 			"placeholder" => $placeholder,
 		]));
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getValidationConstraints () : array
+	{
+		return [
+			new Assert\NotNull(),
+			new Assert\Type("string"),
+		];
 	}
 }

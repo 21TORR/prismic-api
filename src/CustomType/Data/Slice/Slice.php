@@ -2,18 +2,21 @@
 
 namespace Torr\PrismicApi\CustomType\Data\Slice;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\CustomType\Data\Field\InputField;
 use Torr\PrismicApi\CustomType\Data\PrismicTypeInterface;
 use Torr\PrismicApi\CustomType\Exception\InvalidTypeDefinitionException;
 use Torr\PrismicApi\CustomType\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\CustomType\Helper\KeyedMapHelper;
+use Torr\PrismicApi\Exception\Transform\TransformationFailedException;
+use Torr\PrismicApi\Transform\FieldValueTransformer;
 
 /**
  * You can extend this class to create reusable slices
  *
  * @see https://prismic.io/docs/core-concepts/slices
  */
-class Slice implements PrismicTypeInterface
+abstract class Slice implements PrismicTypeInterface
 {
 	/**
 	 * @param array<string, InputField> $fields
@@ -45,5 +48,141 @@ class Slice implements PrismicTypeInterface
 			"non-repeat" => KeyedMapHelper::transformKeyedListOfTypes($this->fields),
 			"repeat" => KeyedMapHelper::transformKeyedListOfTypes($this->repeatedFields),
 		]);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getValidationConstraints () : array
+	{
+		$itemsConstraints = [];
+		$primaryConstraints = [];
+
+		if (!empty($this->fields))
+		{
+			$fields = [];
+
+			foreach ($this->fields as $key => $field)
+			{
+				$fields[$key] = $field->getValidationConstraints();
+			}
+
+			$primaryConstraints[] = new Assert\Collection([
+				"fields" => $fields,
+				"allowMissingFields" => true,
+				"allowExtraFields" => true,
+			]);
+		}
+
+		if (!empty($this->repeatedFields))
+		{
+			$fields = [];
+
+			foreach ($this->repeatedFields as $key => $field)
+			{
+				$fields[$key] = $field->getValidationConstraints();
+			}
+
+			$itemsConstraints[] = new Assert\All([
+				"constraints" => [
+					new Assert\Collection([
+						"fields" => $fields,
+						"allowMissingFields" => true,
+						"allowExtraFields" => true,
+					]),
+				],
+			]);
+		}
+
+		return [
+			new Assert\NotNull(),
+			new Assert\Type("array"),
+			new Assert\Collection([
+				"fields" => [
+					"items" => [
+						new Assert\NotNull(),
+						new Assert\Type("array"),
+						...$itemsConstraints,
+					],
+					"primary" => [
+						new Assert\NotNull(),
+						new Assert\Type("array"),
+						...$primaryConstraints,
+					],
+				],
+				"allowExtraFields" => true,
+				"allowMissingFields" => false,
+			]),
+		];
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function transformValue (mixed $data, FieldValueTransformer $valueTransformer) : mixed
+	{
+		\assert(\is_array($data));
+		$result = [
+			"data" => [],
+			"items" => [],
+		];
+
+		foreach ($this->fields as $key => $field)
+		{
+			$result["data"][$key] = $this->transformSingleValue(
+				$valueTransformer,
+				$this->fields,
+				$key,
+				$data["primary"][$key] ?? null,
+			);
+		}
+
+		foreach ($data["items"] as $itemsData)
+		{
+			$transformedItem = [];
+
+			foreach ($this->repeatedFields as $key => $field)
+			{
+				$transformedItem[$key] = $this->transformSingleValue(
+					$valueTransformer,
+					$this->repeatedFields,
+					$key,
+					$itemsData[$key] ?? null,
+				);
+			}
+
+			$result["items"][] = $transformedItem;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * @param array<string, InputField> $fields
+	 */
+	private function transformSingleValue (
+		FieldValueTransformer $valueTransformer,
+		array $fields,
+		?string $key,
+		mixed $fieldData,
+	) : mixed
+	{
+		if (null === $fieldData)
+		{
+			return null;
+		}
+
+		$field = $fields[$key] ?? null;
+
+		if (null === $field)
+		{
+			throw new TransformationFailedException(\sprintf(
+				"No field found for key '%s' in slice '%s'",
+				$key,
+				static::class,
+			));
+		}
+
+		return $field->transformValue($fieldData, $valueTransformer);
 	}
 }

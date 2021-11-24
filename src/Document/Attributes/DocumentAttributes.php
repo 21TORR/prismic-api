@@ -1,22 +1,21 @@
 <?php declare(strict_types=1);
 
-namespace Torr\PrismicApi\Data\Document;
+namespace Torr\PrismicApi\Document\Attributes;
 
+use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints as Assert;
-use Torr\PrismicApi\Data\Dataset;
 
-final class DocumentAttributes extends Dataset
+final class DocumentAttributes
 {
 	private \DateTimeImmutable $firstPublicationDate;
 	private \DateTimeImmutable $lastPublicationDate;
 
 	/**
-	 * @inheritDoc
 	 */
-	public function __construct (array $data)
+	public function __construct (
+		private array $data,
+	)
 	{
-		parent::__construct($data);
-
 		$this->firstPublicationDate = $this->parseDate($data["first_publication_date"]);
 		$this->lastPublicationDate = $this->parseDate($data["last_publication_date"]);
 	}
@@ -86,9 +85,9 @@ final class DocumentAttributes extends Dataset
 
 
 	/**
-	 * @inheritDoc
+	 * @return Constraint[]
 	 */
-	protected function getValidationConstraints () : array
+	public static function getValidationConstraints () : array
 	{
 		return [
 			new Assert\Collection([

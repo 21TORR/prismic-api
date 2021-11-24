@@ -27,4 +27,13 @@ final class IntegrationField extends InputField
 			"placeholder" => $placeholder,
 		]));
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getValidationConstraints () : array
+	{
+		// @todo add validation
+		return [];
+	}
 }

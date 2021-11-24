@@ -52,4 +52,13 @@ final class LinkField extends InputField
 			"tags" => $tags,
 		]));
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getValidationConstraints () : array
+	{
+		// @todo add validation
+		return [];
+	}
 }

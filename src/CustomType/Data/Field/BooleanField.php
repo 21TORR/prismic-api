@@ -2,6 +2,7 @@
 
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\CustomType\Helper\FilterFieldsHelper;
 
 /**
@@ -20,6 +21,7 @@ final class BooleanField extends InputField
 		bool $defaultValue = false,
 		?string $placeholderFalse = null,
 		?string $placeholderTrue = null,
+		private bool $required = false,
 	)
 	{
 		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([
@@ -28,5 +30,22 @@ final class BooleanField extends InputField
 			"placeholder_true" => $placeholderTrue,
 			"default_value" => $defaultValue,
 		]));
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getValidationConstraints () : array
+	{
+		$constraints = [
+			new Assert\Type("bool"),
+		];
+
+		if ($this->required)
+		{
+			$constraints[] = new Assert\NotNull();
+		}
+
+		return $constraints;
 	}
 }

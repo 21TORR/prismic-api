@@ -2,6 +2,7 @@
 
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\CustomType\Helper\FilterFieldsHelper;
 
 /**
@@ -19,11 +20,30 @@ final class DateField extends InputField
 	public function __construct (
 		string $label,
 		?string $default = null,
+		private bool $required = false,
 	)
 	{
 		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([
 			"label" => $label,
 			"default" => $default,
 		]));
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getValidationConstraints () : array
+	{
+		$constraints = [
+			new Assert\Type("string"),
+			new Assert\Date(),
+		];
+
+		if ($this->required)
+		{
+			$constraints[] = new Assert\NotNull();
+		}
+
+		return $constraints;
 	}
 }

@@ -9,35 +9,29 @@ use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Torr\PrismicApi\CustomType\CustomTypeDefinition;
 use Torr\PrismicApi\Data\Environment;
+use Torr\PrismicApi\Document\Document;
+use Torr\PrismicApi\Document\Factory\DocumentFactory;
 use Torr\PrismicApi\Exception\Api\RequestFailedException;
+use Torr\PrismicApi\Exception\Data\InvalidDocumentTypeException;
 
 final class PrismicApi
 {
-	private string $repository;
-	private string $contentToken;
-	private string $typesToken;
 	private HttpClientInterface $contentClient;
 	private HttpClientInterface $typesClient;
-	private LoggerInterface $logger;
 	private ?Environment $environment = null;
 
 	/**
 	 */
 	public function __construct (
-		LoggerInterface $logger,
-		string $repository,
-		string $contentToken,
-		string $typesToken,
+		private LoggerInterface $logger,
+		private DocumentFactory $documentFactory,
+		private string $repository,
+		private string $contentToken,
+		private string $typesToken,
 	) {
-		$this->repository = $repository;
-		$this->contentToken = $contentToken;
-		$this->typesToken = $typesToken;
-
 		$this->contentClient = HttpClient::createForBaseUri("https://{$repository}.prismic.io/api/v2/");
 		$this->typesClient = HttpClient::createForBaseUri("https://customtypes.prismic.io/");
-		$this->logger = $logger;
 	}
 
 
@@ -57,22 +51,42 @@ final class PrismicApi
 
 	/**
 	 * Searches for documents, according to the given predicates
+	 *
+	 * @phpstan-template T of Document
+	 * @phpstan-param class-string<T> $documentType
+	 * @phpstan-return T[]
+	 *
+	 * @return Document[]
 	 */
 	public function searchDocuments (
-		string $predicates,
+		string $documentType,
+		array $predicates = [],
 		?string $language = null,
 		?string $ref = null,
 	) : array
 	{
+		if (!\is_a($documentType, Document::class, true))
+		{
+			throw new InvalidDocumentTypeException(\sprintf(
+				"Document type '%s' must be a subclass of Document.",
+				$documentType,
+			));
+		}
+
 		$allResults = [];
 		$page = 1;
 		$maxPage = 1;
+
+		$predicates[] = \sprintf(
+			'[[at(document.type, "%s")]]',
+			$documentType::getDocumentTypeId(),
+		);
 
 		while ($page <= $maxPage)
 		{
 			$query = [
 				"ref" => $ref ?? $this->getEnvironment()->getMasterRefId(),
-				"q" => $predicates,
+				"q" => \implode("", $predicates),
 				"pageSize" => 100,
 				"page" => $page,
 			];
@@ -86,7 +100,7 @@ final class PrismicApi
 
 			foreach ($response["results"] as $result)
 			{
-				$allResults[] = $result;
+				$allResults[] = $this->documentFactory->createDocument($documentType, $result);
 			}
 
 			$maxPage = $response["total_pages"];
@@ -95,66 +109,6 @@ final class PrismicApi
 
 		return $allResults;
 	}
-
-
-	/**
-	 * Pushes the type definition to prismic
-	 *
-	 * @return bool whether the type was newly created (true) or just updated (false)
-	 */
-	public function pushTypeDefinition (CustomTypeDefinition $typeDefinition) : bool
-	{
-		$stored = $this->fetchesTypeConfig($typeDefinition);
-		$alreadyExists = [] !== $stored;
-
-		$data = [];
-
-		foreach ($typeDefinition->getTabs() as $tab)
-		{
-			$data[$tab->getLabel()] = $tab->toArray();
-		}
-
-		$this->requestType(
-			path: $alreadyExists
-				? "customtypes/update"
-				: "customtypes/insert",
-			payload: [
-				"id" => $typeDefinition->getId(),
-				"label" => $typeDefinition->getLabel(),
-				"repeatable" => $typeDefinition->isRepeatable(),
-				"json" => $data,
-				"status" => $typeDefinition->isActive(),
-			],
-			method: "POST",
-		);
-
-		return !$alreadyExists;
-	}
-
-
-	// region Type Config specific fetcher
-	/**
-	 * Fetches the currently stored type config for the given type
-	 */
-	private function fetchesTypeConfig (CustomTypeDefinition $typeDefinition) : ?array
-	{
-		try
-		{
-			return $this->requestType("customtypes/{$typeDefinition->getId()}");
-		}
-		catch (RequestFailedException $exception)
-		{
-			$previous = $exception->getPrevious();
-
-			if ($previous instanceof HttpExceptionInterface && 404 === $previous->getResponse()->getStatusCode())
-			{
-				return null;
-			}
-
-			throw $exception;
-		}
-	}
-	// endregion
 
 
 	// region HTTP wrappers

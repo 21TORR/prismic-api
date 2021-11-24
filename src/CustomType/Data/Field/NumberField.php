@@ -2,6 +2,7 @@
 
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\CustomType\Helper\FilterFieldsHelper;
 
 /**
@@ -18,15 +19,41 @@ final class NumberField extends InputField
 	public function __construct (
 		string $label,
 		?string $placeholder = null,
-		?int $min = null,
-		?int $max = null,
+		private ?int $min = null,
+		private ?int $max = null,
+		private bool $required = false,
 	)
 	{
 		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([
 			"label" => $label,
 			"placeholder" => $placeholder,
-			"min" => $min,
-			"max" => $max,
+			"min" => $this->min,
+			"max" => $this->max,
 		]));
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getValidationConstraints () : array
+	{
+		$constraints = [
+			new Assert\Type("numeric"),
+		];
+
+		if ($this->required)
+		{
+			$constraints[] = new Assert\NotNull();
+		}
+
+		if (null !== $this->min || null !== $this->max)
+		{
+			$constraints[] = new Assert\Range(
+				min: $this->min,
+				max: $this->max,
+			);
+		}
+
+		return $constraints;
 	}
 }

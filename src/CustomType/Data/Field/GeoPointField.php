@@ -2,6 +2,7 @@
 
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\CustomType\Helper\FilterFieldsHelper;
 
 /**
@@ -17,10 +18,42 @@ final class GeoPointField extends InputField
 	 */
 	public function __construct (
 		string $label,
+		private bool $required = false,
 	)
 	{
 		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([
 			"label" => $label,
 		]));
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getValidationConstraints () : array
+	{
+		$constraints = [
+			new Assert\Type("array"),
+			new Assert\Collection([
+				"fields" => [
+					"latitude" => [
+						new Assert\NotNull(),
+						new Assert\Type("float"),
+					],
+					"longitude" => [
+						new Assert\NotNull(),
+						new Assert\Type("float"),
+					],
+				],
+				"allowExtraFields" => true,
+				"allowMissingFields" => false,
+			]),
+		];
+
+		if ($this->required)
+		{
+			$constraints[] = new Assert\NotNull();
+		}
+
+		return $constraints;
 	}
 }

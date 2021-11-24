@@ -24,8 +24,8 @@ final class PrismicApiBundle extends Bundle
 		$container->registerForAutoconfiguration(LinkGeneratorHandler::class)
 			->addTag("prismic.link_generator");
 
-		$container->registerForAutoconfiguration(CustomTypeDefinition::class)
-			->addTag("prismic.type-definition");
+		//$container->registerForAutoconfiguration(CustomTypeDefinition::class)
+		//	->addTag("prismic.type-definition");
 	}
 
 

@@ -2,6 +2,7 @@
 
 namespace Torr\PrismicApi\CustomType\Data\Field;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\CustomType\Helper\FilterFieldsHelper;
 
 /**
@@ -19,16 +20,38 @@ final class SelectField extends InputField
 	 */
 	public function __construct (
 		string $label,
-		array $options,
+		private array $options,
 		?string $default_value = null,
 		?string $placeholder = null,
+		private bool $required = false,
 	)
 	{
 		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([
 			"label" => $label,
 			"placeholder" => $placeholder,
-			"options" => $options,
+			"options" => $this->options,
 			"default_value" => $default_value,
 		]));
+	}
+
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getValidationConstraints () : array
+	{
+		$constraints = [
+			new Assert\Type("string"),
+			new Assert\Choice(
+				choices: $this->options,
+			),
+		];
+
+		if ($this->required)
+		{
+			$constraints[] = new Assert\NotNull();
+		}
+
+		return $constraints;
 	}
 }

@@ -2,10 +2,9 @@
 
 namespace Torr\PrismicApi\CustomType\Data\Part;
 
-use Torr\PrismicApi\CustomType\Data\PrismicTypeInterface;
 use Torr\PrismicApi\CustomType\Exception\InvalidTypeDefinitionException;
 
-class ImageConstraint implements PrismicTypeInterface
+class ImageConstraint
 {
 	/**
 	 */
@@ -22,7 +21,7 @@ class ImageConstraint implements PrismicTypeInterface
 
 
 	/**
-	 * @inheritDoc
+	 *
 	 */
 	public function toArray () : array
 	{

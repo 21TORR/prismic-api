@@ -38,4 +38,13 @@ final class ImageField extends InputField
 				: null,
 		]));
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getValidationConstraints () : array
+	{
+		// @todo add validation
+		return [];
+	}
 }

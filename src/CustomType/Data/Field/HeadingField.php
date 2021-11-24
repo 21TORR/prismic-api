@@ -14,6 +14,7 @@ class HeadingField extends RichTextField
 		string $label,
 		array $headlineLevels = RichTextField::HEADINGS,
 		?string $placeholder = null,
+		bool $required = false,
 	)
 	{
 		parent::__construct(
@@ -21,6 +22,7 @@ class HeadingField extends RichTextField
 			styles: $headlineLevels,
 			allowsMultipleLines: false,
 			placeholder: $placeholder,
+			required: $required,
 		);
 	}
 }
