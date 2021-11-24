@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Torr\PrismicApi\Document\Factory;
+namespace Torr\PrismicApi\Factory;
 
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Document\Document;

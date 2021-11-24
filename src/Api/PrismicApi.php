@@ -11,9 +11,9 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Torr\PrismicApi\Data\Environment;
 use Torr\PrismicApi\Document\Document;
-use Torr\PrismicApi\Document\Factory\DocumentFactory;
 use Torr\PrismicApi\Exception\Api\RequestFailedException;
 use Torr\PrismicApi\Exception\Data\InvalidDocumentTypeException;
+use Torr\PrismicApi\Factory\DocumentFactory;
 
 final class PrismicApi
 {
@@ -109,6 +109,70 @@ final class PrismicApi
 
 		return $allResults;
 	}
+
+	/**
+	 * Pushes the type definition to prismic
+	 *
+	 * @phpstan-template T of Document
+	 * @phpstan-param class-string<T> $documentType
+	 *
+	 * @return bool whether the type was newly created (true) or just updated (false)
+	 */
+	public function pushTypeDefinition (string $documentType) : bool
+	{
+		\assert(\is_a($documentType, Document::class, true));
+
+		$stored = $this->fetchesTypeConfig($documentType);
+		$alreadyExists = [] !== $stored;
+
+		$configuration = $documentType::configureType();
+
+		$this->requestType(
+			path: $alreadyExists
+				? "customtypes/update"
+				: "customtypes/insert",
+			payload: [
+				"id" => $documentType::getDocumentTypeId(),
+				"label" => $configuration->getLabel(),
+				"repeatable" => $configuration->isRepeatable(),
+				"json" => $documentType::getEditorTabs()->getTypesDefinition(),
+				"status" => $configuration->isActive(),
+			],
+			method: "POST",
+		);
+
+		return !$alreadyExists;
+	}
+
+
+	// region Type Config specific fetcher
+	/**
+	 * Fetches the currently stored type config for the given type
+	 *
+	 * @phpstan-template T of Document
+	 * @phpstan-param class-string<T> $documentType
+	 */
+	private function fetchesTypeConfig (string $documentType) : ?array
+	{
+		\assert(\is_a($documentType, Document::class, true));
+
+		try
+		{
+			return $this->requestType("customtypes/{$documentType::getDocumentTypeId()}");
+		}
+		catch (RequestFailedException $exception)
+		{
+			$previous = $exception->getPrevious();
+
+			if ($previous instanceof HttpExceptionInterface && 404 === $previous->getResponse()->getStatusCode())
+			{
+				return null;
+			}
+
+			throw $exception;
+		}
+	}
+	// endregion
 
 
 	// region HTTP wrappers

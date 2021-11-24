@@ -9,19 +9,23 @@ use Torr\PrismicApi\Document\Attributes\DocumentAttributes;
 use Torr\PrismicApi\Document\Configuration\DocumentTypeConfiguration;
 use Torr\PrismicApi\Document\Editor\EditorTabs;
 use Torr\PrismicApi\Exception\Data\InvalidDataStructureException;
+use Torr\PrismicApi\Factory\DocumentFactory;
 
 /**
  * Base class for any document in Prismic
  */
-abstract class Document
+abstract class Document implements DocumentInterface
 {
 	protected array $data;
 	protected DocumentAttributes $attributes;
 	protected static ?EditorTabs $editorTabs = null;
 
 	/**
+	 * You should never create an instance manually, always use {@see DocumentFactory} instead.
+	 *
+	 * @internal
 	 */
-	final protected function __construct (array $data)
+	final public function __construct (array $data = [])
 	{
 		$this->data = $data["data"];
 		$this->attributes = new DocumentAttributes($data);
@@ -47,6 +51,7 @@ abstract class Document
 
 
 	/**
+	 * @internal
 	 */
 	public static function getEditorTabs () : EditorTabs
 	{
@@ -66,6 +71,8 @@ abstract class Document
 	/**
 	 * Returns the validation constraints to validate the given data from prismic,
 	 * according to field definitions.
+	 *
+	 * @internal
 	 *
 	 * @return Constraint[]
 	 */

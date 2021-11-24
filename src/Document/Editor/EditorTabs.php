@@ -4,6 +4,7 @@ namespace Torr\PrismicApi\Document\Editor;
 
 use Torr\PrismicApi\CustomType\Data\Field\InputField;
 use Torr\PrismicApi\CustomType\Data\Slice\SliceZone;
+use Torr\PrismicApi\CustomType\Helper\KeyedMapHelper;
 use Torr\PrismicApi\Exception\Document\InvalidDocumentStructureException;
 use Torr\PrismicApi\Exception\Document\MissingFieldException;
 
@@ -88,5 +89,19 @@ final class EditorTabs
 	public function getFields () : array
 	{
 		return $this->fields;
+	}
+
+	/**
+	 */
+	public function getTypesDefinition () : array
+	{
+		$result = [];
+
+		foreach ($this->tabs as $label => $fields)
+		{
+			$result[$label] = KeyedMapHelper::transformKeyedListOfTypes($fields);
+		}
+
+		return $result;
 	}
 }

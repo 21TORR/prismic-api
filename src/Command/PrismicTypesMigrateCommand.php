@@ -25,7 +25,7 @@ final class PrismicTypesMigrateCommand extends Command
 		private CommandHelper $commandHelper,
 	)
 	{
-		parent::__construct(null);
+		parent::__construct();
 	}
 
 
