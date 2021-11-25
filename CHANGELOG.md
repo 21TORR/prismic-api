@@ -1,3 +1,9 @@
+4.0.0-beta.3
+============
+
+*   (bug) Add empty extra field for slices.
+
+
 4.0.0-beta.2
 ============
 
