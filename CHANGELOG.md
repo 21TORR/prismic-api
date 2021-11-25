@@ -2,6 +2,7 @@
 ============
 
 *   (bug) Add empty extra field for slices.
+*   (improvement) Added `ImageValue` and `VideoValue`.
 
 
 4.0.0-beta.2
