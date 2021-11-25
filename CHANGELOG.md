@@ -1,3 +1,9 @@
+4.0.0-beta.2
+============
+
+*   (bug) Fix invalid index map key.
+
+
 4.0.0-beta.1
 ============
 

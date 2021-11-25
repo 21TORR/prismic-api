@@ -65,7 +65,7 @@ final class DocumentFactory
 
 			foreach ($this->documentDefinitions as $definition)
 			{
-				$this->definitionMap[$definition->getTypeId()] = $definition;
+				$this->definitionMap[$definition->getDataClass()] = $definition;
 			}
 		}
 
