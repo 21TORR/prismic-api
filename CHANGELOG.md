@@ -1,3 +1,9 @@
+4.0.0-beta.1
+============
+
+*   (bc) Completely refactor the whole implementation.
+
+
 3.0.0
 =====
 
