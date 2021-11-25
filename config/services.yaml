@@ -7,10 +7,12 @@ services:
         resource: ../src/*
         exclude:
             - '../src/Data'
+            - '../src/Definition'
             - '../src/Document/Data'
-            - '../src/CustomType/Data'
+            - '../src/Editor'
             - '../src/Exception'
             - '../src/PrismicApiBundle.php'
+            - '../src/Structure'
             - '../src/Validation'
 
     Torr\PrismicApi\Api\PrismicApi:
