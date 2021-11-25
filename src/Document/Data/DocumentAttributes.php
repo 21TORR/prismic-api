@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Torr\PrismicApi\Document\Attributes;
+namespace Torr\PrismicApi\Document\Data;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints as Assert;

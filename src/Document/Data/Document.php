@@ -2,7 +2,6 @@
 
 namespace Torr\PrismicApi\Document\Data;
 
-use Torr\PrismicApi\Document\Attributes\DocumentAttributes;
 use Torr\PrismicApi\Document\Editor\EditorTabs;
 use Torr\PrismicApi\Transform\FieldValueTransformer;
 

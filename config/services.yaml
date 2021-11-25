@@ -19,11 +19,11 @@ services:
         $contentToken: '%env(PRISMIC_CONTENT_API_TOKEN)%'
         $typesToken: '%env(PRISMIC_TYPES_API_TOKEN)%'
 
-    Torr\PrismicApi\CustomType\CustomTypesMigrator:
+    Torr\PrismicApi\Migration\TypesMigrator:
         $documentDefinitions: !tagged_iterator 'prismic.document.definition'
 
     Torr\PrismicApi\Factory\DocumentFactory:
-        $documentTypes: !tagged_iterator 'prismic.document.definition'
+        $documentDefinitions: !tagged_iterator 'prismic.document.definition'
 
     Torr\PrismicApi\RichText\LinkGenerator:
         $handlers: !tagged_iterator 'prismic.link_generator'
