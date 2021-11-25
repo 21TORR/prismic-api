@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Torr\PrismicApi\Document\Editor;
+namespace Tests\Torr\PrismicApi\Editor;
 
 use PHPUnit\Framework\TestCase;
 use Torr\PrismicApi\Structure\Field\TextField;

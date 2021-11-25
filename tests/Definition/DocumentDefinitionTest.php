@@ -1,16 +1,17 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Torr\PrismicApi\Document;
+namespace Tests\Torr\PrismicApi\Definition;
 
 use PHPUnit\Framework\TestCase;
 use Tests\Torr\PrismicApi\Fixtures\DocumentDataTrait;
+use Torr\PrismicApi\Data\Document;
+use Torr\PrismicApi\Definition\DocumentDefinition;
 use Torr\PrismicApi\Structure\Field\TextField;
 use Torr\PrismicApi\Definition\Configuration\DocumentTypeConfiguration;
-use Torr\PrismicApi\Document\Document;
 use Torr\PrismicApi\Editor\EditorTabs;
 use Torr\PrismicApi\Exception\Document\InvalidDocumentStructureException;
 
-final class DocumentTest extends TestCase
+final class DocumentDefinitionTest extends TestCase
 {
 	use DocumentDataTrait;
 
@@ -18,12 +19,12 @@ final class DocumentTest extends TestCase
 	 */
 	public function testEditorTabsAreCached () : void
 	{
-		$type = new class ($this->getExampleDocumentData()) extends Document
+		$type = new class extends DocumentDefinition
 		{
 			/**
 			 * @inheritDoc
 			 */
-			public static function getDocumentTypeId () : string
+			public function getTypeId () : string
 			{
 				return "test";
 			}
@@ -31,7 +32,15 @@ final class DocumentTest extends TestCase
 			/**
 			 * @inheritDoc
 			 */
-			public static function configureType () : DocumentTypeConfiguration
+			public function getDataClass () : string
+			{
+				return "test";
+			}
+
+			/**
+			 * @inheritDoc
+			 */
+			public function configureType () : DocumentTypeConfiguration
 			{
 				return new DocumentTypeConfiguration("Test");
 			}
@@ -39,7 +48,7 @@ final class DocumentTest extends TestCase
 			/**
 			 * @inheritDoc
 			 */
-			protected static function configureEditorTabs () : EditorTabs
+			protected function configureEditorTabs () : EditorTabs
 			{
 				return (new EditorTabs())
 					->addTab("Test", [
@@ -48,8 +57,8 @@ final class DocumentTest extends TestCase
 			}
 		};
 
-		$tabs = $type::getEditorTabs();
-		$tabs2 = $type::getEditorTabs();
+		$tabs = $type->getEditorTabs();
+		$tabs2 = $type->getEditorTabs();
 
 		self::assertSame($tabs, $tabs2);
 	}
@@ -58,12 +67,12 @@ final class DocumentTest extends TestCase
 	 */
 	public function testEmptyEditorTabsAreInvalid () : void
 	{
-		$type = new class ($this->getExampleDocumentData()) extends Document
+		$type = new class extends DocumentDefinition
 		{
 			/**
 			 * @inheritDoc
 			 */
-			public static function getDocumentTypeId () : string
+			public function getTypeId () : string
 			{
 				return "test";
 			}
@@ -71,7 +80,15 @@ final class DocumentTest extends TestCase
 			/**
 			 * @inheritDoc
 			 */
-			public static function configureType () : DocumentTypeConfiguration
+			public function getDataClass () : string
+			{
+				return "test";
+			}
+
+			/**
+			 * @inheritDoc
+			 */
+			public function configureType () : DocumentTypeConfiguration
 			{
 				return new DocumentTypeConfiguration("Test");
 			}
@@ -79,13 +96,13 @@ final class DocumentTest extends TestCase
 			/**
 			 * @inheritDoc
 			 */
-			protected static function configureEditorTabs () : EditorTabs
+			protected function configureEditorTabs () : EditorTabs
 			{
 				return (new EditorTabs());
 			}
 		};
 
 		$this->expectException(InvalidDocumentStructureException::class);
-		$type::getEditorTabs();
+		$type->getEditorTabs();
 	}
 }
