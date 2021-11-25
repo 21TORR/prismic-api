@@ -85,7 +85,7 @@ final class EmbedField extends InputField
 				],
 				"allowMissingFields" => false,
 				"allowExtraFields" => true,
-			])
+			]),
 		];
 	}
 
