@@ -2,8 +2,10 @@
 
 namespace Torr\PrismicApi\Structure\Field;
 
+use Torr\PrismicApi\Data\Value\DocumentLinkValue;
 use Torr\PrismicApi\Exception\Structure\InvalidTypeDefinitionException;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
+use Torr\PrismicApi\Transform\FieldValueTransformer;
 
 /**
  * @see https://prismic.io/docs/core-concepts/link-content-relationship
@@ -60,5 +62,34 @@ final class LinkField extends InputField
 	{
 		// @todo add validation
 		return [];
+	}
+
+
+	/**
+	 * @inheritDoc
+	 */
+	public function transformValue (mixed $data, FieldValueTransformer $valueTransformer) : mixed
+	{
+		$type = $data["link_type"] ?? null;
+
+		if ("Web" === $type)
+		{
+			return $data["url"] ?? null;
+		}
+
+		if ("Media" === $type)
+		{
+			return $data["url"] ?? null;
+		}
+
+		if ("Document" === $type && \is_string($data["id"]))
+		{
+			return new DocumentLinkValue(
+				$data["id"],
+				$data["type"] ?? null,
+			);
+		}
+
+		return null;
 	}
 }
