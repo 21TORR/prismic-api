@@ -25,6 +25,14 @@ final class EditorTabs
 	 */
 	public function addTab (string $label, array $fields) : self
 	{
+		if (empty($fields))
+		{
+			throw new InvalidDocumentStructureException(\sprintf(
+				"Can't add empty tab '%s'.",
+				$label,
+			));
+		}
+
 		foreach ($fields as $key => $field)
 		{
 			if (\array_key_exists($key, $this->fields))

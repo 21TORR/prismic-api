@@ -8,8 +8,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Torr\Cli\Command\CommandHelper;
 use Torr\Cli\Console\Style\TorrStyle;
-use Torr\PrismicApi\CustomType\CustomTypesMigrator;
 use Torr\PrismicApi\Exception\PrismicApiException;
+use Torr\PrismicApi\Migration\TypesMigrator;
 
 #[AsCommand(
 	name: "prismic:types:migrate",
@@ -21,7 +21,7 @@ final class PrismicTypesMigrateCommand extends Command
 	 * @inheritDoc
 	 */
 	public function __construct (
-		private CustomTypesMigrator $typesMigrator,
+		private TypesMigrator $typesMigrator,
 		private CommandHelper $commandHelper,
 	)
 	{

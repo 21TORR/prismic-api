@@ -3,32 +3,72 @@
 namespace Torr\PrismicApi\Factory;
 
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Torr\PrismicApi\Document\Document;
-use Torr\PrismicApi\Exception\Data\InvalidDocumentTypeException;
+use Torr\PrismicApi\Document\Data\Document;
+use Torr\PrismicApi\Document\Definition\DocumentDefinition;
+use Torr\PrismicApi\Exception\Document\MissingDocumentDefinitionException;
 
 final class DocumentFactory
 {
+	private ?array $definitionMap = null;
+
+	/**
+	 * @param iterable<DocumentDefinition> $documentDefinitions
+	 */
 	public function __construct (
+		private iterable $documentDefinitions,
 		private ValidatorInterface $validator,
 	)
 	{
 	}
 
+
+	/**
+	 * @phpstan-template T of Document
+	 * @phpstan-param DocumentDefinition<T> $definition
+	 * @phpstan-return T
+	 */
+	public function createDocument (DocumentDefinition $definition, array $data) : Document
+	{
+		return $definition->createDocument($data, $this->validator);
+	}
+
+
 	/**
 	 * @phpstan-template T of Document
 	 * @phpstan-param class-string<T> $documentType
-	 * @phpstan-return T
+	 * @phpstan-return DocumentDefinition<T>
 	 */
-	public function createDocument (string $documentType, array $data) : Document
+	public function getDefinitionForType (string $documentType) : DocumentDefinition
 	{
-		if (!\is_a($documentType, Document::class, true))
+		$definition = $this->getDocumentDefinitionMap()[$documentType] ?? null;
+
+		if (null === $definition)
 		{
-			throw new InvalidDocumentTypeException(\sprintf(
-				"Document type '%s' must be a subclass of Document.",
+			throw new MissingDocumentDefinitionException(\sprintf(
+				"Can't find document definition for document type '%s'",
 				$documentType,
 			));
 		}
 
-		return $documentType::create($data, $this->validator);
+		return $definition;
+	}
+
+
+	/**
+	 * @return array<string, DocumentDefinition>
+	 */
+	private function getDocumentDefinitionMap () : array
+	{
+		if (null === $this->definitionMap)
+		{
+			$this->definitionMap = [];
+
+			foreach ($this->documentDefinitions as $definition)
+			{
+				$this->definitionMap[$definition->getTypeId()] = $definition;
+			}
+		}
+
+		return $this->definitionMap;
 	}
 }

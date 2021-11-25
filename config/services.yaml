@@ -8,7 +8,7 @@ services:
         exclude:
             - '../src/Data'
             - '../src/DependencyInjection'
-            - '../src/Document'
+            - '../src/Document/Data'
             - '../src/CustomType/Data'
             - '../src/Exception'
             - '../src/PrismicApiBundle.php'
@@ -20,7 +20,10 @@ services:
         $typesToken: '%env(PRISMIC_TYPES_API_TOKEN)%'
 
     Torr\PrismicApi\CustomType\CustomTypesMigrator:
-        $documentTypes: !tagged_locator {tag: 'prismic.document.type', default_index_method: 'getDocumentTypeId'}
+        $documentDefinitions: !tagged_iterator 'prismic.document.definition'
+
+    Torr\PrismicApi\Factory\DocumentFactory:
+        $documentTypes: !tagged_iterator 'prismic.document.definition'
 
     Torr\PrismicApi\RichText\LinkGenerator:
         $handlers: !tagged_iterator 'prismic.link_generator'

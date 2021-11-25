@@ -10,9 +10,9 @@ use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Torr\PrismicApi\Data\Environment;
-use Torr\PrismicApi\Document\Document;
+use Torr\PrismicApi\Document\Data\Document;
+use Torr\PrismicApi\Document\Definition\DocumentDefinition;
 use Torr\PrismicApi\Exception\Api\RequestFailedException;
-use Torr\PrismicApi\Exception\Data\InvalidDocumentTypeException;
 use Torr\PrismicApi\Factory\DocumentFactory;
 
 final class PrismicApi
@@ -65,21 +65,14 @@ final class PrismicApi
 		?string $ref = null,
 	) : array
 	{
-		if (!\is_a($documentType, Document::class, true))
-		{
-			throw new InvalidDocumentTypeException(\sprintf(
-				"Document type '%s' must be a subclass of Document.",
-				$documentType,
-			));
-		}
-
+		$definition = $this->documentFactory->getDefinitionForType($documentType);
 		$allResults = [];
 		$page = 1;
 		$maxPage = 1;
 
 		$predicates[] = \sprintf(
 			'[[at(document.type, "%s")]]',
-			$documentType::getDocumentTypeId(),
+			$definition->getTypeId(),
 		);
 
 		while ($page <= $maxPage)
@@ -100,7 +93,7 @@ final class PrismicApi
 
 			foreach ($response["results"] as $result)
 			{
-				$allResults[] = $this->documentFactory->createDocument($documentType, $result);
+				$allResults[] = $this->documentFactory->createDocument($definition, $result);
 			}
 
 			$maxPage = $response["total_pages"];
@@ -113,29 +106,24 @@ final class PrismicApi
 	/**
 	 * Pushes the type definition to prismic
 	 *
-	 * @phpstan-template T of Document
-	 * @phpstan-param class-string<T> $documentType
-	 *
 	 * @return bool whether the type was newly created (true) or just updated (false)
 	 */
-	public function pushTypeDefinition (string $documentType) : bool
+	public function pushTypeDefinition (DocumentDefinition $definition) : bool
 	{
-		\assert(\is_a($documentType, Document::class, true));
-
-		$stored = $this->fetchesTypeConfig($documentType);
+		$stored = $this->fetchesTypeConfig($definition);
 		$alreadyExists = [] !== $stored;
 
-		$configuration = $documentType::configureType();
+		$configuration = $definition->configureType();
 
 		$this->requestType(
 			path: $alreadyExists
 				? "customtypes/update"
 				: "customtypes/insert",
 			payload: [
-				"id" => $documentType::getDocumentTypeId(),
+				"id" => $definition->getTypeId(),
 				"label" => $configuration->getLabel(),
 				"repeatable" => $configuration->isRepeatable(),
-				"json" => $documentType::getEditorTabs()->getTypesDefinition(),
+				"json" => $definition->getEditorTabs()->getTypesDefinition(),
 				"status" => $configuration->isActive(),
 			],
 			method: "POST",
@@ -148,17 +136,12 @@ final class PrismicApi
 	// region Type Config specific fetcher
 	/**
 	 * Fetches the currently stored type config for the given type
-	 *
-	 * @phpstan-template T of Document
-	 * @phpstan-param class-string<T> $documentType
 	 */
-	private function fetchesTypeConfig (string $documentType) : ?array
+	private function fetchesTypeConfig (DocumentDefinition $definition) : ?array
 	{
-		\assert(\is_a($documentType, Document::class, true));
-
 		try
 		{
-			return $this->requestType("customtypes/{$documentType::getDocumentTypeId()}");
+			return $this->requestType("customtypes/{$definition->getTypeId()}");
 		}
 		catch (RequestFailedException $exception)
 		{
