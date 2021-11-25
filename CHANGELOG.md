@@ -1,3 +1,13 @@
+4.0.0-beta.3
+============
+
+*   (bug) Add empty extra field for slices.
+*   (feature) Add `ImageValue` and `VideoValue`.
+*   (feature) Implement `EmbedField` (it only supports videos for now).
+*   (bug) Fix invalid initialization of `SliceValidationCompound`.
+*   (feature) Add `DocumentLinkValue` and use it in `LinkField`.
+
+
 4.0.0-beta.2
 ============
 

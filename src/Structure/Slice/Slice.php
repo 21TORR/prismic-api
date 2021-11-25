@@ -125,6 +125,7 @@ abstract class Slice implements PrismicTypeInterface
 		$result = [
 			"data" => [],
 			"items" => [],
+			"extra" => [],
 		];
 
 		foreach ($this->fields as $key => $field)

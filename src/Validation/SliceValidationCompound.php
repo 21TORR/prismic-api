@@ -16,8 +16,7 @@ final class SliceValidationCompound extends Compound
 		private array $sliceConstraints,
 	)
 	{
-		parent::__construct();
-
+		// we need to add the nested constraint before calling the constructor
 		$this->sliceConstraints[] = new Assert\Collection([
 			"fields" => [
 				"slice_type" => [
@@ -29,6 +28,8 @@ final class SliceValidationCompound extends Compound
 			"allowExtraFields" => true,
 			"allowMissingFields" => false,
 		]);
+
+		parent::__construct();
 	}
 
 

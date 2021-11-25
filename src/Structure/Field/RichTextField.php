@@ -13,6 +13,7 @@ use Torr\PrismicApi\Transform\FieldValueTransformer;
 class RichTextField extends InputField
 {
 	private const TYPE_KEY = "StructuredText";
+	private const PARAGRAPH = "paragraph";
 	public const HEADINGS = [
 		"heading1",
 		"heading2",
@@ -27,7 +28,7 @@ class RichTextField extends InputField
 		"hyperlink",
 	];
 	public const PARAGRAPH_STYLE = [
-		"paragraph",
+		self::PARAGRAPH,
 		"preformatted",
 		"list-item",
 		"o-list-item",
@@ -78,10 +79,14 @@ class RichTextField extends InputField
 	 */
 	private function getAllowedParagraphLevelStyles () : array
 	{
-		return \array_filter(
+		$styles = \array_filter(
 			$this->getAllowedStyles(),
 			static fn (string $style) => \in_array($style, self::HEADINGS, true) || \in_array($style, self::PARAGRAPH_STYLE, true),
 		);
+
+		return !empty($styles)
+			? $styles
+			: [self::PARAGRAPH];
 	}
 
 
