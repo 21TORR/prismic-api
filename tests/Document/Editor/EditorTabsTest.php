@@ -3,8 +3,8 @@
 namespace Tests\Torr\PrismicApi\Document\Editor;
 
 use PHPUnit\Framework\TestCase;
-use Torr\PrismicApi\CustomType\Data\Field\TextField;
-use Torr\PrismicApi\Document\Editor\EditorTabs;
+use Torr\PrismicApi\Structure\Field\TextField;
+use Torr\PrismicApi\Editor\EditorTabs;
 use Torr\PrismicApi\Exception\Document\InvalidDocumentStructureException;
 
 final class EditorTabsTest extends TestCase

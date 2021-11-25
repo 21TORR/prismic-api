@@ -2,8 +2,8 @@
 
 namespace Torr\PrismicApi\Transform;
 
-use Torr\PrismicApi\CustomType\Data\Field\InputField;
-use Torr\PrismicApi\CustomType\Data\Slice\SliceZone;
+use Torr\PrismicApi\Structure\Field\InputField;
+use Torr\PrismicApi\Structure\Slice\SliceZone;
 
 final class FieldValueTransformer
 {

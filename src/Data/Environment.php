@@ -2,18 +2,19 @@
 
 namespace Torr\PrismicApi\Data;
 
+use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Validation;
 use Torr\PrismicApi\Exception\Data\InvalidDataStructureException;
 
 final class Environment
 {
-	use DataStructureValidationTrait;
 	private string $masterRefId;
 	private array $languages = [];
 
 	/**
-	 * @inheritDoc
+	 *
 	 */
 	public function __construct (
 		private array $data,
@@ -64,9 +65,9 @@ final class Environment
 
 
 	/**
-	 * @inheritDoc
+	 *
 	 */
-	protected function getValidationConstraints () : array
+	private function getValidationConstraints () : array
 	{
 		return [
 			new Assert\Collection([
@@ -156,6 +157,35 @@ final class Environment
 				"allowMissingFields" => false,
 			]),
 		];
+	}
+
+
+	/**
+	 * Validates the given data according to the constraints.
+	 *
+	 * @param Constraint[] $constraints
+	 * @param string|null  $validationMessage A message that is added to the exception in case the validation fails.
+	 */
+	private function validateDataStructure (array $data, array $constraints, ?string $validationMessage = null) : void
+	{
+		// always valid if no constraints given
+		if (0 === \count($constraints))
+		{
+			return;
+		}
+
+		$validator = Validation::createValidator();
+		$violations = $validator->validate($data, $constraints);
+
+		if (\count($violations) > 0)
+		{
+			throw new InvalidDataStructureException(
+				self::class,
+				$data,
+				$violations,
+				$validationMessage,
+			);
+		}
 	}
 	//endregion
 }

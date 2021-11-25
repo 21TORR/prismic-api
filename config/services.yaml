@@ -7,7 +7,6 @@ services:
         resource: ../src/*
         exclude:
             - '../src/Data'
-            - '../src/DependencyInjection'
             - '../src/Document/Data'
             - '../src/CustomType/Data'
             - '../src/Exception'

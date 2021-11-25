@@ -3,8 +3,8 @@
 namespace Torr\PrismicApi\Factory;
 
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Torr\PrismicApi\Document\Data\Document;
-use Torr\PrismicApi\Document\Definition\DocumentDefinition;
+use Torr\PrismicApi\Data\Document;
+use Torr\PrismicApi\Definition\DocumentDefinition;
 use Torr\PrismicApi\Exception\Document\MissingDocumentDefinitionException;
 
 final class DocumentFactory

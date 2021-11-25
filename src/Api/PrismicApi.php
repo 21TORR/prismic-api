@@ -9,9 +9,9 @@ use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Torr\PrismicApi\Data\Document;
 use Torr\PrismicApi\Data\Environment;
-use Torr\PrismicApi\Document\Data\Document;
-use Torr\PrismicApi\Document\Definition\DocumentDefinition;
+use Torr\PrismicApi\Definition\DocumentDefinition;
 use Torr\PrismicApi\Exception\Api\RequestFailedException;
 use Torr\PrismicApi\Factory\DocumentFactory;
 

@@ -4,7 +4,7 @@ namespace Torr\PrismicApi\Migration;
 
 use Torr\Cli\Console\Style\TorrStyle;
 use Torr\PrismicApi\Api\PrismicApi;
-use Torr\PrismicApi\Document\Definition\DocumentDefinition;
+use Torr\PrismicApi\Definition\DocumentDefinition;
 
 /**
  *

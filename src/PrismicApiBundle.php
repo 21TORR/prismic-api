@@ -6,7 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Torr\BundleHelpers\Bundle\BundleExtension;
-use Torr\PrismicApi\Document\Definition\DocumentDefinition;
+use Torr\PrismicApi\Definition\DocumentDefinition;
 use Torr\PrismicApi\RichText\Link\LinkGeneratorHandler;
 
 final class PrismicApiBundle extends Bundle

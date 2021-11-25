@@ -4,10 +4,10 @@ namespace Tests\Torr\PrismicApi\Document;
 
 use PHPUnit\Framework\TestCase;
 use Tests\Torr\PrismicApi\Fixtures\DocumentDataTrait;
-use Torr\PrismicApi\CustomType\Data\Field\TextField;
-use Torr\PrismicApi\Document\Configuration\DocumentTypeConfiguration;
+use Torr\PrismicApi\Structure\Field\TextField;
+use Torr\PrismicApi\Definition\Configuration\DocumentTypeConfiguration;
 use Torr\PrismicApi\Document\Document;
-use Torr\PrismicApi\Document\Editor\EditorTabs;
+use Torr\PrismicApi\Editor\EditorTabs;
 use Torr\PrismicApi\Exception\Document\InvalidDocumentStructureException;
 
 final class DocumentTest extends TestCase
