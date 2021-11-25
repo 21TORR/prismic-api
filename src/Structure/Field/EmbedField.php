@@ -94,7 +94,6 @@ final class EmbedField extends InputField
 	 */
 	public function transformValue (mixed $data, FieldValueTransformer $valueTransformer) : mixed
 	{
-		dump($data);
 		return new VideoValue(
 			provider: VideoValue::PROVIDER_MAPPING[$data["provider_name"]],
 			url: $data["embed_url"],
