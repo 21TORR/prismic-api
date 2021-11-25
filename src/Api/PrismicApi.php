@@ -9,35 +9,29 @@ use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Torr\PrismicApi\CustomType\CustomTypeDefinition;
+use Torr\PrismicApi\Data\Document;
 use Torr\PrismicApi\Data\Environment;
+use Torr\PrismicApi\Definition\DocumentDefinition;
 use Torr\PrismicApi\Exception\Api\RequestFailedException;
+use Torr\PrismicApi\Factory\DocumentFactory;
 
 final class PrismicApi
 {
-	private string $repository;
-	private string $contentToken;
-	private string $typesToken;
 	private HttpClientInterface $contentClient;
 	private HttpClientInterface $typesClient;
-	private LoggerInterface $logger;
 	private ?Environment $environment = null;
 
 	/**
 	 */
 	public function __construct (
-		LoggerInterface $logger,
-		string $repository,
-		string $contentToken,
-		string $typesToken,
+		private LoggerInterface $logger,
+		private DocumentFactory $documentFactory,
+		private string $repository,
+		private string $contentToken,
+		private string $typesToken,
 	) {
-		$this->repository = $repository;
-		$this->contentToken = $contentToken;
-		$this->typesToken = $typesToken;
-
 		$this->contentClient = HttpClient::createForBaseUri("https://{$repository}.prismic.io/api/v2/");
 		$this->typesClient = HttpClient::createForBaseUri("https://customtypes.prismic.io/");
-		$this->logger = $logger;
 	}
 
 
@@ -57,22 +51,35 @@ final class PrismicApi
 
 	/**
 	 * Searches for documents, according to the given predicates
+	 *
+	 * @phpstan-template T of Document
+	 * @phpstan-param class-string<T> $documentType
+	 * @phpstan-return T[]
+	 *
+	 * @return Document[]
 	 */
 	public function searchDocuments (
-		string $predicates,
+		string $documentType,
+		array $predicates = [],
 		?string $language = null,
 		?string $ref = null,
 	) : array
 	{
+		$definition = $this->documentFactory->getDefinitionForType($documentType);
 		$allResults = [];
 		$page = 1;
 		$maxPage = 1;
+
+		$predicates[] = \sprintf(
+			'[[at(document.type, "%s")]]',
+			$definition->getTypeId(),
+		);
 
 		while ($page <= $maxPage)
 		{
 			$query = [
 				"ref" => $ref ?? $this->getEnvironment()->getMasterRefId(),
-				"q" => $predicates,
+				"q" => \implode("", $predicates),
 				"pageSize" => 100,
 				"page" => $page,
 			];
@@ -86,7 +93,7 @@ final class PrismicApi
 
 			foreach ($response["results"] as $result)
 			{
-				$allResults[] = $result;
+				$allResults[] = $this->documentFactory->createDocument($definition, $result);
 			}
 
 			$maxPage = $response["total_pages"];
@@ -96,34 +103,28 @@ final class PrismicApi
 		return $allResults;
 	}
 
-
 	/**
 	 * Pushes the type definition to prismic
 	 *
 	 * @return bool whether the type was newly created (true) or just updated (false)
 	 */
-	public function pushTypeDefinition (CustomTypeDefinition $typeDefinition) : bool
+	public function pushTypeDefinition (DocumentDefinition $definition) : bool
 	{
-		$stored = $this->fetchesTypeConfig($typeDefinition);
+		$stored = $this->fetchesTypeConfig($definition);
 		$alreadyExists = [] !== $stored;
 
-		$data = [];
-
-		foreach ($typeDefinition->getTabs() as $tab)
-		{
-			$data[$tab->getLabel()] = $tab->toArray();
-		}
+		$configuration = $definition->configureType();
 
 		$this->requestType(
 			path: $alreadyExists
 				? "customtypes/update"
 				: "customtypes/insert",
 			payload: [
-				"id" => $typeDefinition->getId(),
-				"label" => $typeDefinition->getLabel(),
-				"repeatable" => $typeDefinition->isRepeatable(),
-				"json" => $data,
-				"status" => $typeDefinition->isActive(),
+				"id" => $definition->getTypeId(),
+				"label" => $configuration->getLabel(),
+				"repeatable" => $configuration->isRepeatable(),
+				"json" => $definition->getEditorTabs()->getTypesDefinition(),
+				"status" => $configuration->isActive(),
 			],
 			method: "POST",
 		);
@@ -136,11 +137,11 @@ final class PrismicApi
 	/**
 	 * Fetches the currently stored type config for the given type
 	 */
-	private function fetchesTypeConfig (CustomTypeDefinition $typeDefinition) : ?array
+	private function fetchesTypeConfig (DocumentDefinition $definition) : ?array
 	{
 		try
 		{
-			return $this->requestType("customtypes/{$typeDefinition->getId()}");
+			return $this->requestType("customtypes/{$definition->getTypeId()}");
 		}
 		catch (RequestFailedException $exception)
 		{
