@@ -3,6 +3,7 @@
 namespace Torr\PrismicApi\Structure\Field;
 
 use Torr\PrismicApi\Data\Value\DocumentLinkValue;
+use Torr\PrismicApi\Data\Value\ImageValue;
 use Torr\PrismicApi\Exception\Structure\InvalidTypeDefinitionException;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Transform\FieldValueTransformer;
@@ -31,14 +32,14 @@ final class LinkField extends InputField
 	 */
 	public function __construct (
 		string $label,
-		?string $select = self::SELECT_ALL,
+		private ?string $select = self::SELECT_ALL,
 		?string $placeholder = null,
 		?array $customTypes = null,
 		?array $tags = null,
 	)
 	{
 		$hasDocumentFilter = !empty($customTypes) || !empty($tags);
-		$selectsDocuments = self::SELECT_ALL === $select || self::SELECT_DOCUMENT === $select;
+		$selectsDocuments = self::SELECT_ALL === $this->select || self::SELECT_DOCUMENT === $this->select;
 
 		if ($hasDocumentFilter && !$selectsDocuments)
 		{
@@ -49,7 +50,7 @@ final class LinkField extends InputField
 		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([
 			"label" => $label,
 			"placeholder" => $placeholder,
-			"select" => $select,
+			"select" => $this->select,
 			"customtypes" => $customTypes,
 			"tags" => $tags,
 		]));
@@ -79,6 +80,18 @@ final class LinkField extends InputField
 
 		if ("Media" === $type)
 		{
+			// return as an image, if specifically an image was asked for
+			// @todo always return it this way (and use ImageValue or FileValue)
+			if (self::SELECT_MEDIA === $this->select)
+			{
+				return new ImageValue(
+					$data["url"],
+					(int) $data["width"],
+					(int) $data["height"],
+					$data["name"],
+				);
+			}
+
 			return $data["url"] ?? null;
 		}
 
