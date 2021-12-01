@@ -19,11 +19,14 @@ final class IntegrationField extends InputField
 		string $label,
 		string $catalog,
 		?string $placeholder = null,
+		?string $catalogRepository = null,
 	)
 	{
+		$catalogRepository = $catalogRepository ?? $_ENV['PRISMIC_REPOSITORY'];
+
 		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([
 			"label" => $label,
-			"catalog" => $catalog,
+			"catalog" => "{$catalogRepository}--{$catalog}",
 			"placeholder" => $placeholder,
 		]));
 	}
