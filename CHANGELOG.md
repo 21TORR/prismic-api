@@ -1,3 +1,9 @@
+4.0.0-beta.4
+============
+
+*   (feature) Add `PrismicIntegrationFieldApi`.
+
+
 4.0.0-beta.3
 ============
 

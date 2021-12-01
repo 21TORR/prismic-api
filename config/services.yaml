@@ -28,3 +28,7 @@ services:
 
     Torr\PrismicApi\RichText\LinkGenerator:
         $handlers: !tagged_iterator 'prismic.link_generator'
+
+    Torr\PrismicApi\Api\PrismicIntegrationFieldApi:
+        $repository: '%env(PRISMIC_REPOSITORY)%'
+        $tokens: '%env(json:PRISMIC_INTEGRATION_TOKENS)%'
