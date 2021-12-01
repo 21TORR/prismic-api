@@ -10,7 +10,16 @@ Installation
 Define the required `.env` variables:
 
 ```env
-PRISMIC_REPOSITORY=...
-PRISMIC_CONTENT_API_TOKEN=...
-PRISMIC_TYPES_API_TOKEN=...
+# The repository key
+PRISMIC_REPOSITORY='...'
+
+# The API token to fetch content from Prismic
+PRISMIC_CONTENT_API_TOKEN='...'
+
+# The API token to push content type changes to Prismic
+PRISMIC_TYPES_API_TOKEN='...'
+
+# An JSON array with the mapping of integration field key -> token
+# example: '{"product_catalog": "abc", "test": "def"}'
+PRISMIC_INTEGRATION_TOKENS='{...}'
 ```
