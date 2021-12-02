@@ -1,3 +1,9 @@
+4.0.0-beta.6
+============
+
+*   (improvement) Add missing value transformation in `GroupField`.
+
+
 4.0.0-beta.5
 ============
 
