@@ -72,6 +72,7 @@ final class LinkField extends InputField
 	public function transformValue (mixed $data, FieldValueTransformer $valueTransformer) : mixed
 	{
 		$type = $data["link_type"] ?? null;
+		$kind = $data["kind"] ?? null;
 
 		if ("Web" === $type)
 		{
@@ -82,7 +83,7 @@ final class LinkField extends InputField
 		{
 			// return as an image, if specifically an image was asked for
 			// @todo always return it this way (and use ImageValue or FileValue)
-			if (self::SELECT_MEDIA === $this->select)
+			if ("image" === $kind)
 			{
 				return new ImageValue(
 					$data["url"],
