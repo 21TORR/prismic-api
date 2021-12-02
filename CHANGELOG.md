@@ -1,3 +1,10 @@
+4.0.0-beta.5
+============
+
+*   (improvement) Build `catalog` value on `IntegrationField`.
+*   (bug) Add check if property `kind` in `LinkField` is `image` to return `ImageValue`.
+
+
 4.0.0-beta.4
 ============
 
