@@ -51,4 +51,16 @@ abstract class Document
 			$this->editorTabs->getSliceZoneByKey($key),
 		);
 	}
+
+
+	/**
+	 * Transforms the input field with the given key
+	 */
+	protected function transformField (FieldValueTransformer $valueTransformer, string $key) : mixed
+	{
+		return $valueTransformer->transformValue(
+			$this->data[$key] ?? [],
+			$this->editorTabs->getByKey($key),
+		);
+	}
 }

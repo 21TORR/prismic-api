@@ -1,3 +1,10 @@
+4.0.0-beta.6
+============
+
+*   (improvement) Add missing value transformation in `GroupField`.
+*   (improvement) Add helper to transform a single field in `Document::transformField()`.
+
+
 4.0.0-beta.5
 ============
 
