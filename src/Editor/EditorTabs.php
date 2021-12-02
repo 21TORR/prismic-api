@@ -93,6 +93,7 @@ final class EditorTabs
 	}
 
 	/**
+	 * @return array<InputField|SliceZone>
 	 */
 	public function getFields () : array
 	{
