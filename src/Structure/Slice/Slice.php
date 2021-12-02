@@ -3,12 +3,14 @@
 namespace Torr\PrismicApi\Structure\Slice;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Exception\Structure\InvalidTypeDefinitionException;
 use Torr\PrismicApi\Exception\Transform\TransformationFailedException;
 use Torr\PrismicApi\Structure\Field\InputField;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Structure\Helper\KeyedMapHelper;
 use Torr\PrismicApi\Structure\PrismicTypeInterface;
+use Torr\PrismicApi\Structure\Validation\ValueValidationTrait;
 use Torr\PrismicApi\Transform\FieldValueTransformer;
 
 /**
@@ -18,6 +20,8 @@ use Torr\PrismicApi\Transform\FieldValueTransformer;
  */
 abstract class Slice implements PrismicTypeInterface
 {
+	use ValueValidationTrait;
+
 	/**
 	 * @param array<string, InputField> $fields
 	 * @param array<string, InputField> $repeatedFields
@@ -53,7 +57,7 @@ abstract class Slice implements PrismicTypeInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function getValidationConstraints () : array
+	public function validateData (ValidatorInterface $validator, mixed $data) : void
 	{
 		$itemsConstraints = [];
 		$primaryConstraints = [];
@@ -64,7 +68,7 @@ abstract class Slice implements PrismicTypeInterface
 
 			foreach ($this->fields as $key => $field)
 			{
-				$fields[$key] = $field->getValidationConstraints();
+				//$fields[$key] = $field->getValidationConstraints();
 			}
 
 			$primaryConstraints[] = new Assert\Collection([
@@ -80,7 +84,7 @@ abstract class Slice implements PrismicTypeInterface
 
 			foreach ($this->repeatedFields as $key => $field)
 			{
-				$fields[$key] = $field->getValidationConstraints();
+				//$fields[$key] = $field->getValidationConstraints();
 			}
 
 			$itemsConstraints[] = new Assert\All([
@@ -94,7 +98,7 @@ abstract class Slice implements PrismicTypeInterface
 			]);
 		}
 
-		return [
+		$this->ensureDataIsValid($validator, $data, [
 			new Assert\NotNull(),
 			new Assert\Type("array"),
 			new Assert\Collection([
@@ -113,8 +117,9 @@ abstract class Slice implements PrismicTypeInterface
 				"allowExtraFields" => true,
 				"allowMissingFields" => false,
 			]),
-		];
+		]);
 	}
+
 
 	/**
 	 * @inheritDoc
