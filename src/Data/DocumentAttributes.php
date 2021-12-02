@@ -85,6 +85,7 @@ final class DocumentAttributes
 
 
 	/**
+	 * @internal
 	 * @return Constraint[]
 	 */
 	public static function getValidationConstraints () : array
