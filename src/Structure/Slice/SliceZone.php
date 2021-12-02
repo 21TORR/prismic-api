@@ -3,11 +3,13 @@
 namespace Torr\PrismicApi\Structure\Slice;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Exception\Data\InvalidDataException;
 use Torr\PrismicApi\Exception\Structure\InvalidTypeDefinitionException;
 use Torr\PrismicApi\Exception\Transform\TransformationFailedException;
 use Torr\PrismicApi\Structure\Helper\KeyedMapHelper;
 use Torr\PrismicApi\Structure\PrismicTypeInterface;
+use Torr\PrismicApi\Structure\Validation\ValueValidationTrait;
 use Torr\PrismicApi\Transform\FieldValueTransformer;
 use Torr\PrismicApi\Validation\SliceValidationCompound;
 
@@ -16,6 +18,8 @@ use Torr\PrismicApi\Validation\SliceValidationCompound;
  */
 final class SliceZone implements PrismicTypeInterface
 {
+	use ValueValidationTrait;
+
 	/**
 	 * @param array<string, Slice> $choices
 	 */
@@ -47,30 +51,17 @@ final class SliceZone implements PrismicTypeInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function getValidationConstraints () : array
+	public function validateData (ValidatorInterface $validator, mixed $data) : void
 	{
-		$sliceValidations = [];
-
-		foreach ($this->choices as $key => $choice)
-		{
-			$sliceValidations[] = new SliceValidationCompound(
-				$key,
-				$choice->getValidationConstraints(),
-			);
-		}
-
-		return [
+		// first check basic structure
+		$this->ensureDataIsValid($validator, $data, [
 			new Assert\NotNull(),
 			new Assert\Type("array"),
-			new Assert\All([
-				"constraints" => [
-					new Assert\AtLeastOneOf([
-						"constraints" => $sliceValidations,
-					]),
-				],
-			]),
-		];
+		]);
+
+		// then check every entry
 	}
+
 
 	/**
 	 * @inheritDoc
