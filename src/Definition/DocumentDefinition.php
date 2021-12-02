@@ -11,12 +11,14 @@ use Torr\PrismicApi\Definition\Configuration\DocumentTypeConfiguration;
 use Torr\PrismicApi\Editor\EditorTabs;
 use Torr\PrismicApi\Exception\Data\InvalidDataStructureException;
 use Torr\PrismicApi\Exception\Document\InvalidDocumentStructureException;
+use Torr\PrismicApi\Structure\Validation\ValueValidationTrait;
 
 /**
  * @phpstan-template T of Document
  */
 abstract class DocumentDefinition
 {
+	use ValueValidationTrait;
 	protected ?EditorTabs $editorTabs = null;
 
 
@@ -65,31 +67,23 @@ abstract class DocumentDefinition
 
 
 	/**
-	 * Returns the validation constraints to validate the given data from prismic,
-	 * according to field definitions.
+	 * Validates the data according to the validation constraints and possibly throws a validation exception.
 	 *
 	 * @internal
-	 *
-	 * @return Constraint[]
 	 */
-	private function getValidationConstraints () : array
+	public function validateData (ValidatorInterface $validator, array $data) : void
 	{
 		$constraints = DocumentAttributes::getValidationConstraints();
-
-		$collectionFields = [];
-
-		foreach ($this->getEditorTabs()->getFields() as $key => $inputField)
-		{
-			$collectionFields[$key] = $inputField->getValidationConstraints();
-		}
-
 		$constraints[] = new Assert\Collection([
 			"fields" => [
 				"data" => [
 					new Assert\NotNull(),
 					new Assert\Type("array"),
 					new Assert\Collection([
-						"fields" => $collectionFields,
+						"fields" => [
+							new Assert\NotNull(),
+							new Assert\Type("array"),
+						],
 						"allowExtraFields" => true,
 						"allowMissingFields" => true,
 					]),
@@ -99,7 +93,17 @@ abstract class DocumentDefinition
 			"allowMissingFields" => false,
 		]);
 
-		return $constraints;
+		// validate itself
+		$this->ensureDataIsValid($validator, $data, $constraints);
+
+		// validate nested data
+		foreach ($this->getEditorTabs()->getFields() as $key => $inputField)
+		{
+			$inputField->validateData(
+				$validator,
+				$data["data"][$key] ?? null,
+			);
+		}
 	}
 
 	/**
@@ -117,16 +121,8 @@ abstract class DocumentDefinition
 			));
 		}
 
-		$violations = $validator->validate($data, $this->getValidationConstraints());
-
-		if (0 < \count($violations))
-		{
-			throw new InvalidDataStructureException(
-				static::class,
-				$data,
-				$violations,
-			);
-		}
+		// validate the data before creating the object
+		$this->validateData($validator, $data);
 
 		return new $dataClass($data, $this->getEditorTabs());
 	}
