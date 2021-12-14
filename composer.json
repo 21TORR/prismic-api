@@ -1,15 +1,15 @@
 {
 	"name": "21torr/prismic-api",
-	"type": "symfony-bundle",
 	"description": "Symfony API bundle for integration into Prismic.",
-	"homepage": "https://github.com/21TORR/prismic-api",
 	"license": "MIT",
+	"type": "symfony-bundle",
 	"authors": [
 		{
 			"name": "21TORR",
 			"homepage": "https://www.21torr.com/"
 		}
 	],
+	"homepage": "https://github.com/21TORR/prismic-api",
 	"require": {
 		"php": "^8.0",
 		"21torr/bundle-helpers": "^2.1",
@@ -27,14 +27,6 @@
 		"roave/security-advisories": "dev-latest",
 		"symfony/phpunit-bridge": "^5.3"
 	},
-	"config": {
-		"sort-packages": true
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-next": "4.x-dev"
-		}
-	},
 	"autoload": {
 		"psr-4": {
 			"Torr\\PrismicApi\\": "src/"
@@ -43,6 +35,14 @@
 	"autoload-dev": {
 		"psr-4": {
 			"Tests\\Torr\\PrismicApi\\": "tests/"
+		}
+	},
+	"config": {
+		"sort-packages": true
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-next": "4.x-dev"
 		}
 	},
 	"scripts": {
