@@ -7,8 +7,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class DocumentAttributes
 {
-	private \DateTimeImmutable $firstPublicationDate;
-	private \DateTimeImmutable $lastPublicationDate;
+	private ?\DateTimeImmutable $firstPublicationDate;
+	private ?\DateTimeImmutable $lastPublicationDate;
 
 	/**
 	 */
@@ -71,14 +71,14 @@ final class DocumentAttributes
 
 	/**
 	 */
-	public function getFirstPublicationDate () : \DateTimeImmutable
+	public function getFirstPublicationDate () : ?\DateTimeImmutable
 	{
 		return $this->firstPublicationDate;
 	}
 
 	/**
 	 */
-	public function getLastPublicationDate () : \DateTimeImmutable
+	public function getLastPublicationDate () : ?\DateTimeImmutable
 	{
 		return $this->lastPublicationDate;
 	}
@@ -114,12 +114,10 @@ final class DocumentAttributes
 						]),
 					],
 					"first_publication_date" => [
-						new Assert\NotNull(),
 						new Assert\Type("string"),
 						new Assert\DateTime(\DateTimeInterface::RFC3339),
 					],
 					"last_publication_date" => [
-						new Assert\NotNull(),
 						new Assert\Type("string"),
 						new Assert\DateTime(\DateTimeInterface::RFC3339),
 					],
@@ -138,8 +136,13 @@ final class DocumentAttributes
 	/**
 	 * Parses the given date
 	 */
-	private function parseDate (string $date) : \DateTimeImmutable
+	private function parseDate (?string $date) : ?\DateTimeImmutable
 	{
+		if (null === $date)
+		{
+			return null;
+		}
+
 		$parsed = \DateTimeImmutable::createFromFormat(\DateTimeInterface::RFC3339, $date);
 		\assert($parsed instanceof \DateTimeImmutable);
 		return $parsed;
