@@ -1,3 +1,9 @@
+4.0.0-beta.7
+============
+
+*   (improvement) Add support to load unpublished documents.
+
+
 4.0.0-beta.6
 ============
 
