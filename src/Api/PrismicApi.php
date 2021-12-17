@@ -77,19 +77,15 @@ final class PrismicApi
 
 		while ($page <= $maxPage)
 		{
-			$query = [
+			$response = $this->requestContent("documents/search", [
 				"ref" => $ref ?? $this->getEnvironment()->getMasterRefId(),
 				"q" => \implode("", $predicates),
 				"pageSize" => 100,
 				"page" => $page,
-			];
-
-			if (null !== $language)
-			{
-				$query["lang"] = $language;
-			}
-
-			$response = $this->requestContent("documents/search", $query);
+				"lang" => null !== $language
+					? $language
+					: "*",
+			]);
 
 			foreach ($response["results"] as $result)
 			{
