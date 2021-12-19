@@ -82,9 +82,7 @@ final class PrismicApi
 				"q" => \implode("", $predicates),
 				"pageSize" => 100,
 				"page" => $page,
-				"lang" => null !== $language
-					? $language
-					: "*",
+				"lang" => $language ?? "*",
 			]);
 
 			foreach ($response["results"] as $result)
