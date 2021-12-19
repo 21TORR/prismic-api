@@ -32,3 +32,6 @@ services:
     Torr\PrismicApi\Api\PrismicIntegrationFieldApi:
         $repository: '%env(PRISMIC_REPOSITORY)%'
         $tokens: '%env(json:PRISMIC_INTEGRATION_TOKENS)%'
+
+    Torr\PrismicApi\Transform\FieldValueTransformer:
+        $sliceExtraDataGenerators: !tagged_iterator 'prismic.slice.extra-data-generator'

@@ -1,3 +1,9 @@
+4.0.0-beta.9
+============
+
+*   (feature) Added `SliceExtraDataGenerator` to be able to append extra data to slices.
+
+
 4.0.0-beta.8
 ============
 
