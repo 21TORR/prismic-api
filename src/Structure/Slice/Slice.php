@@ -122,6 +122,8 @@ abstract class Slice implements PrismicTypeInterface
 	public function transformValue (mixed $data, FieldValueTransformer $valueTransformer) : mixed
 	{
 		\assert(\is_array($data));
+		$resultItems = [];
+		$resultData = [];
 		$result = [
 			"data" => [],
 			"items" => [],
@@ -130,7 +132,7 @@ abstract class Slice implements PrismicTypeInterface
 
 		foreach ($this->fields as $key => $field)
 		{
-			$result["data"][$key] = $this->transformSingleValue(
+			$resultData[$key] = $this->transformSingleValue(
 				$valueTransformer,
 				$this->fields,
 				$key,
@@ -152,10 +154,14 @@ abstract class Slice implements PrismicTypeInterface
 				);
 			}
 
-			$result["items"][] = $transformedItem;
+			$resultItems[] = $transformedItem;
 		}
 
-		return $result;
+		return [
+			"data" => $resultData,
+			"items" => $resultItems,
+			"extra" => $valueTransformer->generateExtraDataForSlice($this),
+		];
 	}
 
 	/**
