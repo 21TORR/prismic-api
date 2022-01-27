@@ -1,3 +1,10 @@
+4.0.0-beta.10
+=============
+
+*   (feature) Add `PrismicApi::search()` as a base search helper.
+*   (bug) Fix passing multiple predicates to the Prismic API.
+
+
 4.0.0-beta.9
 ============
 
