@@ -9,6 +9,7 @@ use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Torr\PrismicApi\Api\Url\PrismicApiUrlBuilder;
 use Torr\PrismicApi\Data\Document;
 use Torr\PrismicApi\Data\Environment;
 use Torr\PrismicApi\Definition\DocumentDefinition;
@@ -26,6 +27,7 @@ final class PrismicApi
 	public function __construct (
 		private LoggerInterface $logger,
 		private DocumentFactory $documentFactory,
+		private PrismicApiUrlBuilder $urlBuilder,
 		private string $repository,
 		private string $contentToken,
 		private string $typesToken,
@@ -50,6 +52,45 @@ final class PrismicApi
 
 
 	/**
+	 * Searches for anything, according to the given predicates.
+	 * Won't transform the results in any way.
+	 *
+	 * @return array[]
+	 */
+	public function search (
+		array $predicates = [],
+		?string $language = null,
+		?string $ref = null,
+	) : array
+	{
+		$allResults = [];
+		$page = 1;
+		$maxPage = 1;
+
+		while ($page <= $maxPage)
+		{
+			$response = $this->requestContent("documents/search", [
+				"ref" => $ref ?? $this->getEnvironment()->getMasterRefId(),
+				"q" => $predicates,
+				"pageSize" => 100,
+				"page" => $page,
+				"lang" => $language ?? "*",
+			]);
+
+			foreach ($response["results"] as $result)
+			{
+				$allResults[] = $result;
+			}
+
+			$maxPage = $response["total_pages"];
+			++$page;
+		}
+
+		return $allResults;
+	}
+
+
+	/**
 	 * Searches for documents, according to the given predicates
 	 *
 	 * @phpstan-template T of Document
@@ -66,35 +107,20 @@ final class PrismicApi
 	) : array
 	{
 		$definition = $this->documentFactory->getDefinitionForType($documentType);
-		$allResults = [];
-		$page = 1;
-		$maxPage = 1;
 
 		$predicates[] = \sprintf(
 			'[[at(document.type, "%s")]]',
 			$definition->getTypeId(),
 		);
 
-		while ($page <= $maxPage)
+		$transformed = [];
+
+		foreach ($this->search($predicates, $language, $ref) as $result)
 		{
-			$response = $this->requestContent("documents/search", [
-				"ref" => $ref ?? $this->getEnvironment()->getMasterRefId(),
-				"q" => \implode("", $predicates),
-				"pageSize" => 100,
-				"page" => $page,
-				"lang" => $language ?? "*",
-			]);
-
-			foreach ($response["results"] as $result)
-			{
-				$allResults[] = $this->documentFactory->createDocument($definition, $result);
-			}
-
-			$maxPage = $response["total_pages"];
-			++$page;
+			$transformed[] = $this->documentFactory->createDocument($definition, $result);
 		}
 
-		return $allResults;
+		return $transformed;
 	}
 
 	/**
@@ -158,15 +184,16 @@ final class PrismicApi
 	 */
 	private function requestContent (string $path, array $query = []) : array
 	{
+		$pathWithQuery = $this->urlBuilder->buildUrl($path, \array_replace($query, [
+			"access_token" => $this->contentToken,
+			"format" => "json",
+		]));
+
 		return $this->performRequest(
 			fn () => $this->contentClient->request(
 				"GET",
-				$path,
+				$pathWithQuery,
 				(new HttpOptions())
-					->setQuery(\array_replace($query, [
-						"access_token" => $this->contentToken,
-						"format" => "json",
-					]))
 					->toArray(),
 			),
 			[
