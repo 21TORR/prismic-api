@@ -1,3 +1,9 @@
+4.0.0
+=====
+
+*   (improvement) Allow Symfony v6.
+
+
 4.0.0-beta.10
 =============
 
