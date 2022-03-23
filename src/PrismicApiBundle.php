@@ -20,6 +20,9 @@ final class PrismicApiBundle extends Bundle
 		return new BundleExtension($this);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function build (ContainerBuilder $container) : void
 	{
 		$container->registerForAutoconfiguration(LinkGeneratorHandler::class)
@@ -31,7 +34,6 @@ final class PrismicApiBundle extends Bundle
 		$container->registerForAutoconfiguration(SliceExtraDataGeneratorInterface::class)
 			->addTag("prismic.slice.extra-data-generator");
 	}
-
 
 	/**
 	 * @inheritDoc

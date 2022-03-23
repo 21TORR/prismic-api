@@ -4,6 +4,7 @@ namespace Torr\PrismicApi\Structure\Field;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
+use Torr\PrismicApi\Transform\DataTransformer;
 use Torr\PrismicApi\Validation\DataValidator;
 
 /**
@@ -47,5 +48,13 @@ final class SelectField extends InputField
 			),
 			$this->required ? new Assert\NotNull() : null,
 		]);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function transformValue (mixed $data, DataTransformer $dataTransformer) : ?string
+	{
+		return $data;
 	}
 }

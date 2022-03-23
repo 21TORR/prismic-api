@@ -120,7 +120,7 @@ final class SliceZone implements PrismicTypeInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function transformValue (mixed $data, DataTransformer $dataTransformer) : mixed
+	public function transformValue (mixed $data, DataTransformer $dataTransformer) : array
 	{
 		$result = [];
 

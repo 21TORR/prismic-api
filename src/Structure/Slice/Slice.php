@@ -111,7 +111,7 @@ abstract class Slice implements PrismicTypeInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function transformValue (mixed $data, DataTransformer $dataTransformer) : mixed
+	public function transformValue (mixed $data, DataTransformer $dataTransformer) : array
 	{
 		\assert(\is_array($data));
 		$resultItems = [];
