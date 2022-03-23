@@ -68,7 +68,7 @@ final class LinkField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function transformValue (mixed $data, DataTransformer $dataTransformer) : mixed
+	public function transformValue (mixed $data, DataTransformer $dataTransformer) : string|ImageValue|DocumentLinkValue|null
 	{
 		$type = $data["link_type"] ?? null;
 		$kind = $data["kind"] ?? null;

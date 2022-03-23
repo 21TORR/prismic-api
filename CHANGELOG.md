@@ -2,6 +2,7 @@
 =====
 
 * (improvement) Add proper validation for `ColorField`s.
+* (improvement) Make return types in transform calls narrower.
 
 
 5.0.0

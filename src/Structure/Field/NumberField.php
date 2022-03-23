@@ -4,6 +4,7 @@ namespace Torr\PrismicApi\Structure\Field;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
+use Torr\PrismicApi\Transform\DataTransformer;
 use Torr\PrismicApi\Validation\DataValidator;
 
 /**
@@ -56,5 +57,13 @@ final class NumberField extends InputField
 		}
 
 		$this->ensureDataIsValid($validator, $path, $data, $constraints);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function transformValue (mixed $data, DataTransformer $dataTransformer) : int|float|null
+	{
+		return $data;
 	}
 }

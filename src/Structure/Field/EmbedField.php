@@ -92,7 +92,7 @@ final class EmbedField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function transformValue (mixed $data, DataTransformer $dataTransformer) : mixed
+	public function transformValue (mixed $data, DataTransformer $dataTransformer) : VideoValue
 	{
 		return new VideoValue(
 			provider: VideoValue::PROVIDER_MAPPING[$data["provider_name"]],
