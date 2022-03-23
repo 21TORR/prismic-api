@@ -4,6 +4,7 @@ namespace Torr\PrismicApi\Structure\Field;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
+use Torr\PrismicApi\Transform\DataTransformer;
 use Torr\PrismicApi\Validation\DataValidator;
 
 /**
@@ -34,8 +35,20 @@ final class ColorField extends InputField
 	{
 		$this->ensureDataIsValid($validator, $path, $data, [
 			new Assert\Type("string"),
+			new Assert\CssColor([
+				Assert\CssColor::HEX_LONG,
+				Assert\CssColor::HEX_SHORT,
+			]),
 			// @todo add CssColor validation as soon as Symfony 5.4 is released
 			$this->required ? new Assert\NotNull() : null,
 		]);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function transformValue (mixed $data, DataTransformer $dataTransformer) : ?string
+	{
+		return $data;
 	}
 }

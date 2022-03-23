@@ -1,3 +1,9 @@
+5.0.1
+=====
+
+* (improvement) Add proper validation for `ColorField`s.
+
+
 5.0.0
 =====
 
