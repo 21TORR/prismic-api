@@ -9,7 +9,7 @@ use Torr\PrismicApi\Exception\Structure\InvalidTypeDefinitionException;
 use Torr\PrismicApi\Exception\Transform\TransformationFailedException;
 use Torr\PrismicApi\Structure\Helper\KeyedMapHelper;
 use Torr\PrismicApi\Structure\PrismicTypeInterface;
-use Torr\PrismicApi\Transform\FieldValueTransformer;
+use Torr\PrismicApi\Transform\DataTransformer;
 use Torr\PrismicApi\Validation\DataValidator;
 
 /**
@@ -120,7 +120,7 @@ final class SliceZone implements PrismicTypeInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function transformValue (mixed $data, FieldValueTransformer $valueTransformer) : mixed
+	public function transformValue (mixed $data, DataTransformer $dataTransformer) : mixed
 	{
 		$result = [];
 
@@ -137,7 +137,7 @@ final class SliceZone implements PrismicTypeInterface
 				));
 			}
 
-			$transformed = $slice->transformValue($entryData, $valueTransformer);
+			$transformed = $slice->transformValue($entryData, $dataTransformer);
 
 			if (!\is_array($transformed) || \array_key_exists("type", $transformed))
 			{

@@ -6,7 +6,7 @@ use Torr\PrismicApi\Data\Value\DocumentLinkValue;
 use Torr\PrismicApi\Data\Value\ImageValue;
 use Torr\PrismicApi\Exception\Structure\InvalidTypeDefinitionException;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
-use Torr\PrismicApi\Transform\FieldValueTransformer;
+use Torr\PrismicApi\Transform\DataTransformer;
 use Torr\PrismicApi\Validation\DataValidator;
 
 /**
@@ -68,7 +68,7 @@ final class LinkField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function transformValue (mixed $data, FieldValueTransformer $valueTransformer) : mixed
+	public function transformValue (mixed $data, DataTransformer $dataTransformer) : mixed
 	{
 		$type = $data["link_type"] ?? null;
 		$kind = $data["kind"] ?? null;

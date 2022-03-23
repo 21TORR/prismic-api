@@ -9,7 +9,7 @@ use Torr\PrismicApi\Structure\Field\InputField;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Structure\Helper\KeyedMapHelper;
 use Torr\PrismicApi\Structure\PrismicTypeInterface;
-use Torr\PrismicApi\Transform\FieldValueTransformer;
+use Torr\PrismicApi\Transform\DataTransformer;
 use Torr\PrismicApi\Validation\DataValidator;
 
 /**
@@ -111,7 +111,7 @@ abstract class Slice implements PrismicTypeInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function transformValue (mixed $data, FieldValueTransformer $valueTransformer) : mixed
+	public function transformValue (mixed $data, DataTransformer $dataTransformer) : mixed
 	{
 		\assert(\is_array($data));
 		$resultItems = [];
@@ -120,7 +120,7 @@ abstract class Slice implements PrismicTypeInterface
 		foreach ($this->fields as $key => $field)
 		{
 			$resultData[$key] = $this->transformSingleValue(
-				$valueTransformer,
+				$dataTransformer,
 				$this->fields,
 				$key,
 				$data["primary"][$key] ?? null,
@@ -134,7 +134,7 @@ abstract class Slice implements PrismicTypeInterface
 			foreach ($this->repeatedFields as $key => $field)
 			{
 				$transformedItem[$key] = $this->transformSingleValue(
-					$valueTransformer,
+					$dataTransformer,
 					$this->repeatedFields,
 					$key,
 					$itemsData[$key] ?? null,
@@ -147,7 +147,7 @@ abstract class Slice implements PrismicTypeInterface
 		return [
 			"data" => $resultData,
 			"items" => $resultItems,
-			"extra" => $valueTransformer->generateExtraDataForSlice($this),
+			"extra" => $dataTransformer->generateExtraDataForSlice($this),
 		];
 	}
 
@@ -155,7 +155,7 @@ abstract class Slice implements PrismicTypeInterface
 	 * @param array<string, InputField> $fields
 	 */
 	private function transformSingleValue (
-		FieldValueTransformer $valueTransformer,
+		DataTransformer $valueTransformer,
 		array $fields,
 		?string $key,
 		mixed $fieldData,

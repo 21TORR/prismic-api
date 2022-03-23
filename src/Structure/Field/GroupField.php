@@ -5,7 +5,7 @@ namespace Torr\PrismicApi\Structure\Field;
 use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Structure\Helper\KeyedMapHelper;
-use Torr\PrismicApi\Transform\FieldValueTransformer;
+use Torr\PrismicApi\Transform\DataTransformer;
 use Torr\PrismicApi\Validation\DataValidator;
 
 /**
@@ -64,7 +64,7 @@ final class GroupField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function transformValue (mixed $data, FieldValueTransformer $valueTransformer) : array
+	public function transformValue (mixed $data, DataTransformer $dataTransformer) : array
 	{
 		$result = [];
 
@@ -76,7 +76,7 @@ final class GroupField extends InputField
 			{
 				$transformed[$key] = $field->transformValue(
 					$entry[$key] ?? null,
-					$valueTransformer,
+					$dataTransformer,
 				);
 			}
 

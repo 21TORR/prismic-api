@@ -5,7 +5,7 @@ namespace Torr\PrismicApi\Structure\Field;
 use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Structure\Part\ImageConstraint;
-use Torr\PrismicApi\Transform\FieldValueTransformer;
+use Torr\PrismicApi\Transform\DataTransformer;
 use Torr\PrismicApi\Validation\DataValidator;
 
 /**
@@ -135,10 +135,10 @@ class RichTextField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function transformValue (mixed $data, FieldValueTransformer $valueTransformer) : mixed
+	public function transformValue (mixed $data, DataTransformer $dataTransformer) : ?array
 	{
 		return \is_array($data)
-			? $valueTransformer->transformRichText($data)
+			? $dataTransformer->transformRichText($data)
 			: null;
 	}
 }

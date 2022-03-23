@@ -3,7 +3,7 @@
 namespace Torr\PrismicApi\Data;
 
 use Torr\PrismicApi\Editor\EditorTabs;
-use Torr\PrismicApi\Transform\FieldValueTransformer;
+use Torr\PrismicApi\Transform\DataTransformer;
 
 abstract class Document
 {
@@ -44,9 +44,9 @@ abstract class Document
 	/**
 	 * Transforms the slice zone with the given key
 	 */
-	protected function transformSliceZone (FieldValueTransformer $valueTransformer, string $key) : array
+	protected function transformSliceZone (DataTransformer $dataTransformer, string $key) : array
 	{
-		return $valueTransformer->transformValue(
+		return $dataTransformer->transformValue(
 			$this->data[$key] ?? [],
 			$this->editorTabs->getSliceZoneByKey($key),
 		);
@@ -56,9 +56,9 @@ abstract class Document
 	/**
 	 * Transforms the input field with the given key
 	 */
-	protected function transformField (FieldValueTransformer $valueTransformer, string $key) : mixed
+	protected function transformField (DataTransformer $dataTransformer, string $key) : mixed
 	{
-		return $valueTransformer->transformValue(
+		return $dataTransformer->transformValue(
 			$this->data[$key] ?? [],
 			$this->editorTabs->getByKey($key),
 		);
