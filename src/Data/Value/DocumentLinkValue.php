@@ -9,9 +9,7 @@ final class DocumentLinkValue
 	public function __construct (
 		private string $id,
 		private ?string $type,
-	)
-	{
-	}
+	) {}
 
 	/**
 	 */

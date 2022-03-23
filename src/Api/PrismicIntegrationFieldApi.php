@@ -7,6 +7,7 @@ use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\HttpOptions;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Torr\Cli\Console\Style\TorrStyle;
 use Torr\PrismicApi\Data\IntegrationField\IntegrationFieldEntry;
 use Torr\PrismicApi\Exception\IntegrationField\IntegrationFieldApiException;
 
@@ -22,12 +23,10 @@ final class PrismicIntegrationFieldApi
 	/**
 	 */
 	public function __construct (
-		private string $repository,
-		/**
-		 * @var array<string, string>
-		 */
-		private array $tokens,
-		private LoggerInterface $logger,
+		private readonly string $repository,
+		/** @var array<string, string> */
+		private readonly array $tokens,
+		private readonly LoggerInterface $logger,
 	)
 	{
 		$this->client = HttpClient::createForBaseUri("https://if-api.prismic.io");
@@ -38,32 +37,61 @@ final class PrismicIntegrationFieldApi
 	 *
 	 * @param IntegrationFieldEntry[] $entries
 	 */
-	public function atomicInsert (string $integrationFieldKey, array $entries) : bool
+	public function atomicInsert (
+		string $integrationFieldKey,
+		array $entries,
+		?TorrStyle $io = null,
+	) : bool
 	{
 		// first reset index
-		$status = $this->sendRequest($integrationFieldKey, self::ACTION_RESET);
+		$io?->writeln("• Clear existing entries");
+		[$status, $response] = $this->sendRequest($integrationFieldKey, self::ACTION_RESET);
 
 		if (200 !== $status)
 		{
+			$this->logger->error("Failed to reset the integration field '{field}', got status code {status}", [
+				"field" => $integrationFieldKey,
+				"status" => $status,
+				"response" => $response,
+			]);
+
+			$io?->writeln("• <fg=red>Failed to reset</>");
 			return false;
 		}
 
+		$io?->writeln("• <fg=green>Cleared all entries</>");
+
 		// then index
-		$status = $this->sendRequest($integrationFieldKey, self::ACTION_UPDATE, $entries);
-		return 200 === $status;
+		$io?->writeln(\sprintf("• Import all <fg=yellow>%d</> entries", \count($entries)));
+		[$status, $response] = $this->sendRequest($integrationFieldKey, self::ACTION_UPDATE, $entries);
+
+		if (200 !== $status)
+		{
+			$this->logger->error("Failed to import the integration field '{field}' entries, got status code {status}", [
+				"field" => $integrationFieldKey,
+				"status" => $status,
+				"response" => $response,
+			]);
+
+			$io?->writeln("• <fg=red>Failed to import</>");
+			return false;
+		}
+
+		$io?->writeln("• <fg=green>Imported all entries</>");
+		return true;
 	}
 
 
 	/**
 	 * @param IntegrationFieldEntry[]|null $entries
 	 *
-	 * @return int the HTTP status code of the call
+	 * @return array{int, string} the HTTP status code of the call + the response content
 	 */
 	public function sendRequest (
 		string $integrationFieldKey,
 		string $action,
 		?array $entries = null,
-	) : int
+	) : array
 	{
 		try {
 			$options = (new HttpOptions())
@@ -80,7 +108,7 @@ final class PrismicIntegrationFieldApi
 				$options->toArray(),
 			);
 
-			return $response->getStatusCode();
+			return [$response->getStatusCode(), $response->getContent(false)];
 		}
 		catch (TransportExceptionInterface $e)
 		{

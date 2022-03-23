@@ -16,9 +16,7 @@ final class IntegrationFieldEntry
 		 * The normalized blob data
 		 */
 		private array $blob = [],
-	)
-	{
-	}
+	) {}
 
 	/**
 	 */
