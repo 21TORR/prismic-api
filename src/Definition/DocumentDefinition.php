@@ -2,23 +2,19 @@
 
 namespace Torr\PrismicApi\Definition;
 
-use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Data\Document;
 use Torr\PrismicApi\Data\DocumentAttributes;
 use Torr\PrismicApi\Definition\Configuration\DocumentTypeConfiguration;
 use Torr\PrismicApi\Editor\EditorTabs;
-use Torr\PrismicApi\Exception\Data\InvalidDataStructureException;
 use Torr\PrismicApi\Exception\Document\InvalidDocumentStructureException;
-use Torr\PrismicApi\Structure\Validation\ValueValidationTrait;
+use Torr\PrismicApi\Validation\DataValidator;
 
 /**
  * @phpstan-template T of Document
  */
 abstract class DocumentDefinition
 {
-	use ValueValidationTrait;
 	protected ?EditorTabs $editorTabs = null;
 
 
@@ -71,7 +67,7 @@ abstract class DocumentDefinition
 	 *
 	 * @internal
 	 */
-	public function validateData (ValidatorInterface $validator, array $data) : void
+	public function validateData (DataValidator $validator, array $data) : void
 	{
 		$constraints = DocumentAttributes::getValidationConstraints();
 		$constraints[] = new Assert\Collection([
@@ -94,13 +90,17 @@ abstract class DocumentDefinition
 		]);
 
 		// validate itself
-		$this->ensureDataIsValid($validator, $data, $constraints);
+		$path = [
+			\sprintf("Document<%s>", DataValidator::getBaseClassName(static::class, "Definition")),
+		];
+		$validator->ensureDataIsValid($path, static::class, $data, $constraints);
 
 		// validate nested data
 		foreach ($this->getEditorTabs()->getFields() as $key => $inputField)
 		{
 			$inputField->validateData(
 				$validator,
+				[...$path, $key],
 				$data["data"][$key] ?? null,
 			);
 		}
@@ -109,7 +109,7 @@ abstract class DocumentDefinition
 	/**
 	 * @phpstan-return T
 	 */
-	final public function createDocument (array $data, ValidatorInterface $validator) : Document
+	final public function createDocument (array $data, DataValidator $validator) : Document
 	{
 		$dataClass = $this->getDataClass();
 

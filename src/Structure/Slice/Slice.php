@@ -10,7 +10,6 @@ use Torr\PrismicApi\Structure\Field\InputField;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Structure\Helper\KeyedMapHelper;
 use Torr\PrismicApi\Structure\PrismicTypeInterface;
-use Torr\PrismicApi\Structure\Validation\ValueValidationTrait;
 use Torr\PrismicApi\Transform\FieldValueTransformer;
 
 /**
@@ -20,8 +19,6 @@ use Torr\PrismicApi\Transform\FieldValueTransformer;
  */
 abstract class Slice implements PrismicTypeInterface
 {
-	use ValueValidationTrait;
-
 	/**
 	 * @param array<string, InputField> $fields
 	 * @param array<string, InputField> $repeatedFields
@@ -124,7 +121,7 @@ abstract class Slice implements PrismicTypeInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function transformValue (mixed $data, FieldValueTransformer $valueTransformer) : mixed
+	public function transformValue (mixed $data, FieldValueTransformer $valueTransformer) : array
 	{
 		\assert(\is_array($data));
 		$resultItems = [];

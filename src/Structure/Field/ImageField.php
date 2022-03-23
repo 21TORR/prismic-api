@@ -2,10 +2,10 @@
 
 namespace Torr\PrismicApi\Structure\Field;
 
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Structure\Part\ImageConstraint;
 use Torr\PrismicApi\Structure\Part\Thumbnail;
+use Torr\PrismicApi\Validation\DataValidator;
 
 /**
  * @see https://prismic.io/docs/core-concepts/image
@@ -43,7 +43,7 @@ final class ImageField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (ValidatorInterface $validator, mixed $data) : void
+	public function validateData (DataValidator $validator, array $path, mixed $data) : void
 	{
 		// @todo add validation
 	}

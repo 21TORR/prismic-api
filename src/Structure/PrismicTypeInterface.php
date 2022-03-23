@@ -2,9 +2,8 @@
 
 namespace Torr\PrismicApi\Structure;
 
-use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Transform\FieldValueTransformer;
+use Torr\PrismicApi\Validation\DataValidator;
 
 /**
  * @internal
@@ -19,7 +18,7 @@ interface PrismicTypeInterface
 	/**
 	 * Validates the data for this field, as it was sent by Prismic.
 	 */
-	public function validateData (ValidatorInterface $validator, mixed $data) : void;
+	public function validateData (DataValidator $validator, array $path, mixed $data) : void;
 
 	/**
 	 * Receives the prismic data for the given field and transforms it for better usage

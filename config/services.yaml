@@ -13,7 +13,6 @@ services:
             - '../src/Exception'
             - '../src/PrismicApiBundle.php'
             - '../src/Structure'
-            - '../src/Validation'
 
     Torr\PrismicApi\Api\PrismicApi:
         $repository: '%env(PRISMIC_REPOSITORY)%'

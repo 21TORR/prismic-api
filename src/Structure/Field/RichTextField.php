@@ -3,18 +3,16 @@
 namespace Torr\PrismicApi\Structure\Field;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Structure\Part\ImageConstraint;
-use Torr\PrismicApi\Structure\Validation\ValueValidationTrait;
 use Torr\PrismicApi\Transform\FieldValueTransformer;
+use Torr\PrismicApi\Validation\DataValidator;
 
 /**
  * @see https://prismic.io/docs/core-concepts/rich-text-title
  */
 class RichTextField extends InputField
 {
-	use ValueValidationTrait;
 	private const TYPE_KEY = "StructuredText";
 	private const PARAGRAPH = "paragraph";
 	public const HEADINGS = [
@@ -95,7 +93,7 @@ class RichTextField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (ValidatorInterface $validator, mixed $data) : void
+	public function validateData (DataValidator $validator, array $path, mixed $data) : void
 	{
 		$constraints = [
 			new Assert\Type("array"),
@@ -130,7 +128,7 @@ class RichTextField extends InputField
 			$constraints[] = new Assert\Count(max: 1);
 		}
 
-		$this->ensureDataIsValid($validator, $data, $constraints);
+		$this->ensureDataIsValid($validator, $path, $data, $constraints);
 	}
 
 

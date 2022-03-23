@@ -3,9 +3,8 @@
 namespace Torr\PrismicApi\Structure\Field;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
-use Torr\PrismicApi\Structure\Validation\ValueValidationTrait;
+use Torr\PrismicApi\Validation\DataValidator;
 
 /**
  * This is called "Key Text" in the Prismic UI
@@ -14,7 +13,6 @@ use Torr\PrismicApi\Structure\Validation\ValueValidationTrait;
  */
 final class TextField extends InputField
 {
-	use ValueValidationTrait;
 	private const TYPE_KEY = "Text";
 
 
@@ -36,9 +34,9 @@ final class TextField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (ValidatorInterface $validator, mixed $data) : void
+	public function validateData (DataValidator $validator, array $path, mixed $data) : void
 	{
-		$this->ensureDataIsValid($validator, $data, [
+		$this->ensureDataIsValid($validator, $path, $data, [
 			new Assert\Type("string"),
 			$this->required ? new Assert\NotNull() : null,
 		]);

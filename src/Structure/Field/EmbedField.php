@@ -3,19 +3,17 @@
 namespace Torr\PrismicApi\Structure\Field;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Data\Value\ImageValue;
 use Torr\PrismicApi\Data\Value\VideoValue;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
-use Torr\PrismicApi\Structure\Validation\ValueValidationTrait;
 use Torr\PrismicApi\Transform\FieldValueTransformer;
+use Torr\PrismicApi\Validation\DataValidator;
 
 /**
  * @see https://prismic.io/docs/core-concepts/embed
  */
 final class EmbedField extends InputField
 {
-	use ValueValidationTrait;
 	private const TYPE_KEY = "Embed";
 
 	/**
@@ -35,9 +33,9 @@ final class EmbedField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (ValidatorInterface $validator, mixed $data) : void
+	public function validateData (DataValidator $validator, array $path, mixed $data) : void
 	{
-		$this->ensureDataIsValid($validator, $data, [
+		$this->ensureDataIsValid($validator, $path, $data, [
 			new Assert\NotNull(),
 			new Assert\Type("array"),
 			new Assert\Collection([

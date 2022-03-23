@@ -3,16 +3,14 @@
 namespace Torr\PrismicApi\Structure\Field;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
-use Torr\PrismicApi\Structure\Validation\ValueValidationTrait;
+use Torr\PrismicApi\Validation\DataValidator;
 
 /**
  * @see https://prismic.io/docs/core-concepts/geopoint
  */
 final class GeoPointField extends InputField
 {
-	use ValueValidationTrait;
 	private const TYPE_KEY = "GeoPoint";
 
 
@@ -32,9 +30,9 @@ final class GeoPointField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (ValidatorInterface $validator, mixed $data) : void
+	public function validateData (DataValidator $validator, array $path, mixed $data) : void
 	{
-		$this->ensureDataIsValid($validator, $data, [
+		$this->ensureDataIsValid($validator, $path, $data, [
 			new Assert\Type("array"),
 			new Assert\Collection([
 				"fields" => [

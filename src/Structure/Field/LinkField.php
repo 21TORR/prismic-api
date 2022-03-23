@@ -2,12 +2,12 @@
 
 namespace Torr\PrismicApi\Structure\Field;
 
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Data\Value\DocumentLinkValue;
 use Torr\PrismicApi\Data\Value\ImageValue;
 use Torr\PrismicApi\Exception\Structure\InvalidTypeDefinitionException;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Transform\FieldValueTransformer;
+use Torr\PrismicApi\Validation\DataValidator;
 
 /**
  * @see https://prismic.io/docs/core-concepts/link-content-relationship
@@ -60,7 +60,7 @@ final class LinkField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (ValidatorInterface $validator, mixed $data) : void
+	public function validateData (DataValidator $validator, array $path, mixed $data) : void
 	{
 		// @todo add validation
 	}

@@ -3,18 +3,16 @@
 namespace Torr\PrismicApi\Structure\Field;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Structure\Helper\KeyedMapHelper;
-use Torr\PrismicApi\Structure\Validation\ValueValidationTrait;
 use Torr\PrismicApi\Transform\FieldValueTransformer;
+use Torr\PrismicApi\Validation\DataValidator;
 
 /**
  * @see https://prismic.io/docs/core-concepts/group
  */
 final class GroupField extends InputField
 {
-	use ValueValidationTrait;
 	private const TYPE_KEY = "Group";
 
 
@@ -40,10 +38,11 @@ final class GroupField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (ValidatorInterface $validator, mixed $data) : void
+	public function validateData (DataValidator $validator, array $path, mixed $data) : void
 	{
+		//dd($data);
 		// validate field itself
-		$this->ensureDataIsValid($validator, $data, [
+		$this->ensureDataIsValid($validator, $path, $data, [
 			new Assert\Type("array"),
 			new Assert\All([
 				"constraints" => [
@@ -66,6 +65,7 @@ final class GroupField extends InputField
 		{
 			$field->validateData(
 				$validator,
+				[...$path, $key],
 				$data[$key] ?? null,
 			);
 		}

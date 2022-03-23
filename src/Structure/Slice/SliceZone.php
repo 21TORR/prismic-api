@@ -9,17 +9,13 @@ use Torr\PrismicApi\Exception\Structure\InvalidTypeDefinitionException;
 use Torr\PrismicApi\Exception\Transform\TransformationFailedException;
 use Torr\PrismicApi\Structure\Helper\KeyedMapHelper;
 use Torr\PrismicApi\Structure\PrismicTypeInterface;
-use Torr\PrismicApi\Structure\Validation\ValueValidationTrait;
 use Torr\PrismicApi\Transform\FieldValueTransformer;
-use Torr\PrismicApi\Validation\SliceValidationCompound;
 
 /**
  * @see https://prismic.io/docs/core-concepts/slices
  */
 final class SliceZone implements PrismicTypeInterface
 {
-	use ValueValidationTrait;
-
 	/**
 	 * @param array<string, Slice> $choices
 	 */
