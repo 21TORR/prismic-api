@@ -2,6 +2,7 @@
 =====
 
 *   (improvement) Add logging for the prismic integration field API client.
+*   (improvement) Require PHP 8.1+
 
 
 4.0.0
