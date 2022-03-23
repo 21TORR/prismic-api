@@ -2,6 +2,7 @@
 
 namespace Torr\PrismicApi\Structure\Field;
 
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Data\Value\DocumentLinkValue;
 use Torr\PrismicApi\Data\Value\ImageValue;
 use Torr\PrismicApi\Exception\Structure\InvalidTypeDefinitionException;
@@ -59,12 +60,10 @@ final class LinkField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function getValidationConstraints () : array
+	public function validateData (ValidatorInterface $validator, mixed $data) : void
 	{
 		// @todo add validation
-		return [];
 	}
-
 
 	/**
 	 * @inheritDoc

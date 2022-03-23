@@ -3,13 +3,16 @@
 namespace Torr\PrismicApi\Structure\Field;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
+use Torr\PrismicApi\Structure\Validation\ValueValidationTrait;
 
 /**
  * @see https://prismic.io/docs/core-concepts/color
  */
 final class ColorField extends InputField
 {
+	use ValueValidationTrait;
 	private const TYPE_KEY = "Color";
 
 
@@ -29,18 +32,12 @@ final class ColorField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function getValidationConstraints () : array
+	public function validateData (ValidatorInterface $validator, mixed $data) : void
 	{
-		$constraints = [
+		$this->ensureDataIsValid($validator, $data, [
 			new Assert\Type("string"),
 			// @todo add CssColor validation as soon as Symfony 5.4 is released
-		];
-
-		if ($this->required)
-		{
-			$constraints[] = new Assert\NotNull();
-		}
-
-		return $constraints;
+			$this->required ? new Assert\NotNull() : null,
+		]);
 	}
 }

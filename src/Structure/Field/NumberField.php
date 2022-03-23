@@ -3,13 +3,16 @@
 namespace Torr\PrismicApi\Structure\Field;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
+use Torr\PrismicApi\Structure\Validation\ValueValidationTrait;
 
 /**
  * @see https://prismic.io/docs/core-concepts/number
  */
 final class NumberField extends InputField
 {
+	use ValueValidationTrait;
 	private const TYPE_KEY = "Number";
 
 
@@ -35,7 +38,7 @@ final class NumberField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function getValidationConstraints () : array
+	public function validateData (ValidatorInterface $validator, mixed $data) : void
 	{
 		$constraints = [
 			new Assert\Type("numeric"),
@@ -54,6 +57,6 @@ final class NumberField extends InputField
 			);
 		}
 
-		return $constraints;
+		$this->ensureDataIsValid($validator, $data, $constraints);
 	}
 }

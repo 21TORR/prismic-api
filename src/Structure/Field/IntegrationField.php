@@ -2,6 +2,7 @@
 
 namespace Torr\PrismicApi\Structure\Field;
 
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 
 /**
@@ -34,9 +35,8 @@ final class IntegrationField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function getValidationConstraints () : array
+	public function validateData (ValidatorInterface $validator, mixed $data) : void
 	{
 		// @todo add validation
-		return [];
 	}
 }

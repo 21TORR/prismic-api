@@ -3,8 +3,10 @@
 namespace Torr\PrismicApi\Structure\Field;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Structure\Helper\KeyedMapHelper;
+use Torr\PrismicApi\Structure\Validation\ValueValidationTrait;
 use Torr\PrismicApi\Transform\FieldValueTransformer;
 
 /**
@@ -12,6 +14,7 @@ use Torr\PrismicApi\Transform\FieldValueTransformer;
  */
 final class GroupField extends InputField
 {
+	use ValueValidationTrait;
 	private const TYPE_KEY = "Group";
 
 
@@ -37,41 +40,41 @@ final class GroupField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function getValidationConstraints () : array
+	public function validateData (ValidatorInterface $validator, mixed $data) : void
 	{
-		$fields = [];
-
-		foreach ($this->fields as $key => $field)
-		{
-			$fields[$key] = $field->getValidationConstraints();
-		}
-
-		$constraints = [
+		// validate field itself
+		$this->ensureDataIsValid($validator, $data, [
 			new Assert\Type("array"),
 			new Assert\All([
 				"constraints" => [
 					new Assert\Collection([
-						"fields" => $fields,
+						"fields" => [
+							new Assert\NotNull(),
+							new Assert\Type("array"),
+						],
 						"allowExtraFields" => true,
 						"allowMissingFields" => false,
 					]),
 				],
 			]),
-		];
+			$this->required ? new Assert\NotNull() : null,
+			$this->required ? new Assert\Count(min: 1) : null,
+		]);
 
-		if ($this->required)
+		// validate nested fields
+		foreach ($this->fields as $key => $field)
 		{
-			$constraints[] = new Assert\NotNull();
-			$constraints[] = new Assert\Count(min: 1);
+			$field->validateData(
+				$validator,
+				$data[$key] ?? null,
+			);
 		}
-
-		return $constraints;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function transformValue (mixed $data, FieldValueTransformer $valueTransformer) : mixed
+	public function transformValue (mixed $data, FieldValueTransformer $valueTransformer) : array
 	{
 		$result = [];
 

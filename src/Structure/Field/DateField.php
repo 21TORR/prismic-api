@@ -3,13 +3,16 @@
 namespace Torr\PrismicApi\Structure\Field;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
+use Torr\PrismicApi\Structure\Validation\ValueValidationTrait;
 
 /**
  * @see https://prismic.io/docs/core-concepts/date
  */
 final class DateField extends InputField
 {
+	use ValueValidationTrait;
 	private const TYPE_KEY = "Date";
 	public const DEFAULT_NOW = "now";
 
@@ -32,18 +35,12 @@ final class DateField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function getValidationConstraints () : array
+	public function validateData (ValidatorInterface $validator, mixed $data) : void
 	{
-		$constraints = [
+		$this->ensureDataIsValid($validator, $data, [
 			new Assert\Type("string"),
 			new Assert\Date(),
-		];
-
-		if ($this->required)
-		{
-			$constraints[] = new Assert\NotNull();
-		}
-
-		return $constraints;
+			$this->required ? new Assert\NotNull() : null,
+		]);
 	}
 }

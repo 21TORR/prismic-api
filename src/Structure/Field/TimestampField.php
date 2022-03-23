@@ -3,13 +3,16 @@
 namespace Torr\PrismicApi\Structure\Field;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
+use Torr\PrismicApi\Structure\Validation\ValueValidationTrait;
 
 /**
  * @see https://prismic.io/docs/core-concepts/timestamp
  */
 final class TimestampField extends InputField
 {
+	use ValueValidationTrait;
 	private const TYPE_KEY = "Timestamp";
 	public const DEFAULT_NOW = "now";
 
@@ -34,20 +37,14 @@ final class TimestampField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function getValidationConstraints () : array
+	public function validateData (ValidatorInterface $validator, mixed $data) : void
 	{
-		$constraints = [
+		$this->ensureDataIsValid($validator, $data, [
 			new Assert\Type("string"),
 			new Assert\DateTime(
 				format: \DateTimeInterface::ATOM,
 			),
-		];
-
-		if ($this->required)
-		{
-			$constraints[] = new Assert\NotNull();
-		}
-
-		return $constraints;
+			$this->required ? new Assert\NotNull() : null,
+		]);
 	}
 }
