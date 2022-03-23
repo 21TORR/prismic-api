@@ -5,6 +5,7 @@
 * (improvement) Require PHP 8.1+
 * (bc) Completely refactor the validation structure.
 * (bc) The class `FieldValueTransformer` was renamed to `DataTransformer`.
+* (bug) Remove useless validation of `UidField`s.
 
 
 4.0.0
