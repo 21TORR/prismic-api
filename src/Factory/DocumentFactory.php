@@ -2,10 +2,12 @@
 
 namespace Torr\PrismicApi\Factory;
 
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Psr\Log\LoggerInterface;
 use Torr\PrismicApi\Data\Document;
 use Torr\PrismicApi\Definition\DocumentDefinition;
+use Torr\PrismicApi\Exception\Data\DataValidationFailedException;
 use Torr\PrismicApi\Exception\Document\MissingDocumentDefinitionException;
+use Torr\PrismicApi\Validation\DataValidator;
 
 final class DocumentFactory
 {
@@ -15,8 +17,9 @@ final class DocumentFactory
 	 * @param iterable<DocumentDefinition> $documentDefinitions
 	 */
 	public function __construct (
-		private iterable $documentDefinitions,
-		private ValidatorInterface $validator,
+		private readonly iterable $documentDefinitions,
+		private readonly DataValidator $validator,
+		private readonly LoggerInterface $logger,
 	) {}
 
 
@@ -27,7 +30,21 @@ final class DocumentFactory
 	 */
 	public function createDocument (DocumentDefinition $definition, array $data) : Document
 	{
-		return $definition->createDocument($data, $this->validator);
+		try
+		{
+			return $definition->createDocument($data, $this->validator);
+		}
+		catch (DataValidationFailedException $exception)
+		{
+			// catch exception to add proper logging
+			$this->logger->error("Could not created document of type {type}, due to validation errors", [
+				"exception" => $exception,
+				"data" => $data,
+				"type" => $definition->getTypeId(),
+			]);
+
+			throw $exception;
+		}
 	}
 
 

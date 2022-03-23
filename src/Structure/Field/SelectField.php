@@ -4,6 +4,7 @@ namespace Torr\PrismicApi\Structure\Field;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
+use Torr\PrismicApi\Validation\DataValidator;
 
 /**
  * @see https://prismic.io/docs/core-concepts/select
@@ -20,10 +21,10 @@ final class SelectField extends InputField
 	 */
 	public function __construct (
 		string $label,
-		private array $options,
+		private readonly array $options,
 		?string $default_value = null,
 		?string $placeholder = null,
-		private bool $required = false,
+		private readonly bool $required = false,
 	)
 	{
 		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([
@@ -34,24 +35,17 @@ final class SelectField extends InputField
 		]));
 	}
 
-
 	/**
 	 * @inheritDoc
 	 */
-	public function getValidationConstraints () : array
+	public function validateData (DataValidator $validator, array $path, mixed $data) : void
 	{
-		$constraints = [
+		$this->ensureDataIsValid($validator, $path, $data, [
 			new Assert\Type("string"),
 			new Assert\Choice(
 				choices: $this->options,
 			),
-		];
-
-		if ($this->required)
-		{
-			$constraints[] = new Assert\NotNull();
-		}
-
-		return $constraints;
+			$this->required ? new Assert\NotNull() : null,
+		]);
 	}
 }

@@ -4,6 +4,7 @@ namespace Torr\PrismicApi\Structure\Field;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
+use Torr\PrismicApi\Validation\DataValidator;
 
 /**
  * @see https://prismic.io/docs/core-concepts/uid
@@ -30,11 +31,11 @@ final class UidField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function getValidationConstraints () : array
+	public function validateData (DataValidator $validator, array $path, mixed $data) : void
 	{
-		return [
+		$this->ensureDataIsValid($validator, $path, $data, [
 			new Assert\NotNull(),
 			new Assert\Type("string"),
-		];
+		]);
 	}
 }

@@ -17,7 +17,7 @@ final class Environment
 	 *
 	 */
 	public function __construct (
-		private array $data,
+		private readonly array $data,
 	)
 	{
 		$this->validateDataStructure($this->data, $this->getValidationConstraints());

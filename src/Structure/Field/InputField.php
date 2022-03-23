@@ -2,8 +2,10 @@
 
 namespace Torr\PrismicApi\Structure\Field;
 
+use Symfony\Component\Validator\Constraint;
 use Torr\PrismicApi\Structure\PrismicTypeInterface;
 use Torr\PrismicApi\Transform\FieldValueTransformer;
+use Torr\PrismicApi\Validation\DataValidator;
 
 /**
  * Low-level input field wrapper
@@ -37,5 +39,26 @@ abstract class InputField implements PrismicTypeInterface
 	public function transformValue (mixed $data, FieldValueTransformer $valueTransformer) : mixed
 	{
 		return $data;
+	}
+
+
+	/**
+	 * Ensures that the value is valid
+	 *
+	 * @param array<Constraint|null> $constraints
+	 */
+	protected function ensureDataIsValid (
+		DataValidator $validator,
+		array $path,
+		mixed $data,
+		array $constraints,
+	) : void
+	{
+		$validator->ensureDataIsValid(
+			$path,
+			static::class,
+			$data,
+			$constraints,
+		);
 	}
 }

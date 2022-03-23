@@ -10,11 +10,11 @@ final class ImageValue
 	/**
 	 */
 	public function __construct (
-		private string $url,
-		private int $width,
-		private int $height,
-		private ?string $alt = null,
-		private ?string $copyright = null,
+		private readonly string $url,
+		private readonly int $width,
+		private readonly int $height,
+		private readonly ?string $alt = null,
+		private readonly ?string $copyright = null,
 	) {}
 
 	/**

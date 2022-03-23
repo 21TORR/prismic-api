@@ -2,15 +2,14 @@
 
 namespace Torr\PrismicApi\Definition;
 
-use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Data\Document;
 use Torr\PrismicApi\Data\DocumentAttributes;
 use Torr\PrismicApi\Definition\Configuration\DocumentTypeConfiguration;
 use Torr\PrismicApi\Editor\EditorTabs;
-use Torr\PrismicApi\Exception\Data\InvalidDataStructureException;
+use Torr\PrismicApi\Exception\Data\DataValidationFailedException;
 use Torr\PrismicApi\Exception\Document\InvalidDocumentStructureException;
+use Torr\PrismicApi\Validation\DataValidator;
 
 /**
  * @phpstan-template T of Document
@@ -65,31 +64,25 @@ abstract class DocumentDefinition
 
 
 	/**
-	 * Returns the validation constraints to validate the given data from prismic,
-	 * according to field definitions.
+	 * Validates the data according to the validation constraints and possibly throws a validation exception.
 	 *
 	 * @internal
 	 *
-	 * @return Constraint[]
+	 * @throws DataValidationFailedException
 	 */
-	private function getValidationConstraints () : array
+	public function validateData (DataValidator $validator, array $data) : void
 	{
 		$constraints = DocumentAttributes::getValidationConstraints();
-
-		$collectionFields = [];
-
-		foreach ($this->getEditorTabs()->getFields() as $key => $inputField)
-		{
-			$collectionFields[$key] = $inputField->getValidationConstraints();
-		}
-
 		$constraints[] = new Assert\Collection([
 			"fields" => [
 				"data" => [
 					new Assert\NotNull(),
 					new Assert\Type("array"),
 					new Assert\Collection([
-						"fields" => $collectionFields,
+						"fields" => [
+							new Assert\NotNull(),
+							new Assert\Type("array"),
+						],
 						"allowExtraFields" => true,
 						"allowMissingFields" => true,
 					]),
@@ -99,13 +92,30 @@ abstract class DocumentDefinition
 			"allowMissingFields" => false,
 		]);
 
-		return $constraints;
+		// validate itself
+		$path = [
+			\sprintf("Document<%s>", DataValidator::getBaseClassName(static::class, "Definition")),
+		];
+		$validator->ensureDataIsValid($path, static::class, $data, $constraints);
+
+		// validate nested data
+		foreach ($this->getEditorTabs()->getFields() as $key => $inputField)
+		{
+			$inputField->validateData(
+				$validator,
+				[...$path, $key],
+				$data["data"][$key] ?? null,
+			);
+		}
 	}
 
 	/**
 	 * @phpstan-return T
+	 *
+	 * @throws InvalidDocumentStructureException
+	 * @throws DataValidationFailedException
 	 */
-	final public function createDocument (array $data, ValidatorInterface $validator) : Document
+	final public function createDocument (array $data, DataValidator $validator) : Document
 	{
 		$dataClass = $this->getDataClass();
 
@@ -117,16 +127,8 @@ abstract class DocumentDefinition
 			));
 		}
 
-		$violations = $validator->validate($data, $this->getValidationConstraints());
-
-		if (0 < \count($violations))
-		{
-			throw new InvalidDataStructureException(
-				static::class,
-				$data,
-				$violations,
-			);
-		}
+		// validate the data before creating the object
+		$this->validateData($validator, $data);
 
 		return new $dataClass($data, $this->getEditorTabs());
 	}

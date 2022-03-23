@@ -7,6 +7,7 @@ use Torr\PrismicApi\Data\Value\ImageValue;
 use Torr\PrismicApi\Exception\Structure\InvalidTypeDefinitionException;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Transform\FieldValueTransformer;
+use Torr\PrismicApi\Validation\DataValidator;
 
 /**
  * @see https://prismic.io/docs/core-concepts/link-content-relationship
@@ -32,7 +33,7 @@ final class LinkField extends InputField
 	 */
 	public function __construct (
 		string $label,
-		private ?string $select = self::SELECT_ALL,
+		private readonly ?string $select = self::SELECT_ALL,
 		?string $placeholder = null,
 		?array $customTypes = null,
 		?array $tags = null,
@@ -59,12 +60,10 @@ final class LinkField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function getValidationConstraints () : array
+	public function validateData (DataValidator $validator, array $path, mixed $data) : void
 	{
 		// @todo add validation
-		return [];
 	}
-
 
 	/**
 	 * @inheritDoc

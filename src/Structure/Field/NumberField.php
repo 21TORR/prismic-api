@@ -4,6 +4,7 @@ namespace Torr\PrismicApi\Structure\Field;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
+use Torr\PrismicApi\Validation\DataValidator;
 
 /**
  * @see https://prismic.io/docs/core-concepts/number
@@ -19,9 +20,9 @@ final class NumberField extends InputField
 	public function __construct (
 		string $label,
 		?string $placeholder = null,
-		private ?int $min = null,
-		private ?int $max = null,
-		private bool $required = false,
+		private readonly ?int $min = null,
+		private readonly ?int $max = null,
+		private readonly bool $required = false,
 	)
 	{
 		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([
@@ -35,7 +36,7 @@ final class NumberField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function getValidationConstraints () : array
+	public function validateData (DataValidator $validator, array $path, mixed $data) : void
 	{
 		$constraints = [
 			new Assert\Type("numeric"),
@@ -54,6 +55,6 @@ final class NumberField extends InputField
 			);
 		}
 
-		return $constraints;
+		$this->ensureDataIsValid($validator, $path, $data, $constraints);
 	}
 }

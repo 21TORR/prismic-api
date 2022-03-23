@@ -4,6 +4,7 @@ namespace Torr\PrismicApi\Structure\Field;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
+use Torr\PrismicApi\Validation\DataValidator;
 
 /**
  * @see https://prismic.io/docs/core-concepts/boolean
@@ -21,7 +22,7 @@ final class BooleanField extends InputField
 		bool $defaultValue = false,
 		?string $placeholderFalse = null,
 		?string $placeholderTrue = null,
-		private bool $required = false,
+		private readonly bool $required = false,
 	)
 	{
 		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([
@@ -35,17 +36,11 @@ final class BooleanField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function getValidationConstraints () : array
+	public function validateData (DataValidator $validator, array $path, mixed $data) : void
 	{
-		$constraints = [
+		$this->ensureDataIsValid($validator, $path, $data, [
 			new Assert\Type("bool"),
-		];
-
-		if ($this->required)
-		{
-			$constraints[] = new Assert\NotNull();
-		}
-
-		return $constraints;
+			$this->required ? new Assert\NotNull() : null,
+		]);
 	}
 }

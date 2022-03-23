@@ -6,6 +6,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Structure\Helper\KeyedMapHelper;
 use Torr\PrismicApi\Transform\FieldValueTransformer;
+use Torr\PrismicApi\Validation\DataValidator;
 
 /**
  * @see https://prismic.io/docs/core-concepts/group
@@ -22,9 +23,9 @@ final class GroupField extends InputField
 	 */
 	public function __construct (
 		string $label,
-		private array $fields,
+		private readonly array $fields,
 		?bool $repeat = false,
-		private bool $required = false,
+		private readonly bool $required = false,
 	)
 	{
 		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([
@@ -37,41 +38,33 @@ final class GroupField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function getValidationConstraints () : array
+	public function validateData (DataValidator $validator, array $path, mixed $data) : void
 	{
-		$fields = [];
-
-		foreach ($this->fields as $key => $field)
-		{
-			$fields[$key] = $field->getValidationConstraints();
-		}
-
-		$constraints = [
+		// validate field itself
+		$this->ensureDataIsValid($validator, $path, $data, [
 			new Assert\Type("array"),
-			new Assert\All([
-				"constraints" => [
-					new Assert\Collection([
-						"fields" => $fields,
-						"allowExtraFields" => true,
-						"allowMissingFields" => false,
-					]),
-				],
-			]),
-		];
+			$this->required ? new Assert\NotNull() : null,
+			$this->required ? new Assert\Count(min: 1) : null,
+		]);
 
-		if ($this->required)
+		// validate nested fields
+		foreach ($data as $index => $nestedData)
 		{
-			$constraints[] = new Assert\NotNull();
-			$constraints[] = new Assert\Count(min: 1);
+			foreach ($this->fields as $key => $field)
+			{
+				$field->validateData(
+					$validator,
+					[...$path, $index, $key],
+					$nestedData[$key] ?? null,
+				);
+			}
 		}
-
-		return $constraints;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function transformValue (mixed $data, FieldValueTransformer $valueTransformer) : mixed
+	public function transformValue (mixed $data, FieldValueTransformer $valueTransformer) : array
 	{
 		$result = [];
 

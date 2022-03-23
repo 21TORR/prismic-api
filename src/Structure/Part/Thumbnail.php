@@ -5,7 +5,7 @@ namespace Torr\PrismicApi\Structure\Part;
 class Thumbnail extends ImageConstraint
 {
 	public function __construct (
-		private string $name,
+		private readonly string $name,
 		?int $width = null,
 		?int $height = null,
 	)

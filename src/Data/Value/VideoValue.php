@@ -15,12 +15,12 @@ final class VideoValue
 	/**
 	 */
 	public function __construct (
-		private string $provider,
-		private string $url,
-		private string $title,
-		private int $width,
-		private int $height,
-		private ImageValue $thumbnail,
+		private readonly string $provider,
+		private readonly string $url,
+		private readonly string $title,
+		private readonly int $width,
+		private readonly int $height,
+		private readonly ImageValue $thumbnail,
 	) {}
 
 	/**

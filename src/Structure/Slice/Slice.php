@@ -10,6 +10,7 @@ use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Structure\Helper\KeyedMapHelper;
 use Torr\PrismicApi\Structure\PrismicTypeInterface;
 use Torr\PrismicApi\Transform\FieldValueTransformer;
+use Torr\PrismicApi\Validation\DataValidator;
 
 /**
  * You can extend this class to create reusable slices
@@ -23,11 +24,11 @@ abstract class Slice implements PrismicTypeInterface
 	 * @param array<string, InputField> $repeatedFields
 	 */
 	public function __construct (
-		private string $label,
-		private array $fields = [],
-		private array $repeatedFields = [],
-		private ?string $description = null,
-		private ?string $icon = null,
+		private readonly string $label,
+		private readonly array $fields = [],
+		private readonly array $repeatedFields = [],
+		private readonly ?string $description = null,
+		private readonly ?string $icon = null,
 	)
 	{
 		if (empty($this->fields) && empty($this->repeatedFields))
@@ -53,67 +54,58 @@ abstract class Slice implements PrismicTypeInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function getValidationConstraints () : array
+	public function validateData (DataValidator $validator, array $path, mixed $data) : void
 	{
-		$itemsConstraints = [];
-		$primaryConstraints = [];
+		// first validate the basic structure
+		$validator->ensureDataIsValid(
+			$path,
+			static::class,
+			$data,
+			[
+				new Assert\NotNull(),
+				new Assert\Type("array"),
+				new Assert\Collection([
+					"fields" => [
+						"primary" => [
+							new Assert\NotNull(),
+							new Assert\Type("array"),
+						],
+						"items" => [
+							new Assert\NotNull(),
+							new Assert\Type("array"),
+						],
+						"slice_label" => [
+							new Assert\Type("string"),
+						],
+					],
+					"allowExtraFields" => true,
+					"allowMissingFields" => false,
+				]),
+			],
+		);
 
-		if (!empty($this->fields))
+		// validate (non-repeated) fields
+		foreach ($this->fields as $key => $field)
 		{
-			$fields = [];
-
-			foreach ($this->fields as $key => $field)
-			{
-				$fields[$key] = $field->getValidationConstraints();
-			}
-
-			$primaryConstraints[] = new Assert\Collection([
-				"fields" => $fields,
-				"allowMissingFields" => true,
-				"allowExtraFields" => true,
-			]);
+			$field->validateData(
+				$validator,
+				[...$path, "static", $key],
+				$data["primary"][$key] ?? null,
+			);
 		}
 
-		if (!empty($this->repeatedFields))
+		// validate repeated fields
+		foreach ($data["items"] as $index => $itemsData)
 		{
-			$fields = [];
-
 			foreach ($this->repeatedFields as $key => $field)
 			{
-				$fields[$key] = $field->getValidationConstraints();
+				$field->validateData(
+					$validator,
+					[...$path, "repeated", $index, $key],
+					$itemsData[$key] ?? null,
+				);
 			}
-
-			$itemsConstraints[] = new Assert\All([
-				"constraints" => [
-					new Assert\Collection([
-						"fields" => $fields,
-						"allowMissingFields" => true,
-						"allowExtraFields" => true,
-					]),
-				],
-			]);
 		}
-
-		return [
-			new Assert\NotNull(),
-			new Assert\Type("array"),
-			new Assert\Collection([
-				"fields" => [
-					"items" => [
-						new Assert\NotNull(),
-						new Assert\Type("array"),
-						...$itemsConstraints,
-					],
-					"primary" => [
-						new Assert\NotNull(),
-						new Assert\Type("array"),
-						...$primaryConstraints,
-					],
-				],
-				"allowExtraFields" => true,
-				"allowMissingFields" => false,
-			]),
-		];
 	}
 
 	/**
@@ -124,11 +116,6 @@ abstract class Slice implements PrismicTypeInterface
 		\assert(\is_array($data));
 		$resultItems = [];
 		$resultData = [];
-		$result = [
-			"data" => [],
-			"items" => [],
-			"extra" => [],
-		];
 
 		foreach ($this->fields as $key => $field)
 		{

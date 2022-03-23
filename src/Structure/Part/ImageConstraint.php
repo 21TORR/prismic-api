@@ -9,8 +9,8 @@ class ImageConstraint
 	/**
 	 */
 	public function __construct (
-		private ?int $width = null,
-		private ?int $height = null,
+		private readonly ?int $width = null,
+		private readonly ?int $height = null,
 	)
 	{
 		if (null === $this->width && null === $this->height)

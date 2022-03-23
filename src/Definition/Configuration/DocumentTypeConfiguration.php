@@ -5,9 +5,9 @@ namespace Torr\PrismicApi\Definition\Configuration;
 final class DocumentTypeConfiguration
 {
 	public function __construct (
-		private string $label,
-		private bool $isRepeatable = true,
-		private bool $isActive = true,
+		private readonly string $label,
+		private readonly bool $isRepeatable = true,
+		private readonly bool $isActive = true,
 	) {}
 
 	/**

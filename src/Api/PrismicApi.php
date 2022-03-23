@@ -25,12 +25,12 @@ final class PrismicApi
 	/**
 	 */
 	public function __construct (
-		private LoggerInterface $logger,
-		private DocumentFactory $documentFactory,
-		private PrismicApiUrlBuilder $urlBuilder,
-		private string $repository,
-		private string $contentToken,
-		private string $typesToken,
+		private readonly LoggerInterface $logger,
+		private readonly DocumentFactory $documentFactory,
+		private readonly PrismicApiUrlBuilder $urlBuilder,
+		private readonly string $repository,
+		private readonly string $contentToken,
+		private readonly string $typesToken,
 	) {
 		$this->contentClient = HttpClient::createForBaseUri("https://{$repository}.prismic.io/api/v2/");
 		$this->typesClient = HttpClient::createForBaseUri("https://customtypes.prismic.io/");

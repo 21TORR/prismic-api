@@ -6,6 +6,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Structure\Part\ImageConstraint;
 use Torr\PrismicApi\Transform\FieldValueTransformer;
+use Torr\PrismicApi\Validation\DataValidator;
 
 /**
  * @see https://prismic.io/docs/core-concepts/rich-text-title
@@ -43,12 +44,12 @@ class RichTextField extends InputField
 	 */
 	public function __construct (
 		string $label,
-		private ?array $styles = null,
-		private bool $allowsMultipleLines = true,
+		private readonly ?array $styles = null,
+		private readonly bool $allowsMultipleLines = true,
 		bool $allowTargetBlankForLinks = true,
 		?string $placeholder = null,
 		?ImageConstraint $imageConstraint = null,
-		private bool $required = false,
+		private readonly bool $required = false,
 	)
 	{
 		$stylesKey = $this->allowsMultipleLines ? "multi" : "single";
@@ -89,11 +90,10 @@ class RichTextField extends InputField
 			: [self::PARAGRAPH];
 	}
 
-
 	/**
 	 * @inheritDoc
 	 */
-	public function getValidationConstraints () : array
+	public function validateData (DataValidator $validator, array $path, mixed $data) : void
 	{
 		$constraints = [
 			new Assert\Type("array"),
@@ -128,8 +128,9 @@ class RichTextField extends InputField
 			$constraints[] = new Assert\Count(max: 1);
 		}
 
-		return $constraints;
+		$this->ensureDataIsValid($validator, $path, $data, $constraints);
 	}
+
 
 	/**
 	 * @inheritDoc

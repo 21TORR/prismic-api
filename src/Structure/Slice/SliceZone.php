@@ -3,25 +3,24 @@
 namespace Torr\PrismicApi\Structure\Slice;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use Torr\PrismicApi\Exception\Data\DataValidationFailedException;
 use Torr\PrismicApi\Exception\Data\InvalidDataException;
 use Torr\PrismicApi\Exception\Structure\InvalidTypeDefinitionException;
 use Torr\PrismicApi\Exception\Transform\TransformationFailedException;
 use Torr\PrismicApi\Structure\Helper\KeyedMapHelper;
 use Torr\PrismicApi\Structure\PrismicTypeInterface;
 use Torr\PrismicApi\Transform\FieldValueTransformer;
-use Torr\PrismicApi\Validation\SliceValidationCompound;
+use Torr\PrismicApi\Validation\DataValidator;
 
 /**
  * @see https://prismic.io/docs/core-concepts/slices
  */
 final class SliceZone implements PrismicTypeInterface
 {
-	/**
-	 * @param array<string, Slice> $choices
-	 */
 	public function __construct (
-		private string $label,
-		private array $choices = [],
+		private readonly string $label,
+		/** @var array<string, Slice> */
+		private readonly array $choices = [],
 	)
 	{
 		if (empty($this->choices))
@@ -47,29 +46,75 @@ final class SliceZone implements PrismicTypeInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function getValidationConstraints () : array
+	public function validateData (DataValidator $validator, array $path, mixed $data) : void
 	{
-		$sliceValidations = [];
+		$validator->ensureDataIsValid(
+			$path,
+			self::class,
+			$data,
+			[
+				new Assert\NotNull(),
+				new Assert\Type("array"),
+				// must be an array of arrays
+				new Assert\All([
+					new Assert\NotNull(),
+					new Assert\Type("array"),
+				]),
+			],
+		);
 
-		foreach ($this->choices as $key => $choice)
+		foreach ($data as $index => $nestedData)
 		{
-			$sliceValidations[] = new SliceValidationCompound(
-				$key,
-				$choice->getValidationConstraints(),
-			);
-		}
+			\assert(\is_array($nestedData));
 
-		return [
-			new Assert\NotNull(),
-			new Assert\Type("array"),
-			new Assert\All([
-				"constraints" => [
-					new Assert\AtLeastOneOf([
-						"constraints" => $sliceValidations,
+			// ensure that the slice type is available
+			$validator->ensureDataIsValid(
+				[...$path, $index],
+				self::class,
+				$nestedData,
+				[
+					new Assert\NotNull(),
+					new Assert\Type("array"),
+					// must be an array of arrays
+					new Assert\Collection([
+						"fields" => [
+							"slice_type" => [
+								new Assert\NotNull(),
+								new Assert\Type("string"),
+							],
+						],
+						"allowExtraFields" => true,
+						"allowMissingFields" => false,
 					]),
 				],
-			]),
-		];
+			);
+
+			$sliceType = $nestedData["slice_type"];
+			$slice = $this->choices[$sliceType] ?? null;
+
+			if (!$slice instanceof Slice)
+			{
+				throw new DataValidationFailedException(
+					[...$path, $index],
+					$data,
+					"Slice<?>",
+					\sprintf("Unknown slice type '%s'", $sliceType),
+				);
+			}
+
+			$slice->validateData(
+				$validator,
+				[
+					...$path,
+					\sprintf(
+						"@%d Slice<%s>",
+						$index,
+						DataValidator::getBaseClassName(\get_class($slice), "Slice"),
+					),
+				],
+				$nestedData,
+			);
+		}
 	}
 
 	/**

@@ -7,6 +7,7 @@ use Torr\PrismicApi\Data\Value\ImageValue;
 use Torr\PrismicApi\Data\Value\VideoValue;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Transform\FieldValueTransformer;
+use Torr\PrismicApi\Validation\DataValidator;
 
 /**
  * @see https://prismic.io/docs/core-concepts/embed
@@ -14,7 +15,6 @@ use Torr\PrismicApi\Transform\FieldValueTransformer;
 final class EmbedField extends InputField
 {
 	private const TYPE_KEY = "Embed";
-
 
 	/**
 	 * @inheritDoc
@@ -33,9 +33,9 @@ final class EmbedField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function getValidationConstraints () : array
+	public function validateData (DataValidator $validator, array $path, mixed $data) : void
 	{
-		return [
+		$this->ensureDataIsValid($validator, $path, $data, [
 			new Assert\NotNull(),
 			new Assert\Type("array"),
 			new Assert\Collection([
@@ -86,7 +86,7 @@ final class EmbedField extends InputField
 				"allowMissingFields" => false,
 				"allowExtraFields" => true,
 			]),
-		];
+		]);
 	}
 
 	/**

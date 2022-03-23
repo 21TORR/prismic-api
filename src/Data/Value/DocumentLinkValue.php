@@ -7,8 +7,8 @@ final class DocumentLinkValue
 	/**
 	 */
 	public function __construct (
-		private string $id,
-		private ?string $type,
+		private readonly string $id,
+		private readonly ?string $type,
 	) {}
 
 	/**

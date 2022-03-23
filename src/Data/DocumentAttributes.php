@@ -13,7 +13,7 @@ final class DocumentAttributes
 	/**
 	 */
 	public function __construct (
-		private array $data,
+		private readonly array $data,
 	)
 	{
 		$this->firstPublicationDate = $this->parseDate($data["first_publication_date"]);
@@ -85,6 +85,8 @@ final class DocumentAttributes
 
 
 	/**
+	 * @internal
+	 *
 	 * @return Constraint[]
 	 */
 	public static function getValidationConstraints () : array
