@@ -85,7 +85,7 @@ final class PrismicIntegrationFieldApi
 	/**
 	 * @param IntegrationFieldEntry[]|null $entries
 	 *
-	 * @return int the HTTP status code of the call
+	 * @return array{int, string} the HTTP status code of the call + the response content
 	 */
 	public function sendRequest (
 		string $integrationFieldKey,
