@@ -17,9 +17,7 @@ final class TypesMigrator
 	public function __construct (
 		private iterable $documentDefinitions,
 		private PrismicApi $api,
-	)
-	{
-	}
+	) {}
 
 
 	/**

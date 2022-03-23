@@ -17,9 +17,7 @@ final class DocumentFactory
 	public function __construct (
 		private iterable $documentDefinitions,
 		private ValidatorInterface $validator,
-	)
-	{
-	}
+	) {}
 
 
 	/**

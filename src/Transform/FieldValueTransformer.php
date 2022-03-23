@@ -12,10 +12,7 @@ final class FieldValueTransformer
 	public function __construct (
 		/** @var iterable<SliceExtraDataGeneratorInterface> */
 		private iterable $sliceExtraDataGenerators,
-	)
-	{
-
-	}
+	) {}
 
 	public function transformValue (
 		array $data,

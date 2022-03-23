@@ -15,9 +15,7 @@ final class ImageValue
 		private int $height,
 		private ?string $alt = null,
 		private ?string $copyright = null,
-	)
-	{
-	}
+	) {}
 
 	/**
 	 */

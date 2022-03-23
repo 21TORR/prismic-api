@@ -8,10 +8,7 @@ final class DocumentTypeConfiguration
 		private string $label,
 		private bool $isRepeatable = true,
 		private bool $isActive = true,
-	)
-	{
-
-	}
+	) {}
 
 	/**
 	 */

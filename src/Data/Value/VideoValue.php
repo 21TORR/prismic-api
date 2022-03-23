@@ -21,10 +21,7 @@ final class VideoValue
 		private int $width,
 		private int $height,
 		private ImageValue $thumbnail,
-	)
-	{
-
-	}
+	) {}
 
 	/**
 	 */
