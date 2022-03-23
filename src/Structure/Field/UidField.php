@@ -34,7 +34,6 @@ final class UidField extends InputField
 	public function validateData (DataValidator $validator, array $path, mixed $data) : void
 	{
 		$this->ensureDataIsValid($validator, $path, $data, [
-			new Assert\NotNull(),
 			new Assert\Type("string"),
 		]);
 	}
