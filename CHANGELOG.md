@@ -1,3 +1,9 @@
+4.0.1
+=====
+
+*   (improvement) Add logging for the prismic integration field API client.
+
+
 4.0.0
 =====
 
