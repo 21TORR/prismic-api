@@ -6,6 +6,7 @@
 * (bc) Completely refactor the validation structure.
 * (bc) The class `FieldValueTransformer` was renamed to `DataTransformer`.
 * (bug) Remove useless validation of `UidField`s.
+* (feature) Properly resolve document links in RTE fields.
 
 
 4.0.0
