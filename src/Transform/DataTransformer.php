@@ -2,6 +2,7 @@
 
 namespace Torr\PrismicApi\Transform;
 
+use Torr\PrismicApi\Data\Value\DocumentLinkValue;
 use Torr\PrismicApi\Structure\Field\InputField;
 use Torr\PrismicApi\Structure\Slice\Slice;
 use Torr\PrismicApi\Structure\Slice\SliceZone;
@@ -29,7 +30,38 @@ final class DataTransformer
 	 */
 	public function transformRichText (array $data) : array
 	{
+		foreach ($data as $index => $paragraph)
+		{
+			$spans = [];
+
+			foreach ($paragraph["spans"] as $span)
+			{
+				$type = $span["type"];
+				$linkType = $span["data"]["link_type"] ?? null;
+
+				$spans[] = "hyperlink" === $type && "Document" === $linkType
+					? $this->rewriteDocumentLinkToUrl($span)
+					: $span;
+			}
+
+			$data[$index]["spans"] = $spans;
+		}
+
 		return $data;
+	}
+
+	/**
+	 * Rewrites the given document-type span to a hyperlink-type span
+	 */
+	private function rewriteDocumentLinkToUrl (array $span) : array
+	{
+		// this will always be an internal link, so no target => _blank
+		$span["data"] = [
+			"link_type" => "Web",
+			"url" => new DocumentLinkValue($span["data"]["id"], $span["data"]["type"]),
+		];
+
+		return $span;
 	}
 
 	/**

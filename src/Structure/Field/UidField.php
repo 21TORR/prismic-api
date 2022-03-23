@@ -2,7 +2,6 @@
 
 namespace Torr\PrismicApi\Structure\Field;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Validation\DataValidator;
 
@@ -33,9 +32,6 @@ final class UidField extends InputField
 	 */
 	public function validateData (DataValidator $validator, array $path, mixed $data) : void
 	{
-		$this->ensureDataIsValid($validator, $path, $data, [
-			new Assert\NotNull(),
-			new Assert\Type("string"),
-		]);
+		// this field's data is not returned via the regular data, but in the attributes of the document
 	}
 }
