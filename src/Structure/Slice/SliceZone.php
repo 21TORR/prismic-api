@@ -24,8 +24,8 @@ final class SliceZone implements PrismicTypeInterface
 	 * @param array<string, Slice> $choices
 	 */
 	public function __construct (
-		private string $label,
-		private array $choices = [],
+		private readonly string $label,
+		private readonly array $choices = [],
 	)
 	{
 		if (empty($this->choices))

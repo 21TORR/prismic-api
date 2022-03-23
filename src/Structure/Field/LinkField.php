@@ -33,7 +33,7 @@ final class LinkField extends InputField
 	 */
 	public function __construct (
 		string $label,
-		private ?string $select = self::SELECT_ALL,
+		private readonly ?string $select = self::SELECT_ALL,
 		?string $placeholder = null,
 		?array $customTypes = null,
 		?array $tags = null,

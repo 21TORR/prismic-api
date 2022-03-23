@@ -7,15 +7,15 @@ final class IntegrationFieldEntry
 	/**
 	 */
 	public function __construct (
-		private string $id,
-		private string $title,
-		private string $description,
-		private ?string $imageUrl,
-		private \DateTimeImmutable $lastUpdate,
+		private readonly string $id,
+		private readonly string $title,
+		private readonly string $description,
+		private readonly ?string $imageUrl,
+		private readonly \DateTimeImmutable $lastUpdate,
 		/**
 		 * The normalized blob data
 		 */
-		private array $blob = [],
+		private readonly array $blob = [],
 	) {}
 
 	/**

@@ -21,7 +21,7 @@ final class GeoPointField extends InputField
 	 */
 	public function __construct (
 		string $label,
-		private bool $required = false,
+		private readonly bool $required = false,
 	)
 	{
 		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([

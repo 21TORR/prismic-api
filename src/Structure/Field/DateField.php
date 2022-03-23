@@ -23,7 +23,7 @@ final class DateField extends InputField
 	public function __construct (
 		string $label,
 		?string $default = null,
-		private bool $required = false,
+		private readonly bool $required = false,
 	)
 	{
 		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([

@@ -15,8 +15,8 @@ final class TypesMigrator
 	 * @param iterable<DocumentDefinition> $documentDefinitions
 	 */
 	public function __construct (
-		private iterable $documentDefinitions,
-		private PrismicApi $api,
+		private readonly iterable $documentDefinitions,
+		private readonly PrismicApi $api,
 	) {}
 
 

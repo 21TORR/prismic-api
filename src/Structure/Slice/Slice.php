@@ -27,11 +27,11 @@ abstract class Slice implements PrismicTypeInterface
 	 * @param array<string, InputField> $repeatedFields
 	 */
 	public function __construct (
-		private string $label,
-		private array $fields = [],
-		private array $repeatedFields = [],
-		private ?string $description = null,
-		private ?string $icon = null,
+		private readonly string $label,
+		private readonly array $fields = [],
+		private readonly array $repeatedFields = [],
+		private readonly ?string $description = null,
+		private readonly ?string $icon = null,
 	)
 	{
 		if (empty($this->fields) && empty($this->repeatedFields))
@@ -129,11 +129,6 @@ abstract class Slice implements PrismicTypeInterface
 		\assert(\is_array($data));
 		$resultItems = [];
 		$resultData = [];
-		$result = [
-			"data" => [],
-			"items" => [],
-			"extra" => [],
-		];
 
 		foreach ($this->fields as $key => $field)
 		{

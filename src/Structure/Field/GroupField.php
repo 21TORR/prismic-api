@@ -25,9 +25,9 @@ final class GroupField extends InputField
 	 */
 	public function __construct (
 		string $label,
-		private array $fields,
+		private readonly array $fields,
 		?bool $repeat = false,
-		private bool $required = false,
+		private readonly bool $required = false,
 	)
 	{
 		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([

@@ -46,12 +46,12 @@ class RichTextField extends InputField
 	 */
 	public function __construct (
 		string $label,
-		private ?array $styles = null,
-		private bool $allowsMultipleLines = true,
+		private readonly ?array $styles = null,
+		private readonly bool $allowsMultipleLines = true,
 		bool $allowTargetBlankForLinks = true,
 		?string $placeholder = null,
 		?ImageConstraint $imageConstraint = null,
-		private bool $required = false,
+		private readonly bool $required = false,
 	)
 	{
 		$stylesKey = $this->allowsMultipleLines ? "multi" : "single";

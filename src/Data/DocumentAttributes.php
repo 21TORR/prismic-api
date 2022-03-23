@@ -13,7 +13,7 @@ final class DocumentAttributes
 	/**
 	 */
 	public function __construct (
-		private array $data,
+		private readonly array $data,
 	)
 	{
 		$this->firstPublicationDate = $this->parseDate($data["first_publication_date"]);

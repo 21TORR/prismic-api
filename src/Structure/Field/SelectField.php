@@ -23,10 +23,10 @@ final class SelectField extends InputField
 	 */
 	public function __construct (
 		string $label,
-		private array $options,
+		private readonly array $options,
 		?string $default_value = null,
 		?string $placeholder = null,
-		private bool $required = false,
+		private readonly bool $required = false,
 	)
 	{
 		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([

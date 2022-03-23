@@ -24,7 +24,7 @@ final class BooleanField extends InputField
 		bool $defaultValue = false,
 		?string $placeholderFalse = null,
 		?string $placeholderTrue = null,
-		private bool $required = false,
+		private readonly bool $required = false,
 	)
 	{
 		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([

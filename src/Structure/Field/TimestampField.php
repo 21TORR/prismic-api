@@ -24,7 +24,7 @@ final class TimestampField extends InputField
 		string $label,
 		?string $placeholder = null,
 		?string $default = null,
-		private bool $required = false,
+		private readonly bool $required = false,
 	)
 	{
 		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([

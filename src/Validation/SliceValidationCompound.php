@@ -13,7 +13,7 @@ final class SliceValidationCompound extends Compound
 	 */
 	public function __construct (
 		string $key,
-		private array $sliceConstraints,
+		private readonly array $sliceConstraints,
 	)
 	{
 		// we need to add the nested constraint before calling the constructor

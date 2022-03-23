@@ -21,8 +21,8 @@ final class PrismicTypesMigrateCommand extends Command
 	 * @inheritDoc
 	 */
 	public function __construct (
-		private TypesMigrator $typesMigrator,
-		private CommandHelper $commandHelper,
+		private readonly TypesMigrator $typesMigrator,
+		private readonly CommandHelper $commandHelper,
 	)
 	{
 		parent::__construct();

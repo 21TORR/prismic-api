@@ -15,8 +15,8 @@ final class DocumentFactory
 	 * @param iterable<DocumentDefinition> $documentDefinitions
 	 */
 	public function __construct (
-		private iterable $documentDefinitions,
-		private ValidatorInterface $validator,
+		private readonly iterable $documentDefinitions,
+		private readonly ValidatorInterface $validator,
 	) {}
 
 

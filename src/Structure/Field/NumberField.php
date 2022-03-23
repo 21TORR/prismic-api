@@ -22,9 +22,9 @@ final class NumberField extends InputField
 	public function __construct (
 		string $label,
 		?string $placeholder = null,
-		private ?int $min = null,
-		private ?int $max = null,
-		private bool $required = false,
+		private readonly ?int $min = null,
+		private readonly ?int $max = null,
+		private readonly bool $required = false,
 	)
 	{
 		parent::__construct(self::TYPE_KEY, FilterFieldsHelper::filterOptionalFields([
