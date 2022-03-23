@@ -23,10 +23,7 @@ jobs:
                     coverage: "none"
                     ini-values: "memory_limit=-1"
                     php-version: "${{ matrix.php }}"
-                    tools: "composer, composer-normalize, cs2pr"
-
-            -   name: Configure matchers
-                uses: mheap/phpunit-matcher-action@v1
+                    tools: "composer, composer-normalize"
 
             -   name: Display versions
                 run: |
@@ -41,13 +38,12 @@ jobs:
                 run: composer-normalize --indent-style tab --indent-size 1 --dry-run --ansi
 
             -   name: PHP CS Fixer
-                run: "./vendor/bin/php-cs-fixer fix --diff --config vendor-bin/test/vendor/21torr/php-cs/.php-cs-fixer.dist.php --dry-run --no-interaction --ansi --format=checkstyle | cs2pr"
+                run: "./vendor/bin/php-cs-fixer fix --diff --config vendor-bin/test/vendor/21torr/php-cs/.php-cs-fixer.dist.php --dry-run --no-interaction --ansi"
                 env:
                     PHP_CS_FIXER_IGNORE_ENV: 1
 
             -   name: PHPStan
-                run: "./vendor/bin/phpstan analyze -c vendor-bin/test/vendor/21torr/php-cs/phpstan/lib.neon . --ansi --error-format=checkstyle | cs2pr"
+                run: "./vendor/bin/phpstan analyze -c vendor-bin/test/vendor/21torr/php-cs/phpstan/lib.neon . --ansi"
 
             -   name: PHPUnit
-                # --teamcity output used by `mheap/phpunit-matcher-action`
-                run: "./vendor/bin/simple-phpunit --teamcity"
+                run: "./vendor/bin/simple-phpunit --testdox"
