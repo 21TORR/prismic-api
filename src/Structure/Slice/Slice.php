@@ -3,7 +3,6 @@
 namespace Torr\PrismicApi\Structure\Slice;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Exception\Structure\InvalidTypeDefinitionException;
 use Torr\PrismicApi\Exception\Transform\TransformationFailedException;
 use Torr\PrismicApi\Structure\Field\InputField;
@@ -108,73 +107,6 @@ abstract class Slice implements PrismicTypeInterface
 			}
 		}
 	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function validateD2ata (ValidatorInterface $validator, mixed $data) : void
-	{
-		$itemsConstraints = [];
-		$primaryConstraints = [];
-
-		if (!empty($this->fields))
-		{
-			$fields = [];
-
-			foreach ($this->fields as $key => $field)
-			{
-				//$fields[$key] = $field->getValidationConstraints();
-			}
-
-			$primaryConstraints[] = new Assert\Collection([
-				"fields" => $fields,
-				"allowMissingFields" => true,
-				"allowExtraFields" => true,
-			]);
-		}
-
-		if (!empty($this->repeatedFields))
-		{
-			$fields = [];
-
-			foreach ($this->repeatedFields as $key => $field)
-			{
-				//$fields[$key] = $field->getValidationConstraints();
-			}
-
-			$itemsConstraints[] = new Assert\All([
-				"constraints" => [
-					new Assert\Collection([
-						"fields" => $fields,
-						"allowMissingFields" => true,
-						"allowExtraFields" => true,
-					]),
-				],
-			]);
-		}
-
-		$this->ensureDataIsValid($validator, $data, [
-			new Assert\NotNull(),
-			new Assert\Type("array"),
-			new Assert\Collection([
-				"fields" => [
-					"items" => [
-						new Assert\NotNull(),
-						new Assert\Type("array"),
-						...$itemsConstraints,
-					],
-					"primary" => [
-						new Assert\NotNull(),
-						new Assert\Type("array"),
-						...$primaryConstraints,
-					],
-				],
-				"allowExtraFields" => true,
-				"allowMissingFields" => false,
-			]),
-		]);
-	}
-
 
 	/**
 	 * @inheritDoc

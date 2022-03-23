@@ -17,7 +17,8 @@ final class DataValidator
 	/**
 	 * Ensures that the given data is valid
 	 *
-	 * @param Constraint[] $constraints
+	 * @param array<Constraint|null> $constraints
+	 *
 	 * @throws DataValidationFailedException
 	 */
 	public function ensureDataIsValid (

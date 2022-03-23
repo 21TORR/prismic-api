@@ -45,7 +45,7 @@ abstract class InputField implements PrismicTypeInterface
 	/**
 	 * Ensures that the value is valid
 	 *
-	 * @param Constraint[] $constraints
+	 * @param array<Constraint|null> $constraints
 	 */
 	protected function ensureDataIsValid (
 		DataValidator $validator,

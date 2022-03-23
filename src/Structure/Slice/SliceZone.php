@@ -3,7 +3,6 @@
 namespace Torr\PrismicApi\Structure\Slice;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\PrismicApi\Exception\Data\DataValidationFailedException;
 use Torr\PrismicApi\Exception\Data\InvalidDataException;
 use Torr\PrismicApi\Exception\Structure\InvalidTypeDefinitionException;
@@ -51,7 +50,7 @@ final class SliceZone implements PrismicTypeInterface
 	{
 		$validator->ensureDataIsValid(
 			$path,
-			static::class,
+			self::class,
 			$data,
 			[
 				new Assert\NotNull(),
@@ -60,7 +59,7 @@ final class SliceZone implements PrismicTypeInterface
 				new Assert\All([
 					new Assert\NotNull(),
 					new Assert\Type("array"),
-				])
+				]),
 			],
 		);
 
@@ -71,7 +70,7 @@ final class SliceZone implements PrismicTypeInterface
 			// ensure that the slice type is available
 			$validator->ensureDataIsValid(
 				[...$path, $index],
-				static::class,
+				self::class,
 				$nestedData,
 				[
 					new Assert\NotNull(),
@@ -82,11 +81,11 @@ final class SliceZone implements PrismicTypeInterface
 							"slice_type" => [
 								new Assert\NotNull(),
 								new Assert\Type("string"),
-							]
+							],
 						],
 						"allowExtraFields" => true,
 						"allowMissingFields" => false,
-					])
+					]),
 				],
 			);
 
@@ -117,42 +116,6 @@ final class SliceZone implements PrismicTypeInterface
 			);
 		}
 	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function validateD2ata (ValidatorInterface $validator, mixed $data) : void
-	{
-		// first check basic structure
-		$this->ensureDataIsValid($validator, $data, [
-			new Assert\NotNull(),
-			new Assert\Type("array"),
-			new Assert\Collection([
-				"fields" => [
-					"primary" => [
-						new Assert\NotNull(),
-						new Assert\Type("array"),
-					],
-					"items" => [
-						new Assert\NotNull(),
-						new Assert\Type("array"),
-					],
-					"slice_type" => [
-						new Assert\NotNull(),
-						new Assert\Type("string"),
-					],
-					"slice_label" => [
-						new Assert\Type("string"),
-					],
-				],
-				"allowExtraFields" => false,
-				"allowMissingFields" => false,
-			]),
-		]);
-
-		// then check every entry
-	}
-
 
 	/**
 	 * @inheritDoc

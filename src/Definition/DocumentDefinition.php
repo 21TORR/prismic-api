@@ -7,6 +7,7 @@ use Torr\PrismicApi\Data\Document;
 use Torr\PrismicApi\Data\DocumentAttributes;
 use Torr\PrismicApi\Definition\Configuration\DocumentTypeConfiguration;
 use Torr\PrismicApi\Editor\EditorTabs;
+use Torr\PrismicApi\Exception\Data\DataValidationFailedException;
 use Torr\PrismicApi\Exception\Document\InvalidDocumentStructureException;
 use Torr\PrismicApi\Validation\DataValidator;
 
@@ -66,6 +67,8 @@ abstract class DocumentDefinition
 	 * Validates the data according to the validation constraints and possibly throws a validation exception.
 	 *
 	 * @internal
+	 *
+	 * @throws DataValidationFailedException
 	 */
 	public function validateData (DataValidator $validator, array $data) : void
 	{
@@ -108,7 +111,9 @@ abstract class DocumentDefinition
 
 	/**
 	 * @phpstan-return T
+	 *
 	 * @throws InvalidDocumentStructureException
+	 * @throws DataValidationFailedException
 	 */
 	final public function createDocument (array $data, DataValidator $validator) : Document
 	{
