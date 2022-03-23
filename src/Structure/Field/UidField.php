@@ -2,7 +2,6 @@
 
 namespace Torr\PrismicApi\Structure\Field;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Validation\DataValidator;
 
