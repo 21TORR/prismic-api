@@ -1,4 +1,4 @@
-5.0.0 (unreleased)
+5.0.0
 =====
 
 * (improvement) Add logging for the prismic integration field API client.
