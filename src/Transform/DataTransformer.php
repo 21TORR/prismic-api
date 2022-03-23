@@ -7,7 +7,7 @@ use Torr\PrismicApi\Structure\Slice\Slice;
 use Torr\PrismicApi\Structure\Slice\SliceZone;
 use Torr\PrismicApi\Transform\Slice\SliceExtraDataGeneratorInterface;
 
-final class FieldValueTransformer
+final class DataTransformer
 {
 	public function __construct (
 		/** @var iterable<SliceExtraDataGeneratorInterface> */

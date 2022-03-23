@@ -6,7 +6,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\Data\Value\ImageValue;
 use Torr\PrismicApi\Data\Value\VideoValue;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
-use Torr\PrismicApi\Transform\FieldValueTransformer;
+use Torr\PrismicApi\Transform\DataTransformer;
 use Torr\PrismicApi\Validation\DataValidator;
 
 /**
@@ -92,7 +92,7 @@ final class EmbedField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function transformValue (mixed $data, FieldValueTransformer $valueTransformer) : mixed
+	public function transformValue (mixed $data, DataTransformer $dataTransformer) : mixed
 	{
 		return new VideoValue(
 			provider: VideoValue::PROVIDER_MAPPING[$data["provider_name"]],
