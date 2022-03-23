@@ -18,6 +18,7 @@ final class DataValidator
 	 * Ensures that the given data is valid
 	 *
 	 * @param Constraint[] $constraints
+	 * @throws DataValidationFailedException
 	 */
 	public function ensureDataIsValid (
 		array $path,
@@ -36,10 +37,15 @@ final class DataValidator
 
 		if (\count($violations) > 0)
 		{
+			$errorMessage = $violations instanceof \Stringable
+				? (string) $violations
+				: null;
+
 			throw new DataValidationFailedException(
 				$path,
 				$data,
 				self::getBaseClassName($fieldType),
+				$errorMessage,
 				$violations,
 			);
 		}

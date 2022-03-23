@@ -4,7 +4,6 @@ namespace Torr\PrismicApi\Exception\Data;
 
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Torr\PrismicApi\Exception\PrismicApiException;
-use Torr\PrismicApi\Validation\DataValidator;
 
 final class DataValidationFailedException extends \InvalidArgumentException implements PrismicApiException
 {
@@ -12,23 +11,20 @@ final class DataValidationFailedException extends \InvalidArgumentException impl
 	 */
 	public function __construct (
 		private readonly array $path,
-		private readonly array $data,
+		private readonly mixed $data,
 		private readonly string $fieldType,
+		?string $errorMessage = null,
 		private readonly ?ConstraintViolationListInterface $violations = null,
-		?string $message = null,
 		?\Throwable $previous = null,
 	)
 	{
 		parent::__construct(
 			\sprintf(
-				"Failed to validate data at path '%s' with field type '%s'%s%s",
+				"Failed to validate data at path '%s' with field type '%s'%s",
 				\implode(" / ", $path),
 				$fieldType,
-				null !== $message
-					? " ({$message})"
-					: "",
-				$violations instanceof \Stringable
-					? ": {$violations}"
+				null !== $errorMessage
+					? ": {$errorMessage}"
 					: "",
 			),
 			0,
@@ -45,7 +41,7 @@ final class DataValidationFailedException extends \InvalidArgumentException impl
 
 	/**
 	 */
-	public function getData () : array
+	public function getData () : mixed
 	{
 		return $this->data;
 	}

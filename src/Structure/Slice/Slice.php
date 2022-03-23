@@ -11,6 +11,7 @@ use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Structure\Helper\KeyedMapHelper;
 use Torr\PrismicApi\Structure\PrismicTypeInterface;
 use Torr\PrismicApi\Transform\FieldValueTransformer;
+use Torr\PrismicApi\Validation\DataValidator;
 
 /**
  * You can extend this class to create reusable slices
@@ -54,7 +55,64 @@ abstract class Slice implements PrismicTypeInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (ValidatorInterface $validator, mixed $data) : void
+	public function validateData (DataValidator $validator, array $path, mixed $data) : void
+	{
+		// first validate the basic structure
+		$validator->ensureDataIsValid(
+			$path,
+			static::class,
+			$data,
+			[
+				new Assert\NotNull(),
+				new Assert\Type("array"),
+				new Assert\Collection([
+					"fields" => [
+						"primary" => [
+							new Assert\NotNull(),
+							new Assert\Type("array"),
+						],
+						"items" => [
+							new Assert\NotNull(),
+							new Assert\Type("array"),
+						],
+						"slice_label" => [
+							new Assert\Type("string"),
+						],
+					],
+					"allowExtraFields" => true,
+					"allowMissingFields" => false,
+				]),
+			],
+		);
+
+		// validate (non-repeated) fields
+		foreach ($this->fields as $key => $field)
+		{
+			$field->validateData(
+				$validator,
+				[...$path, "static", $key],
+				$data["primary"][$key] ?? null,
+			);
+		}
+
+		// validate repeated fields
+		foreach ($data["items"] as $index => $itemsData)
+		{
+			foreach ($this->repeatedFields as $key => $field)
+			{
+				$field->validateData(
+					$validator,
+					[...$path, "repeated", $index, $key],
+					$itemsData[$key] ?? null,
+				);
+			}
+		}
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function validateD2ata (ValidatorInterface $validator, mixed $data) : void
 	{
 		$itemsConstraints = [];
 		$primaryConstraints = [];
@@ -121,7 +179,7 @@ abstract class Slice implements PrismicTypeInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function transformValue (mixed $data, FieldValueTransformer $valueTransformer) : array
+	public function transformValue (mixed $data, FieldValueTransformer $valueTransformer) : mixed
 	{
 		\assert(\is_array($data));
 		$resultItems = [];

@@ -108,6 +108,7 @@ abstract class DocumentDefinition
 
 	/**
 	 * @phpstan-return T
+	 * @throws InvalidDocumentStructureException
 	 */
 	final public function createDocument (array $data, DataValidator $validator) : Document
 	{

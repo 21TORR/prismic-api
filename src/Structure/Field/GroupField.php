@@ -40,34 +40,24 @@ final class GroupField extends InputField
 	 */
 	public function validateData (DataValidator $validator, array $path, mixed $data) : void
 	{
-		//dd($data);
 		// validate field itself
 		$this->ensureDataIsValid($validator, $path, $data, [
 			new Assert\Type("array"),
-			new Assert\All([
-				"constraints" => [
-					new Assert\Collection([
-						"fields" => [
-							new Assert\NotNull(),
-							new Assert\Type("array"),
-						],
-						"allowExtraFields" => true,
-						"allowMissingFields" => false,
-					]),
-				],
-			]),
 			$this->required ? new Assert\NotNull() : null,
 			$this->required ? new Assert\Count(min: 1) : null,
 		]);
 
 		// validate nested fields
-		foreach ($this->fields as $key => $field)
+		foreach ($data as $index => $nestedData)
 		{
-			$field->validateData(
-				$validator,
-				[...$path, $key],
-				$data[$key] ?? null,
-			);
+			foreach ($this->fields as $key => $field)
+			{
+				$field->validateData(
+					$validator,
+					[...$path, $index, $key],
+					$nestedData[$key] ?? null,
+				);
+			}
 		}
 	}
 
