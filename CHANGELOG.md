@@ -1,8 +1,10 @@
-4.0.1
+5.0.0 (unreleased)
 =====
 
-*   (improvement) Add logging for the prismic integration field API client.
-*   (improvement) Require PHP 8.1+
+* (improvement) Add logging for the prismic integration field API client.
+* (improvement) Require PHP 8.1+
+* (bc) Completely refactor the validation structure.
+* (bc) The class `FieldValueTransformer` was renamed to `DataTransformer`.
 
 
 4.0.0
