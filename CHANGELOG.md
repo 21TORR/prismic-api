@@ -1,3 +1,9 @@
+5.0.2
+=====
+
+* (improvement) Import integration field entries in batches.
+
+
 5.0.1
 =====
 

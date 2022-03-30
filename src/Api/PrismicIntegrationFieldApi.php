@@ -13,6 +13,7 @@ use Torr\PrismicApi\Exception\IntegrationField\IntegrationFieldApiException;
 
 final class PrismicIntegrationFieldApi
 {
+	private const BATCH_SIZE = 200;
 	public const ACTION_CREATE = "create";
 	public const ACTION_UPDATE = "update";
 	public const ACTION_DELETE = "delete";
@@ -62,19 +63,37 @@ final class PrismicIntegrationFieldApi
 		$io?->writeln("• <fg=green>Cleared all entries</>");
 
 		// then index
-		$io?->writeln(\sprintf("• Import all <fg=yellow>%d</> entries", \count($entries)));
-		[$status, $response] = $this->sendRequest($integrationFieldKey, self::ACTION_UPDATE, $entries);
+		$batches = \ceil(\count($entries) / self::BATCH_SIZE);
+		$io?->writeln(\sprintf(
+			"• Importing all <fg=yellow>%d</> entries in <fg=yellow>%d</> batch%s",
+			\count($entries),
+			$batches,
+			$batches > 1 ? "es" : "",
+		));
 
-		if (200 !== $status)
+		for ($i = 0; $i < $batches; ++$i)
 		{
-			$this->logger->error("Failed to import the integration field '{field}' entries, got status code {status}", [
-				"field" => $integrationFieldKey,
-				"status" => $status,
-				"response" => $response,
-			]);
+			$offset = $i * self::BATCH_SIZE;
+			$io?->writeln(\sprintf(
+				"• Importing batch <fg=blue>%d</> (entries <fg=yellow>%d</> – <fg=yellow>%d</>)",
+				$i + 1,
+				$offset,
+				\min(\count($entries), ($i + 1) * self::BATCH_SIZE),
+			));
+			$currentBatch = \array_slice($entries, $offset, self::BATCH_SIZE);
+			[$status, $response] = $this->sendRequest($integrationFieldKey, self::ACTION_UPDATE, $currentBatch);
 
-			$io?->writeln("• <fg=red>Failed to import</>");
-			return false;
+			if (200 !== $status)
+			{
+				$this->logger->error("Failed to import the integration field '{field}' entries, got status code {status}", [
+					"field" => $integrationFieldKey,
+					"status" => $status,
+					"response" => $response,
+				]);
+
+				$io?->writeln("• <fg=red>Failed to import</>");
+				return false;
+			}
 		}
 
 		$io?->writeln("• <fg=green>Imported all entries</>");
