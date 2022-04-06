@@ -7,6 +7,7 @@ use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Structure\Part\ImageConstraint;
 use Torr\PrismicApi\Transform\DataTransformer;
 use Torr\PrismicApi\Validation\DataValidator;
+use Torr\PrismicApi\Visitor\DataVisitorInterface;
 
 /**
  * @see https://prismic.io/docs/core-concepts/rich-text-title
@@ -135,10 +136,16 @@ class RichTextField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function transformValue (mixed $data, DataTransformer $dataTransformer) : ?array
+	public function transformValue (
+		mixed $data,
+		DataTransformer $dataTransformer,
+		?DataVisitorInterface $dataVisitor = null,
+	) : ?array
 	{
-		return \is_array($data)
+		$data = \is_array($data)
 			? $dataTransformer->transformRichText($data)
 			: null;
+
+		return parent::transformValue($data, $dataTransformer, $dataVisitor);
 	}
 }

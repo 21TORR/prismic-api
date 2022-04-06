@@ -8,6 +8,7 @@ use Torr\PrismicApi\Exception\Structure\InvalidTypeDefinitionException;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Transform\DataTransformer;
 use Torr\PrismicApi\Validation\DataValidator;
+use Torr\PrismicApi\Visitor\DataVisitorInterface;
 
 /**
  * @see https://prismic.io/docs/core-concepts/link-content-relationship
@@ -68,14 +69,22 @@ final class LinkField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function transformValue (mixed $data, DataTransformer $dataTransformer) : string|ImageValue|DocumentLinkValue|null
+	public function transformValue (
+		mixed $data,
+		DataTransformer $dataTransformer,
+		?DataVisitorInterface $dataVisitor = null,
+	) : string|ImageValue|DocumentLinkValue|null
 	{
 		$type = $data["link_type"] ?? null;
 		$kind = $data["kind"] ?? null;
 
 		if ("Web" === $type)
 		{
-			return $data["url"] ?? null;
+			return parent::transformValue(
+				$data["url"] ?? null,
+				$dataTransformer,
+				$dataVisitor,
+			);
 		}
 
 		if ("Media" === $type)
@@ -84,25 +93,42 @@ final class LinkField extends InputField
 			// @todo always return it this way (and use ImageValue or FileValue)
 			if ("image" === $kind)
 			{
-				return new ImageValue(
-					$data["url"],
-					(int) $data["width"],
-					(int) $data["height"],
-					$data["name"],
+				return parent::transformValue(
+					new ImageValue(
+						$data["url"],
+						(int) $data["width"],
+						(int) $data["height"],
+						$data["name"],
+					),
+					$dataTransformer,
+					$dataVisitor,
 				);
 			}
 
-			return $data["url"] ?? null;
+			return parent::transformValue(
+				$data["url"] ?? null,
+				$dataTransformer,
+				$dataVisitor,
+			);
 		}
 
 		if ("Document" === $type && \is_string($data["id"]))
 		{
-			return new DocumentLinkValue(
-				$data["id"],
-				$data["type"] ?? null,
+			return parent::transformValue(
+				new DocumentLinkValue(
+					$data["id"],
+					$data["type"] ?? null,
+					$data["language"],
+				),
+				$dataTransformer,
+				$dataVisitor,
 			);
 		}
 
-		return null;
+		return parent::transformValue(
+			null,
+			$dataTransformer,
+			$dataVisitor,
+		);
 	}
 }
