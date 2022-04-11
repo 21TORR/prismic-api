@@ -6,6 +6,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Transform\DataTransformer;
 use Torr\PrismicApi\Validation\DataValidator;
+use Torr\PrismicApi\Visitor\DataVisitorInterface;
 
 /**
  * @see https://prismic.io/docs/core-concepts/geopoint
@@ -55,9 +56,21 @@ final class GeoPointField extends InputField
 
 	/**
 	 * @inheritDoc
+	 *
+	 * @template T
+	 *
+	 * @param T $data
+	 *
+	 * @return T
 	 */
-	public function transformValue (mixed $data, DataTransformer $dataTransformer) : ?array
+	public function transformValue (
+		mixed $data,
+		DataTransformer $dataTransformer,
+		?DataVisitorInterface $dataVisitor = null,
+	) : mixed
 	{
+		$dataVisitor?->onDataVisit($this, $data);
+
 		return $data;
 	}
 }

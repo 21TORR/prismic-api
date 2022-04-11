@@ -6,7 +6,6 @@ use Symfony\Component\Validator\Constraint;
 use Torr\PrismicApi\Structure\PrismicTypeInterface;
 use Torr\PrismicApi\Transform\DataTransformer;
 use Torr\PrismicApi\Validation\DataValidator;
-use Torr\PrismicApi\Visitor\DataVisitorCollection;
 use Torr\PrismicApi\Visitor\DataVisitorInterface;
 
 /**
@@ -39,7 +38,9 @@ abstract class InputField implements PrismicTypeInterface
 	 * @inheritDoc
 	 *
 	 * @template T
+	 *
 	 * @param T $data
+	 *
 	 * @return T
 	 */
 	public function transformValue (

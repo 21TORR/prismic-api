@@ -61,7 +61,11 @@ final class LinkField extends InputField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (DataValidator $validator, array $path, mixed $data) : void
+	public function validateData (
+		DataValidator $validator,
+		array $path,
+		mixed $data,
+	) : void
 	{
 		// @todo add validation
 	}
@@ -112,13 +116,13 @@ final class LinkField extends InputField
 			);
 		}
 
-		if ("Document" === $type && \is_string($data["id"]))
+		if ("Document" === $type && \is_string($data["id"] ?? null))
 		{
 			return parent::transformValue(
 				new DocumentLinkValue(
 					$data["id"],
 					$data["type"] ?? null,
-					$data["language"],
+					$data["lang"],
 				),
 				$dataTransformer,
 				$dataVisitor,
