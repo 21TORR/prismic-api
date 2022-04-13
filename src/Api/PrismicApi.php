@@ -194,6 +194,7 @@ final class PrismicApi
 				"GET",
 				$pathWithQuery,
 				(new HttpOptions())
+					->setTimeout(60)
 					->toArray(),
 			),
 			[
@@ -212,6 +213,7 @@ final class PrismicApi
 			->setHeaders([
 				"repository" => $this->repository,
 			])
+			->setTimeout(60)
 			->setAuthBearer($this->typesToken);
 
 		if (!empty($payload))

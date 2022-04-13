@@ -1,3 +1,9 @@
+5.0.3 (unreleased)
+=====
+
+* (improvement) Add timeout for API requests.
+
+
 5.0.2
 =====
 
