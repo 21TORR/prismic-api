@@ -1,7 +1,10 @@
-5.0.3 (unreleased)
+5.1.0 (unreleased)
 =====
 
 * (improvement) Add timeout for API requests.
+* (feature) Add `DataVisitorInterface` to inspect every dataset.
+* (feature) Add `TranslationCheckVisitor`.
+* (feature) Add `PrismicBackendUrlGenerator` to generate URLs to the prismic backend.
 
 
 5.0.2

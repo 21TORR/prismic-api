@@ -34,3 +34,6 @@ services:
 
     Torr\PrismicApi\Transform\DataTransformer:
         $sliceExtraDataGenerators: !tagged_iterator 'prismic.slice.extra-data-generator'
+
+    Torr\PrismicApi\Url\PrismicBackendUrlGenerator:
+        $repository: '%env(PRISMIC_REPOSITORY)%'
