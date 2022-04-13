@@ -7,6 +7,7 @@ use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Structure\Helper\KeyedMapHelper;
 use Torr\PrismicApi\Transform\DataTransformer;
 use Torr\PrismicApi\Validation\DataValidator;
+use Torr\PrismicApi\Visitor\DataVisitorInterface;
 
 /**
  * @see https://prismic.io/docs/core-concepts/group
@@ -63,9 +64,21 @@ final class GroupField extends InputField
 
 	/**
 	 * @inheritDoc
+	 *
+	 * @template T of array
+	 *
+	 * @param T $data
+	 *
+	 * @return T
 	 */
-	public function transformValue (mixed $data, DataTransformer $dataTransformer) : array
+	public function transformValue (
+		mixed $data,
+		DataTransformer $dataTransformer,
+		?DataVisitorInterface $dataVisitor = null,
+	) : array
 	{
+		$dataVisitor?->onDataVisit($this, $data);
+
 		$result = [];
 
 		foreach ($data as $entry)
@@ -77,6 +90,7 @@ final class GroupField extends InputField
 				$transformed[$key] = $field->transformValue(
 					$entry[$key] ?? null,
 					$dataTransformer,
+					$dataVisitor,
 				);
 			}
 

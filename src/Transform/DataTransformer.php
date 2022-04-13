@@ -58,7 +58,11 @@ final class DataTransformer
 		// this will always be an internal link, so no target => _blank
 		$span["data"] = [
 			"link_type" => "Web",
-			"url" => new DocumentLinkValue($span["data"]["id"], $span["data"]["type"]),
+			"url" => new DocumentLinkValue(
+				$span["data"]["id"],
+				$span["data"]["type"],
+				$span["data"]["lang"],
+			),
 		];
 
 		return $span;

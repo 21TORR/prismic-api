@@ -6,6 +6,7 @@ use Symfony\Component\Validator\Constraint;
 use Torr\PrismicApi\Structure\PrismicTypeInterface;
 use Torr\PrismicApi\Transform\DataTransformer;
 use Torr\PrismicApi\Validation\DataValidator;
+use Torr\PrismicApi\Visitor\DataVisitorInterface;
 
 /**
  * Low-level input field wrapper
@@ -35,9 +36,21 @@ abstract class InputField implements PrismicTypeInterface
 
 	/**
 	 * @inheritDoc
+	 *
+	 * @template T
+	 *
+	 * @param T $data
+	 *
+	 * @return T
 	 */
-	public function transformValue (mixed $data, DataTransformer $dataTransformer) : mixed
+	public function transformValue (
+		mixed $data,
+		DataTransformer $dataTransformer,
+		?DataVisitorInterface $dataVisitor = null,
+	) : mixed
 	{
+		$dataVisitor?->onDataVisit($this, $data);
+
 		return $data;
 	}
 

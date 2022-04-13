@@ -11,6 +11,7 @@ use Torr\PrismicApi\Structure\Helper\KeyedMapHelper;
 use Torr\PrismicApi\Structure\PrismicTypeInterface;
 use Torr\PrismicApi\Transform\DataTransformer;
 use Torr\PrismicApi\Validation\DataValidator;
+use Torr\PrismicApi\Visitor\DataVisitorInterface;
 
 /**
  * You can extend this class to create reusable slices
@@ -111,7 +112,11 @@ abstract class Slice implements PrismicTypeInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function transformValue (mixed $data, DataTransformer $dataTransformer) : array
+	public function transformValue (
+		mixed $data,
+		DataTransformer $dataTransformer,
+		?DataVisitorInterface $dataVisitor = null,
+	) : mixed
 	{
 		\assert(\is_array($data));
 		$resultItems = [];
@@ -124,6 +129,7 @@ abstract class Slice implements PrismicTypeInterface
 				$this->fields,
 				$key,
 				$data["primary"][$key] ?? null,
+				$dataVisitor,
 			);
 		}
 
@@ -138,6 +144,7 @@ abstract class Slice implements PrismicTypeInterface
 					$this->repeatedFields,
 					$key,
 					$itemsData[$key] ?? null,
+					$dataVisitor,
 				);
 			}
 
@@ -159,6 +166,7 @@ abstract class Slice implements PrismicTypeInterface
 		array $fields,
 		?string $key,
 		mixed $fieldData,
+		?DataVisitorInterface $dataVisitor,
 	) : mixed
 	{
 		if (null === $fieldData)
@@ -177,6 +185,6 @@ abstract class Slice implements PrismicTypeInterface
 			));
 		}
 
-		return $field->transformValue($fieldData, $valueTransformer);
+		return $field->transformValue($fieldData, $valueTransformer, $dataVisitor);
 	}
 }

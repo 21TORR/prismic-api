@@ -4,6 +4,7 @@ namespace Torr\PrismicApi\Structure;
 
 use Torr\PrismicApi\Transform\DataTransformer;
 use Torr\PrismicApi\Validation\DataValidator;
+use Torr\PrismicApi\Visitor\DataVisitorInterface;
 
 /**
  * @internal
@@ -23,5 +24,9 @@ interface PrismicTypeInterface
 	/**
 	 * Receives the prismic data for the given field and transforms it for better usage
 	 */
-	public function transformValue (mixed $data, DataTransformer $dataTransformer) : mixed;
+	public function transformValue (
+		mixed $data,
+		DataTransformer $dataTransformer,
+		?DataVisitorInterface $dataVisitor = null,
+	) : mixed;
 }

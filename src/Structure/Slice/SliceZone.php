@@ -11,6 +11,7 @@ use Torr\PrismicApi\Structure\Helper\KeyedMapHelper;
 use Torr\PrismicApi\Structure\PrismicTypeInterface;
 use Torr\PrismicApi\Transform\DataTransformer;
 use Torr\PrismicApi\Validation\DataValidator;
+use Torr\PrismicApi\Visitor\DataVisitorInterface;
 
 /**
  * @see https://prismic.io/docs/core-concepts/slices
@@ -120,7 +121,11 @@ final class SliceZone implements PrismicTypeInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function transformValue (mixed $data, DataTransformer $dataTransformer) : array
+	public function transformValue (
+		mixed $data,
+		DataTransformer $dataTransformer,
+		?DataVisitorInterface $dataVisitor = null,
+	) : array
 	{
 		$result = [];
 
@@ -137,7 +142,7 @@ final class SliceZone implements PrismicTypeInterface
 				));
 			}
 
-			$transformed = $slice->transformValue($entryData, $dataTransformer);
+			$transformed = $slice->transformValue($entryData, $dataTransformer, $dataVisitor);
 
 			if (!\is_array($transformed) || \array_key_exists("type", $transformed))
 			{

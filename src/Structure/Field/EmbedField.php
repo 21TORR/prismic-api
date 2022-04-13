@@ -8,6 +8,7 @@ use Torr\PrismicApi\Data\Value\VideoValue;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Transform\DataTransformer;
 use Torr\PrismicApi\Validation\DataValidator;
+use Torr\PrismicApi\Visitor\DataVisitorInterface;
 
 /**
  * @see https://prismic.io/docs/core-concepts/embed
@@ -91,9 +92,18 @@ final class EmbedField extends InputField
 
 	/**
 	 * @inheritDoc
+	 *
+	 * @template T
+	 *
+	 * @param T $data
 	 */
-	public function transformValue (mixed $data, DataTransformer $dataTransformer) : VideoValue
+	public function transformValue (
+		mixed $data,
+		DataTransformer $dataTransformer,
+		?DataVisitorInterface $dataVisitor = null,
+	) : VideoValue
 	{
+		$dataVisitor?->onDataVisit($this, $data);
 		return new VideoValue(
 			provider: VideoValue::PROVIDER_MAPPING[$data["provider_name"]],
 			url: $data["embed_url"],
