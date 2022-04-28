@@ -6,81 +6,120 @@ use Torr\PrismicApi\Data\Value\DocumentLinkValue;
 use Torr\PrismicApi\Structure\Field\LinkField;
 use Torr\PrismicApi\Structure\Field\RichTextField;
 use Torr\PrismicApi\Structure\PrismicTypeInterface;
+use Torr\PrismicApi\Visitor\Check\IssueSeverity;
 use Torr\PrismicApi\Visitor\DataVisitorInterface;
 
 class TranslationCheckVisitor implements DataVisitorInterface
 {
 	/** @var TranslationCheckIssue[] */
-	private array $issue = [];
-
-	public function __construct(
-		private readonly string $documentLocale,
-	) {}
-
+	private array $issues = [];
 
 	/**
 	 */
-	public function onDataVisit(
+	public function __construct (
+		private readonly string $documentLocale,
+	)
+	{
+	}
+
+	/**
+	 */
+	public function onDataVisit (
 		PrismicTypeInterface $field,
 		mixed $data,
 	) : void
 	{
-		if ($field instanceof RichTextField)
+		switch (true)
 		{
-			foreach ($data as $item)
-			{
-				if (!empty($item))
-				{
-					$check = true;
+			case $field instanceof LinkField:
+				$this->checkLinkField($field, $data);
+				break;
 
-					foreach ($item["spans"] as $span) {
-						if ("hyperlink" === $span["type"])
-						{
-							if($span["data"]["url"] instanceof DocumentLinkValue && $span["data"]["url"]->getTargetLocale() !== $this->documentLocale)
-							{
-								$this->issue[] = new TranslationCheckIssue(
-									"ERROR",
-									"RTE - Wrong locale in Link.",
-									$field,
-								);
-							}
-						}
-
-						if (!empty($span["type"]) && $check)
-						{
-							$check = false;
-							$this->issue[] = new TranslationCheckIssue(
-								"INFO",
-								"RTE has span.",
-								$field,
-							);
-						}
-					}
-				}
-			}
-			return;
+			case $field instanceof RichTextField:
+				$this->checkRteField($field, $data);
+				break;
 		}
+	}
 
-		if ($field instanceof LinkField && $data instanceof DocumentLinkValue)
+
+	/**
+	 */
+	private function checkRteField (RichTextField $field, mixed $data) : void
+	{
+		\assert(\is_array($data));
+
+		foreach ($data as $paragraph)
 		{
-			if ($data->getTargetLocale() !== $this->documentLocale)
+			if (empty($paragraph))
 			{
-				$this->issue[] = new TranslationCheckIssue(
-					"ERROR",
-					"Document with wrong locale.",
+				continue;
+			}
+
+			$spans = \array_column($paragraph["spans"], "type");
+
+			if (!empty($spans))
+			{
+				$this->issues[] = new TranslationCheckIssue(
+					IssueSeverity::INFO,
+					\sprintf(
+						"RTE has span(s) of type: %s",
+					\implode(", ", \array_unique($spans))
+					),
 					$field,
 				);
 			}
+
+			foreach ($paragraph["spans"] as $span)
+			{
+				if (
+					"hyperlink" === $span["type"]
+					&& $span["data"]["url"] instanceof DocumentLinkValue
+				)
+				{
+					$this->validateDocumentLinkValue($field, $span["data"]["url"], "RTE - Wrong locale in Link.");
+				}
+			}
 		}
-		// do antother field check
+	}
+
+
+	/**
+	 */
+	private function checkLinkField (LinkField $field, mixed $data) : void
+	{
+		if (!$data instanceof DocumentLinkValue)
+		{
+			return;
+		}
+
+		$this->validateDocumentLinkValue($field, $data, "Linked to a document in another locale.");
+	}
+
+
+	/**
+	 */
+	private function validateDocumentLinkValue (
+		PrismicTypeInterface $field,
+		DocumentLinkValue $documentLink,
+		string $message,
+	) : void
+	{
+		if ($documentLink->getTargetLocale() !== $this->documentLocale)
+		{
+			$this->issues[] = new TranslationCheckIssue(
+				IssueSeverity::ERROR,
+				$message,
+				$field,
+			);
+		}
 	}
 
 	/**
 	 * @return TranslationCheckIssue[]
 	 */
-	public function getIssue() : array
+	public function getIssues () : array
 	{
-		return $this->issue;
+		return $this->issues;
 	}
 
 }
