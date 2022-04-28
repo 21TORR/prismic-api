@@ -18,9 +18,7 @@ class TranslationCheckVisitor implements DataVisitorInterface
 	 */
 	public function __construct (
 		private readonly string $documentLocale,
-	)
-	{
-	}
+	) {}
 
 	/**
 	 */
@@ -63,7 +61,7 @@ class TranslationCheckVisitor implements DataVisitorInterface
 					IssueSeverity::INFO,
 					\sprintf(
 						"RTE has span(s) of type: %s",
-					\implode(", ", \array_unique($spans))
+						\implode(", ", \array_unique($spans)),
 					),
 					$field,
 				);
