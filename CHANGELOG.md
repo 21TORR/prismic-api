@@ -1,3 +1,10 @@
+6.0.0
+=====
+
+* (improvement) Overhaul translation check visitor.
+* (bc) Changed interface of translation check visitor.
+
+
 5.1.0
 =====
 
