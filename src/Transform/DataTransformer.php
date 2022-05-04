@@ -56,12 +56,21 @@ final class DataTransformer
 	private function rewriteDocumentLinkToUrl (array $span) : array
 	{
 		// this will always be an internal link, so no target => _blank
+		$type = $span["data"]["type"];
+		$lang = $span["data"]["lang"];
+
+		// if broken link, just leave it untouched
+		if ("broken_type" === $type || null === $lang)
+		{
+			return $span;
+		}
+
 		$span["data"] = [
 			"link_type" => "Web",
 			"url" => new DocumentLinkValue(
 				$span["data"]["id"],
-				$span["data"]["type"],
-				$span["data"]["lang"],
+				$type,
+				$lang,
 			),
 		];
 

@@ -1,3 +1,9 @@
+6.0.1
+=====
+
+* (bug) Handle broken links in the data transformer.
+
+
 6.0.0
 =====
 
