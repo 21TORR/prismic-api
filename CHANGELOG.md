@@ -1,3 +1,9 @@
+6.1.0
+=====
+
+* (feature) Add getter for slug + all outdated slugs in documents.
+
+
 6.0.1
 =====
 
