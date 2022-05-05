@@ -83,6 +83,33 @@ final class DocumentAttributes
 		return $this->lastPublicationDate;
 	}
 
+	/**
+	 * Returns the slug of the element
+	 */
+	public function getSlug () : string|null
+	{
+		return $this->getAllSlugs()[0] ?? null;
+	}
+
+	/**
+	 * Returns the current slug + all previous slugs of this item
+	 *
+	 * @return string[]
+	 */
+	public function getAllSlugs () : array
+	{
+		$slugs = \array_filter([
+			$this->getUid(),
+			// the slugs lists all slugs that element had
+			...$this->data["slugs"],
+		]);
+
+		// return a 0-based array
+		return \array_values(
+			\array_unique($slugs),
+		);
+	}
+
 
 	/**
 	 * @internal
