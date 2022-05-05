@@ -1,6 +1,6 @@
 {
     "require-dev": {
-        "21torr/php-cs": "^4.0"
+        "21torr/php-cs": "^4.0.4"
     },
     "config": {
         "allow-plugins": {
