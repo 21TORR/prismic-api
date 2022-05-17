@@ -4,7 +4,6 @@ namespace Torr\PrismicApi\Structure\Slice;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\Exception\Structure\InvalidTypeDefinitionException;
-use Torr\PrismicApi\Exception\Transform\TransformationFailedException;
 use Torr\PrismicApi\Structure\Field\InputField;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Structure\Helper\KeyedMapHelper;
@@ -126,8 +125,7 @@ abstract class Slice implements PrismicTypeInterface
 		{
 			$resultData[$key] = $this->transformSingleValue(
 				$dataTransformer,
-				$this->fields,
-				$key,
+				$field,
 				$data["primary"][$key] ?? null,
 				$dataVisitor,
 			);
@@ -141,8 +139,7 @@ abstract class Slice implements PrismicTypeInterface
 			{
 				$transformedItem[$key] = $this->transformSingleValue(
 					$dataTransformer,
-					$this->repeatedFields,
-					$key,
+					$field,
 					$itemsData[$key] ?? null,
 					$dataVisitor,
 				);
@@ -159,30 +156,18 @@ abstract class Slice implements PrismicTypeInterface
 	}
 
 	/**
-	 * @param array<string, InputField> $fields
 	 */
 	private function transformSingleValue (
 		DataTransformer $valueTransformer,
-		array $fields,
-		?string $key,
+		InputField $field,
 		mixed $fieldData,
 		?DataVisitorInterface $dataVisitor,
 	) : mixed
 	{
 		if (null === $fieldData)
 		{
+			$dataVisitor?->onDataVisit($field, null);
 			return null;
-		}
-
-		$field = $fields[$key] ?? null;
-
-		if (null === $field)
-		{
-			throw new TransformationFailedException(\sprintf(
-				"No field found for key '%s' in slice '%s'",
-				$key,
-				static::class,
-			));
 		}
 
 		return $field->transformValue($fieldData, $valueTransformer, $dataVisitor);

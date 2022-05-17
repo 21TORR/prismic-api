@@ -39,7 +39,9 @@
 	},
 	"config": {
 		"allow-plugins": {
-			"bamarni/composer-bin-plugin": true
+			"bamarni/composer-bin-plugin": true,
+			"ergebnis/composer-normalize": true,
+			"phpstan/extension-installer": true
 		},
 		"sort-packages": true
 	},
