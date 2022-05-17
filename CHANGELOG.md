@@ -1,3 +1,10 @@
+6.1.1
+=====
+
+* (improvement) Also call data visitor for null fields.
+* (improvement) Clean up code in slice data transformation.
+
+
 6.1.0
 =====
 
