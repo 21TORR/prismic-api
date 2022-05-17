@@ -167,6 +167,7 @@ abstract class Slice implements PrismicTypeInterface
 	{
 		if (null === $fieldData)
 		{
+			$dataVisitor?->onDataVisit($field, null);
 			return null;
 		}
 
