@@ -126,8 +126,7 @@ abstract class Slice implements PrismicTypeInterface
 		{
 			$resultData[$key] = $this->transformSingleValue(
 				$dataTransformer,
-				$this->fields,
-				$key,
+				$field,
 				$data["primary"][$key] ?? null,
 				$dataVisitor,
 			);
@@ -141,8 +140,7 @@ abstract class Slice implements PrismicTypeInterface
 			{
 				$transformedItem[$key] = $this->transformSingleValue(
 					$dataTransformer,
-					$this->repeatedFields,
-					$key,
+					$field,
 					$itemsData[$key] ?? null,
 					$dataVisitor,
 				);
@@ -159,12 +157,10 @@ abstract class Slice implements PrismicTypeInterface
 	}
 
 	/**
-	 * @param array<string, InputField> $fields
 	 */
 	private function transformSingleValue (
 		DataTransformer $valueTransformer,
-		array $fields,
-		?string $key,
+		InputField $field,
 		mixed $fieldData,
 		?DataVisitorInterface $dataVisitor,
 	) : mixed
@@ -172,17 +168,6 @@ abstract class Slice implements PrismicTypeInterface
 		if (null === $fieldData)
 		{
 			return null;
-		}
-
-		$field = $fields[$key] ?? null;
-
-		if (null === $field)
-		{
-			throw new TransformationFailedException(\sprintf(
-				"No field found for key '%s' in slice '%s'",
-				$key,
-				static::class,
-			));
 		}
 
 		return $field->transformValue($fieldData, $valueTransformer, $dataVisitor);
