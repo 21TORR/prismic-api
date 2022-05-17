@@ -4,7 +4,6 @@ namespace Torr\PrismicApi\Structure\Slice;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Torr\PrismicApi\Exception\Structure\InvalidTypeDefinitionException;
-use Torr\PrismicApi\Exception\Transform\TransformationFailedException;
 use Torr\PrismicApi\Structure\Field\InputField;
 use Torr\PrismicApi\Structure\Helper\FilterFieldsHelper;
 use Torr\PrismicApi\Structure\Helper\KeyedMapHelper;
