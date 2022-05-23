@@ -1,3 +1,9 @@
+6.1.2
+=====
+
+* (improvement) Allow empty target locales for document links.
+
+
 6.1.1
 =====
 

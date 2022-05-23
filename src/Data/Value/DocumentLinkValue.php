@@ -9,7 +9,7 @@ final class DocumentLinkValue
 	public function __construct (
 		private readonly string $id,
 		private readonly ?string $type,
-		private readonly string $targetLocale,
+		private readonly ?string $targetLocale,
 	) {}
 
 	/**
@@ -28,7 +28,7 @@ final class DocumentLinkValue
 
 	/**
 	 */
-	public function getTargetLocale () : string
+	public function getTargetLocale () : ?string
 	{
 		return $this->targetLocale;
 	}
