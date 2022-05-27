@@ -1,7 +1,8 @@
-6.1.3
+6.2.0
 =====
 
 * (improvement) Clear stateful services on worker start.
+* (feature) Provide access to alternate language ids of documents.
 
 
 6.1.2

@@ -110,6 +110,24 @@ final class DocumentAttributes
 		);
 	}
 
+	/**
+	 * Returns the alternative languages of this document.
+	 * Key is the locale, value is the page id.
+	 *
+	 * @return array<string, string>
+	 */
+	public function getAlternateLanguageIds () : array
+	{
+		$result = [];
+
+		foreach ($this->data["alternate_languages"] as $alternateLanguage)
+		{
+			$result[$alternateLanguage["lang"]] = $alternateLanguage["id"];
+		}
+
+		return $result;
+	}
+
 
 	/**
 	 * @internal
@@ -153,6 +171,29 @@ final class DocumentAttributes
 					"lang" => [
 						new Assert\NotNull(),
 						new Assert\Type("string"),
+					],
+					"alternate_languages" => [
+						new Assert\NotNull(),
+						new Assert\Type("array"),
+						new Assert\All([
+							"constraints" => [
+								new Assert\NotNull(),
+								new Assert\Collection(
+									fields: [
+										"id" => [
+											new Assert\NotNull(),
+											new Assert\Type("string"),
+										],
+										"lang" => [
+											new Assert\NotNull(),
+											new Assert\Type("string"),
+										],
+									],
+									allowExtraFields: true,
+									allowMissingFields: false,
+								),
+							],
+						]),
 					],
 				],
 				"allowMissingFields" => false,
