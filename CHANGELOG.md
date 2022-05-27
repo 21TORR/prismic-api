@@ -1,3 +1,9 @@
+6.1.3
+=====
+
+* (improvement) Clear stateful services on worker start.
+
+
 6.1.2
 =====
 
