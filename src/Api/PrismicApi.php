@@ -3,7 +3,6 @@
 namespace Torr\PrismicApi\Api;
 
 use Psr\Log\LoggerInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\HttpOptions;
 use Symfony\Component\Messenger\Event\WorkerStartedEvent;
@@ -11,7 +10,6 @@ use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Contracts\Service\ResetInterface;
 use Torr\PrismicApi\Api\Url\PrismicApiUrlBuilder;
 use Torr\PrismicApi\Data\Document;
 use Torr\PrismicApi\Data\Environment;
@@ -19,11 +17,10 @@ use Torr\PrismicApi\Definition\DocumentDefinition;
 use Torr\PrismicApi\Exception\Api\RequestFailedException;
 use Torr\PrismicApi\Factory\DocumentFactory;
 
-final class PrismicApi implements EventSubscriberInterface, ResetInterface
+final class PrismicApi
 {
 	private HttpClientInterface $contentClient;
 	private HttpClientInterface $typesClient;
-	private ?Environment $environment = null;
 
 	/**
 	 */
@@ -45,12 +42,7 @@ final class PrismicApi implements EventSubscriberInterface, ResetInterface
 	 */
 	public function getEnvironment () : Environment
 	{
-		if (null === $this->environment)
-		{
-			$this->environment = new Environment($this->requestContent(""));
-		}
-
-		return $this->environment;
+		return new Environment($this->requestContent(""));
 	}
 
 
@@ -272,23 +264,4 @@ final class PrismicApi implements EventSubscriberInterface, ResetInterface
 		}
 	}
 	// endregion
-
-	/**
-	 * @inheritDoc
-	 */
-	public function reset () : void
-	{
-		$this->environment = null;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public static function getSubscribedEvents () : array
-	{
-		return [
-			WorkerStartedEvent::class => "reset",
-		];
-	}
-
 }
