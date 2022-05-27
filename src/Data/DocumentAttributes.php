@@ -122,7 +122,7 @@ final class DocumentAttributes
 
 		foreach ($this->data["alternate_languages"] as $alternateLanguage)
 		{
-			$result[$alternateLanguage["lang"]] = $alternateLanguage["id"];
+			$result[(string) $alternateLanguage["lang"]] = (string) $alternateLanguage["id"];
 		}
 
 		return $result;

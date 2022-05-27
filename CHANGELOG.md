@@ -1,3 +1,9 @@
+6.2.1
+=====
+
+* (improvement) Don't cache the environment.
+
+
 6.2.0
 =====
 

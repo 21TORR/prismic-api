@@ -20,7 +20,6 @@
 		"symfony/event-dispatcher": "^6.1",
 		"symfony/http-client": "^5.3 || ^6.1",
 		"symfony/http-kernel": "^5.3 || ^6.1",
-		"symfony/messenger": "^6.1",
 		"symfony/validator": "^6.1",
 		"twig/twig": "^3.3"
 	},
