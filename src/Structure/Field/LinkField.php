@@ -85,7 +85,7 @@ final class LinkField extends InputField
 		if ("Web" === $type)
 		{
 			return parent::transformValue(
-				$data["url"] ?? null,
+				$dataTransformer->rewriteUrl($data["url"] ?? null),
 				$dataTransformer,
 				$dataVisitor,
 			);
@@ -110,7 +110,7 @@ final class LinkField extends InputField
 			}
 
 			return parent::transformValue(
-				$data["url"] ?? null,
+				$dataTransformer->rewriteUrl($data["url"] ?? null),
 				$dataTransformer,
 				$dataVisitor,
 			);

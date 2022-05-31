@@ -1,3 +1,9 @@
+6.3.0
+=====
+
+* (feature) Add URL rewriter to rewrite static URLs.
+
+
 6.2.1
 =====
 

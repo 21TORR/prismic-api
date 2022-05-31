@@ -6,6 +6,7 @@ use Torr\PrismicApi\Data\Value\DocumentLinkValue;
 use Torr\PrismicApi\Structure\Field\InputField;
 use Torr\PrismicApi\Structure\Slice\Slice;
 use Torr\PrismicApi\Structure\Slice\SliceZone;
+use Torr\PrismicApi\Transform\Link\UrlRewriterInterface;
 use Torr\PrismicApi\Transform\Slice\SliceExtraDataGeneratorInterface;
 
 final class DataTransformer
@@ -13,8 +14,12 @@ final class DataTransformer
 	public function __construct (
 		/** @var iterable<SliceExtraDataGeneratorInterface> */
 		private readonly iterable $sliceExtraDataGenerators,
+		/** @var iterable<UrlRewriterInterface> */
+		private readonly iterable $urlRewriters,
 	) {}
 
+	/**
+	 */
 	public function transformValue (
 		array $data,
 		InputField|SliceZone $field,
@@ -39,9 +44,20 @@ final class DataTransformer
 				$type = $span["type"];
 				$linkType = $span["data"]["link_type"] ?? null;
 
-				$spans[] = "hyperlink" === $type && "Document" === $linkType
-					? $this->rewriteDocumentLinkToUrl($span)
-					: $span;
+				if ("hyperlink" === $type && "Document" === $linkType)
+				{
+					$spans[] = $this->rewriteDocumentLinkToUrl($span);
+					continue;
+				}
+
+				if ("hyperlink" === $type && "Web" === $linkType)
+				{
+					$span["data"]["url"] = $this->rewriteUrl($span["data"]["url"] ?? null);
+					$spans[] = $span;
+					continue;
+				}
+
+				$spans[] = $span;
 			}
 
 			$data[$index]["spans"] = $spans;
@@ -75,6 +91,19 @@ final class DataTransformer
 		];
 
 		return $span;
+	}
+
+	/**
+	 */
+	public function rewriteUrl (?string $url) : ?string
+	{
+		/** @var UrlRewriterInterface $urlRewriter */
+		foreach ($this->urlRewriters as $urlRewriter)
+		{
+			$url = $urlRewriter->rewriteUrl($url);
+		}
+
+		return $url;
 	}
 
 	/**

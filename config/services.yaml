@@ -34,6 +34,7 @@ services:
 
     Torr\PrismicApi\Transform\DataTransformer:
         $sliceExtraDataGenerators: !tagged_iterator 'prismic.slice.extra-data-generator'
+        $urlRewriters: !tagged_iterator 'prismic.url_rewriter'
 
     Torr\PrismicApi\Url\PrismicBackendUrlGenerator:
         $repository: '%env(PRISMIC_REPOSITORY)%'

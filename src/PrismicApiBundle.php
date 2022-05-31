@@ -8,6 +8,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Torr\BundleHelpers\Bundle\BundleExtension;
 use Torr\PrismicApi\Definition\DocumentDefinition;
 use Torr\PrismicApi\RichText\Link\LinkGeneratorHandler;
+use Torr\PrismicApi\Transform\Link\UrlRewriterInterface;
 use Torr\PrismicApi\Transform\Slice\SliceExtraDataGeneratorInterface;
 
 final class PrismicApiBundle extends Bundle
@@ -27,6 +28,9 @@ final class PrismicApiBundle extends Bundle
 	{
 		$container->registerForAutoconfiguration(LinkGeneratorHandler::class)
 			->addTag("prismic.link_generator");
+
+		$container->registerForAutoconfiguration(UrlRewriterInterface::class)
+			->addTag("prismic.url_rewriter");
 
 		$container->registerForAutoconfiguration(DocumentDefinition::class)
 			->addTag("prismic.document.definition");
