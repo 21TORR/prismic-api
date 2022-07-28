@@ -1,3 +1,9 @@
+6.3.1
+=====
+
+* (bug) Add early exit on `validateData` of `GroupField` if `$data` is not an array.
+
+
 6.3.0
 =====
 

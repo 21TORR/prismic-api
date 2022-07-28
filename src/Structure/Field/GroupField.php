@@ -48,6 +48,13 @@ final class GroupField extends InputField
 			$this->required ? new Assert\Count(min: 1) : null,
 		]);
 
+		// If the document already exists and the field was added later, the data does not exist yet.
+		// The data is only there or in the structure when the document is saved again in Prismic, before that it is null or the previous structure.
+		if (!\is_array($data))
+		{
+			return;
+		}
+
 		// validate nested fields
 		foreach ($data as $index => $nestedData)
 		{

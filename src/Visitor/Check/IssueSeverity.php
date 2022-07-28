@@ -2,7 +2,7 @@
 
 namespace Torr\PrismicApi\Visitor\Check;
 
-enum IssueSeverity: string
+enum IssueSeverity : string
 {
 	case INFO = "info";
 
