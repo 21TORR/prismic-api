@@ -39,8 +39,7 @@ final class EmbedField extends InputField
 		$this->ensureDataIsValid($validator, $path, $data, [
 			new Assert\AtLeastOneOf([
 				new Assert\IsNull(),
-				new class extends Assert\Compound
-				{
+				new class() extends Assert\Compound {
 					protected function getConstraints (array $options) : array
 					{
 						return [
@@ -50,8 +49,7 @@ final class EmbedField extends InputField
 						];
 					}
 				},
-				new class extends Assert\Compound
-				{
+				new class() extends Assert\Compound {
 					protected function getConstraints (array $options) : array
 					{
 						return [
