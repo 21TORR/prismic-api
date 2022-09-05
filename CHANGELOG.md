@@ -1,3 +1,12 @@
+6.3.2
+=====
+
+* (improvement) Use PHPUnit 9.5.
+* (bug) Pass transformed value into visitor in `EmbedField`.
+* (bug) Allow empty `EmbedField`s.
+* (improvement) Add tests for `EmbedField` validation.
+
+
 6.3.1
 =====
 

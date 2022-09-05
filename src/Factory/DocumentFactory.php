@@ -25,7 +25,9 @@ final class DocumentFactory
 
 	/**
 	 * @phpstan-template T of Document
+	 *
 	 * @phpstan-param DocumentDefinition<T> $definition
+	 *
 	 * @phpstan-return T
 	 */
 	public function createDocument (DocumentDefinition $definition, array $data) : Document
@@ -50,7 +52,9 @@ final class DocumentFactory
 
 	/**
 	 * @phpstan-template T of Document
+	 *
 	 * @phpstan-param class-string<T> $documentType
+	 *
 	 * @phpstan-return DocumentDefinition<T>
 	 */
 	public function getDefinitionForType (string $documentType) : DocumentDefinition

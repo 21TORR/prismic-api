@@ -88,7 +88,9 @@ final class PrismicApi
 	 * Searches for documents, according to the given predicates
 	 *
 	 * @phpstan-template T of Document
+	 *
 	 * @phpstan-param class-string<T> $documentType
+	 *
 	 * @phpstan-return T[]
 	 *
 	 * @return Document[]
