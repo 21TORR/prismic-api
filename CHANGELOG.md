@@ -1,3 +1,9 @@
+6.3.2
+=====
+
+* (improvement) Use PHPUnit 9.5.
+
+
 6.3.1
 =====
 
