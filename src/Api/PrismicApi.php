@@ -3,7 +3,6 @@
 namespace Torr\PrismicApi\Api;
 
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\HttpOptions;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
@@ -30,9 +29,18 @@ final class PrismicApi
 		private readonly string $repository,
 		private readonly string $contentToken,
 		private readonly string $typesToken,
+		HttpClientInterface $client,
 	) {
-		$this->contentClient = HttpClient::createForBaseUri("https://{$repository}.prismic.io/api/v2/");
-		$this->typesClient = HttpClient::createForBaseUri("https://customtypes.prismic.io/");
+		$this->contentClient = $client->withOptions(
+			(new HttpOptions())
+				->setBaseUri("https://{$repository}.prismic.io/api/v2/")
+				->toArray(),
+		);
+		$this->typesClient = $client->withOptions(
+			(new HttpOptions())
+				->setBaseUri("https://customtypes.prismic.io/")
+				->toArray(),
+		);
 	}
 
 
