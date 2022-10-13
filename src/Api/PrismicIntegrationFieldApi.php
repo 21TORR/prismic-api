@@ -3,7 +3,6 @@
 namespace Torr\PrismicApi\Api;
 
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\HttpOptions;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -28,9 +27,14 @@ final class PrismicIntegrationFieldApi
 		/** @var array<string, string> */
 		private readonly array $tokens,
 		private readonly LoggerInterface $logger,
+		HttpClientInterface $client,
 	)
 	{
-		$this->client = HttpClient::createForBaseUri("https://if-api.prismic.io");
+		$this->client = $client->withOptions(
+			(new HttpOptions())
+				->setBaseUri("https://if-api.prismic.io")
+				->toArray(),
+		);
 	}
 
 	/**
