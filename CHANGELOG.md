@@ -1,3 +1,9 @@
+6.3.4
+=====
+
+* (improvement) Remove unused dependency.
+
+
 6.3.3
 =====
 
