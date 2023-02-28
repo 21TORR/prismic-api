@@ -51,4 +51,18 @@ final class ImageValue
 	{
 		return $this->copyright;
 	}
+
+	/**
+	 *
+	 */
+	public function withNewUrl (string $url) : self
+	{
+		return new self(
+			$url,
+			$this->width,
+			$this->height,
+			$this->alt,
+			$this->copyright,
+		);
+	}
 }
