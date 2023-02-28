@@ -1,3 +1,9 @@
+6.3.5
+=====
+
+* (improvement) Add wither to `ImageValue` to set a new URL.
+
+
 6.3.4
 =====
 
