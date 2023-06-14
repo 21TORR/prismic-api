@@ -248,7 +248,7 @@ final class PrismicApi
 		{
 			$response = $requestCallable();
 
-			return "" !== $response->getContent(false)
+			return "" !== $response->getContent()
 				? $response->toArray()
 				: [];
 		}
