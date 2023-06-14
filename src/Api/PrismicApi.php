@@ -8,6 +8,7 @@ use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 use Torr\PrismicApi\Api\Url\PrismicApiUrlBuilder;
 use Torr\PrismicApi\Data\Document;
 use Torr\PrismicApi\Data\Environment;
@@ -247,6 +248,7 @@ final class PrismicApi
 		try
 		{
 			$response = $requestCallable();
+			\assert($response instanceof ResponseInterface);
 
 			return "" !== $response->getContent()
 				? $response->toArray()
