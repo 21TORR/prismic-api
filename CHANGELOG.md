@@ -1,3 +1,9 @@
+6.3.6
+=====
+
+* (bug) Fix missing exception in `PrismicApi` on empty response.
+
+
 6.3.5
 =====
 
